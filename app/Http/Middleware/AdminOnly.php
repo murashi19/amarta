@@ -14,7 +14,7 @@ class AdminOnly
             return redirect()->route('login');
         }
 
-        if (!Auth::user()->roles()->where('name', 'Admin')->exists()) {
+        if (!Auth::user()->roles()->where('name', 'admin')->exists()) {
             return redirect()->route('dashboard.user');
         }
 

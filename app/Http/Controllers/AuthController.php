@@ -27,9 +27,7 @@ class AuthController extends Controller
             'phone_number' => ['required', 'string', 'max:255'],
             'address' => ['required', 'string', 'max:255'],
             'birth_date' => ['required', 'date'],
-            'education' => ['required', 'string', 'max:255'],
-            'japanese_level' => ['required', 'in:N1,N2,N3,N4,N5,Belum Menguasai'],
-            'motivation' => ['required', 'string', 'max:255'],
+            'education_level' => ['required', 'string', 'max:255'],
         ]);
 
         $user = null;
@@ -39,12 +37,10 @@ class AuthController extends Controller
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
                 'phone_number' => $request->phone_number,
-                'status_id' => 1,
+                'status_id' => 1, // Registered
                 'address' => $request->address,
                 'birth_date' => $request->birth_date,
-                'education' => $request->education,
-                'japanese_level' => $request->japanese_level,
-                'motivation' => $request->motivation,
+                'education_level' => $request->education_level,
             ]);
 
             // Tambah role default User
@@ -90,7 +86,7 @@ class AuthController extends Controller
     private function redirectToDashboard()
     {
         $user = Auth::user();
-        if ($user->roles()->where('name', 'Admin')->exists()) {
+        if ($user->roles()->where('name', 'admin')->exists()) {
             return redirect()->route('dashboard.admin');
         }
         return redirect()->route('dashboard.user');

@@ -38,18 +38,13 @@ class AnnouncementController extends Controller
         ]);
 
         // Handle checkbox untuk CREATE
-        $checkboxValue = $request->input('has_payment_button');
-        
-        if ($checkboxValue === '1' || $checkboxValue === 1 || $checkboxValue === true || $checkboxValue === 'true') {
+        $isCreateMode = $isNewAnnouncement ?? true; // Atur ini sesuai logika buat/edit
+
+        if ($request->has('has_payment_button')) {
             $validated['has_payment_button'] = true;
         } else {
-            $validated['has_payment_button'] = false;
+            $validated['has_payment_button'] = $isCreateMode ? true : false;
         }
-
-        \Log::info('🔧 CREATE CHECKBOX PROCESSING:', [
-            'raw_value' => $checkboxValue,
-            'processed_value' => $validated['has_payment_button']
-        ]);
 
         $announcement = Announcement::create($validated);
 

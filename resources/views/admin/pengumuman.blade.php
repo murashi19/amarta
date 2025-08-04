@@ -179,7 +179,7 @@
                                             <td><span class="badge {{ $announcement->status === 'published' ? 'bg-success' : 'bg-warning text-dark' }}">{{ ucfirst($announcement->status) }}</span></td>
                                             <td><span class="badge {{ $announcement->priority === 'high' ? 'bg-danger' : ($announcement->priority === 'medium' ? 'bg-warning' : 'bg-success') }}">Prioritas {{ ucfirst($announcement->priority) }}</span></td>
                                             <td><i class="fas fa-users me-1"></i> {{ $announcement->target_audience }}</td>
-                                            <td><span class="badge bg-info">{{ $announcement->views }} views</span></td>
+                                            <td><span class="badge bg-info">{{ $announcement->views_count }} views</span></td>
                                             <td><small>{{ \Carbon\Carbon::parse($announcement->created_at)->format('d M Y') }}</small></td>
                                             <td>
                                                 <div class="dropdown">
@@ -282,7 +282,7 @@
                                 <!-- Fields untuk pengumuman otomatis -->
                                 <div id="paymentButtonField" class="mt-3" style="display: none;">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="has_payment_button" name="has_payment_button">
+                                        <input class="form-check-input" type="checkbox" id="has_payment_button" name="has_payment_button" value="1" checked>
                                         <label class="form-check-label" for="has_payment_button">
                                             Tampilkan Button Pembayaran
                                         </label>
@@ -460,6 +460,8 @@
                 </div>
             </div>
 @endsection
+
+
 <script>
     let currentEditId = null;
     let editAutoSaveInterval;
@@ -1150,6 +1152,5 @@
         });
 
 </script>
-
 @section('scripts')
 @endsection

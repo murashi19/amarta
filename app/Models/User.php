@@ -9,28 +9,34 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory;
 
     protected $fillable = [
         'name',
         'email',
         'password',
         'phone_number',
-        'address',
+        'gender',
+        'birth_place',
         'birth_date',
-        'education',
-        'japanese_level',
-        'motivation',
+        'address',
+        'education_level',
+        'photo',
+        // 'is_verified',
+        'notes',
         'status_id',
+        // 'email_verified_at',
     ];
-    
-     protected $hidden = [
+
+    protected $hidden = [
         'password',
         'remember_token',
     ];
 
     protected $casts = [
+        // 'email_verified_at' => 'datetime',
         'birth_date' => 'date',
+        // 'is_verified' => 'boolean',
         'password' => 'hashed',
     ];
 
@@ -42,59 +48,40 @@ class User extends Authenticatable
 
     public function status()
     {
-        return $this->belongsTo(MasterStatus::class, 'status_id');
+        return $this->belongsTo(Status::class);
     }
 
-    public function transactions()
+    public function classes()
     {
-        return $this->hasMany(Transaction::class);
+        return $this->belongsToMany(ClassProgram::class, 'user_classes')
+                    ->withTimestamps()
+                    ->withPivot('enrolled_at');
     }
 
-    public function events()
+    public function notifications()
     {
-        return $this->hasMany(Event::class);
+        return $this->hasMany(Notification::class);
     }
 
-    public function auditLogs()
+    public function announcements()
     {
-        return $this->hasMany(AuditLog::class);
+        return $this->belongsToMany(Announcement::class)->withPivot('read_at')->withTimestamps();
     }
 
-    // Helper Method
-    public function hasCompletedBookingPayment()
-    {
-        return $this->transactions()
-            ->where('type', 'Payment')
-            ->where('status', 'Completed')
-            ->where('description', 'Booking Fee LPK')
-            ->exists();
-    }
-
-    public function getActiveGoogleMeeting()
-    {
-        return $this->events()
-            ->where('type_id', 1) // intro_meeting
-            ->whereIn('status_id', [5, 6]) // meeting_scheduled or meeting_completed
-            ->where('start_date', '>=', now()->toDateString())
-            ->first();
-    }
-
-    public function getJapaneseLevelText()
-    {
-        $levels = [
-            'N5' => 'N5 (Pemula)',
-            'N4' => 'N4 (Menengah Bawah)',
-            'N3' => 'N3 (Menengah)',
-            'N2' => 'N2 (Menengah Atas)',
-            'N1' => 'N1 (Mahir)',
-            'none' => 'Belum Menguasai'
-        ];
-        
-        return $levels[$this->japanese_level] ?? 'Tidak diketahui';
-    }
-
+    // Helper methods
     public function hasRole($roleName)
     {
         return $this->roles()->where('name', $roleName)->exists();
+    }
+
+    public function hasAnyRole($roles)
+    {
+        return $this->roles()->whereIn('name', $roles)->exists();
+    }
+
+    // Accessor untuk photo URL
+    public function getPhotoUrlAttribute()
+    {
+        return $this->photo ? asset('storage/' . $this->photo) : null;
     }
 }

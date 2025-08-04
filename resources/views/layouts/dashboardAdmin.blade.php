@@ -325,100 +325,100 @@
             border-left: 4px solid #28a745;
         }
         .table th {
-    vertical-align: middle;
-    border-bottom: 2px solid #dee2e6;
-    font-weight: 600;
-    font-size: 0.875rem;
-}
-
-.table td {
-    vertical-align: middle;
-    padding: 1rem 0.75rem;
-}
-
-.table-hover tbody tr:hover {
-    background-color: rgba(0, 123, 255, 0.05);
-}
-
-/* Badge styling */
-.badge {
-    font-size: 0.75rem;
-    font-weight: 500;
-}
-
-/* Dropdown button styling */
-.dropdown-toggle::after {
-    display: none;
-}
-
-/* Card stats styling */
-.card-stats {
-    border: none;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-}
-
-/* Table responsive improvements */
-@media (max-width: 768px) {
-    .table-responsive {
+        vertical-align: middle;
+        border-bottom: 2px solid #dee2e6;
+        font-weight: 600;
         font-size: 0.875rem;
-    }
-    
-    .table td, .table th {
-        padding: 0.5rem 0.25rem;
-    }
-    
-    .badge {
-        font-size: 0.7rem;
-    }
-}
+        }
 
-/* Status badge colors */
-.badge.bg-info {
-    background-color: #17a2b8 !important;
-}
+        .table td {
+            vertical-align: middle;
+            padding: 1rem 0.75rem;
+        }
 
-.badge.bg-secondary {
-    background-color: #6c757d !important;
-}
+        .table-hover tbody tr:hover {
+            background-color: rgba(0, 123, 255, 0.05);
+        }
 
-/* Table striped custom colors */
-.table-striped > tbody > tr:nth-of-type(odd) > td {
-    background-color: rgba(0, 123, 255, 0.02);
-}
+        /* Badge styling */
+        .badge {
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
 
-/* Action dropdown */
-.dropdown-menu {
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-    border: none;
-    border-radius: 0.375rem;
-}
+        /* Dropdown button styling */
+        .dropdown-toggle::after {
+            display: none;
+        }
 
-.dropdown-item {
-    padding: 0.5rem 1rem;
-    font-size: 0.875rem;
-}
+        /* Card stats styling */
+        .card-stats {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
 
-.dropdown-item:hover {
-    background-color: #f8f9fa;
-}
+        /* Table responsive improvements */
+        @media (max-width: 768px) {
+            .table-responsive {
+                font-size: 0.875rem;
+            }
+            
+            .table td, .table th {
+                padding: 0.5rem 0.25rem;
+            }
+            
+            .badge {
+                font-size: 0.7rem;
+            }
+        }
 
-.dropdown-item.text-danger:hover {
-    background-color: #f8d7da;
-    color: #721c24 !important;
-}
+        /* Status badge colors */
+        .badge.bg-info {
+            background-color: #17a2b8 !important;
+        }
 
-/* Title cell styling */
-.table td div strong {
-    color: #495057;
-    font-size: 0.9rem;
-}
+        .badge.bg-secondary {
+            background-color: #6c757d !important;
+        }
 
-.table td div small {
-    display: block;
-    margin-top: 0.25rem;
-    line-height: 1.3;
-}
+        /* Table striped custom colors */
+        .table-striped > tbody > tr:nth-of-type(odd) > td {
+            background-color: rgba(0, 123, 255, 0.02);
+        }
+
+        /* Action dropdown */
+        .dropdown-menu {
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            border: none;
+            border-radius: 0.375rem;
+        }
+
+        .dropdown-item {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .dropdown-item.text-danger:hover {
+            background-color: #f8d7da;
+            color: #721c24 !important;
+        }
+
+        /* Title cell styling */
+        .table td div strong {
+            color: #495057;
+            font-size: 0.9rem;
+        }
+
+        .table td div small {
+            display: block;
+            margin-top: 0.25rem;
+            line-height: 1.3;
+        }
     </style>
 </head>
 <body>
@@ -475,7 +475,7 @@
                 </a>
             </li>
             <li>
-                <a href="{{ url('admin/transaksi') }}" class="{{ Request::is('admin.transaksi') ? 'active' : '' }}">
+                <a href="{{ url('admin/transaksi') }}" class="{{ request()->routeIs('admin.transaksi') ? 'active' : '' }}">
                     <i class="fas fa-credit-card"></i>Transaksi
                 </a>
             </li>
@@ -520,6 +520,7 @@
     </form>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    
     <script>
         // Add some interactive effects
         document.querySelectorAll('.dashboard-card').forEach(card => {
@@ -608,6 +609,7 @@
         setInterval(updateStats, 30000);
     </script>
 
-    @yield('scripts')
+    @stack('scripts')
+
 </body>
 </html>

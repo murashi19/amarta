@@ -67,44 +67,10 @@
                 <h4 class="mb-3 text-primary">Informasi Pendidikan</h4>
                 <div class="row g-3">
                     <div class="col-md-6">
-                        <label for="education" class="form-label">Pendidikan Terakhir</label>
-                        <select class="form-select @error('education') is-invalid @enderror" 
-                                id="education" name="education" required>
-                            <option value="" disabled {{ old('education') ? '' : 'selected' }}>-- Pilih Pendidikan --</option>
-                            <option value="SD" {{ old('education') == 'SD' ? 'selected' : '' }}>SD</option>
-                            <option value="SMP" {{ old('education') == 'SMP' ? 'selected' : '' }}>SMP</option>
-                            <option value="SMA/SMK" {{ old('education') == 'SMA/SMK' ? 'selected' : '' }}>SMA/SMK</option>
-                            <option value="D3" {{ old('education') == 'D3' ? 'selected' : '' }}>Diploma (D3)</option>
-                            <option value="S1" {{ old('education') == 'S1' ? 'selected' : '' }}>Sarjana (S1)</option>
-                            <option value="S2" {{ old('education') == 'S2' ? 'selected' : '' }}>Magister (S2)</option>
-                            <option value="S3" {{ old('education') == 'S3' ? 'selected' : '' }}>Doktor (S3)</option>
-                        </select>
-                        @error('education')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="col-md-6">
-                        <label for="japanese_level" class="form-label">Tingkat Bahasa Jepang</label>
-                        <select class="form-select @error('japanese_level') is-invalid @enderror" 
-                                id="japanese_level" name="japanese_level" required>
-                            <option value="">Pilih tingkat...</option>
-                            <option value="N1" {{ old('japanese_level') == 'N1' ? 'selected' : '' }}>N1</option>
-                            <option value="N2" {{ old('japanese_level') == 'N2' ? 'selected' : '' }}>N2</option>
-                            <option value="N3" {{ old('japanese_level') == 'N3' ? 'selected' : '' }}>N3</option>
-                            <option value="N4" {{ old('japanese_level') == 'N4' ? 'selected' : '' }}>N4</option>
-                            <option value="N5" {{ old('japanese_level') == 'N5' ? 'selected' : '' }}>N5</option>
-                            <option value="Belum Menguasai" {{ old('japanese_level') == 'Belum Menguasai' ? 'selected' : '' }}>Belum Menguasai</option>
-                        </select>
-                        @error('japanese_level')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    <div class="col-12">
-                        <label for="motivation" class="form-label">Motivasi Mengikuti Program</label>
-                        <textarea class="form-control @error('motivation') is-invalid @enderror" 
-                                  id="motivation" name="motivation" rows="3" required>{{ old('motivation') }}</textarea>
-                        @error('motivation')
+                        <label for="education_level" class="form-label">Pendidikan Terakhir</label>
+                        <input type="text" class="form-control @error('education_level') is-invalid @enderror" 
+                               id="education_level" name="education_level" value="{{ old('education_level') }}" required>
+                        @error('education_level')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
@@ -157,28 +123,24 @@
     .toggle-password {
         cursor: pointer;
         color: #6c757d;
-        opacity: 30%; /* selalu redup */
+        opacity: 30%;
         transition: opacity 0.2s ease;
     }
     .toggle-password:hover {
-        opacity: 150%; /* jadi jelas ketika diarahkan kursor */
+        opacity: 150%;
     }
 </style>
+
 {{-- Script untuk toggle password --}}
 @push('scripts')
 <script>
     document.querySelectorAll('.toggle-password').forEach(button => {
         button.addEventListener('click', function () {
             const target = document.querySelector(this.dataset.target);
-            const icon = this.querySelector('i');
             if (target.type === 'password') {
                 target.type = 'text';
-                icon.classList.remove('bi-eye');
-                icon.classList.add('bi-eye-slash');
             } else {
                 target.type = 'password';
-                icon.classList.remove('bi-eye-slash');
-                icon.classList.add('bi-eye');
             }
         });
     });

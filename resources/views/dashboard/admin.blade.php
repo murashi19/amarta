@@ -230,7 +230,7 @@
 </div>
 @endsection
 
-@section('scripts')
+@push('scripts')
 <script>
     // Custom JavaScript untuk dashboard
     document.addEventListener('DOMContentLoaded', function() {
@@ -253,4 +253,4 @@
         });
     });
 </script>
-@endsection
+@endpush

@@ -7,53 +7,19 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Transaction extends Model
 {
-   use HasFactory;
-
     protected $fillable = [
         'user_id',
-        'package_id',
-        'event_id',
+        'type',          // booking / dp
         'amount',
-        'type',
-        'status',
-        'payment_method',
-        'payment_reference',
-        'snap_token',
-        'description',
+        'status',        // pending / completed / failed
+        'proof_url',
+        'xendit_id',
+        'xendit_status',
     ];
 
-    protected $casts = [
-        'amount' => 'decimal:2',
-    ];
-
+    // Relasi: satu transaksi milik satu user
     public function user()
     {
         return $this->belongsTo(User::class);
-    }
-
-    public function package()
-    {
-        return $this->belongsTo(Package::class);
-    }
-
-    public function event()
-    {
-        return $this->belongsTo(Event::class);
-    }
-
-    // Scopes
-    public function scopeBookingFee($query)
-    {
-        return $query->where('description', 'Booking Fee LPK');
-    }
-
-    public function scopeCompleted($query)
-    {
-        return $query->where('status', 'Completed');
-    }
-
-    public function scopePending($query)
-    {
-        return $query->where('status', 'Pending');
     }
 }
