@@ -2,8 +2,38 @@
 
 @push('styles')
 <style>
+ :root {
+    --color-primary: #0d5ea6;
+    --color-secondary: #a6550d;
+    --color-success: #24c224;
+    --color-warning: #e2b11e;
+    --color-danger: #ac2020;
+    --color-info: #297ba3;
+    --color-light: #eff2f6;
+    --color-dark: #162737;
+    --color-hover: #d6eafe;
+    --color-disabletxt: #9e9e9e;
+    --gradient-primary: linear-gradient(135deg, #0d5ea6 0%, #1e7bb8 100%);
+    --gradient-light: linear-gradient(135deg, #d6eafe 0%, #e8f4fd 100%);
+    --shadow-soft: 0 10px 40px rgba(13, 94, 166, 0.1);
+    --shadow-hover: 0 20px 60px rgba(13, 94, 166, 0.2);
 
-/* KONTEN 1 */
+    /* Shadows */
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
+    --shadow-lg: 0 8px 25px rgba(0, 0, 0, 0.2);
+    --shadow-xl: 0 20px 50px rgba(0, 0, 0, 0.3);
+
+    /* Transitions */
+    --transition-fast: 0.2s ease;
+    --transition-normal: 0.3s ease;
+    --transition-slow: 0.5s ease;
+}
+
+
+/*========================================
+  PROGRAM UNGGULAN
+========================================*/
 #program-unggulan {
     width: 100%;
     height: 100vh;
@@ -82,11 +112,16 @@
     right: -60px;
 }
 
+
+/*========================================
+  PROGRAM TAMBAHAN
+========================================*/
+
 #program-tambahan {
     width: 100%;
-    background-color: var(--color-info);
-    height: 500px;
-    margin-bottom: 50px;
+    background-color: var(--color-hover);
+    height: 400px;
+    margin-bottom: 20px;
 }
 
 .card-program {
@@ -108,14 +143,16 @@
     color: var(--color-light);
 }
 
-/* KONTEN 3 */
+/*========================================
+  kegiatan
+========================================*/
 /* Base styles */
 #kegiatan-kami {
     width: 100%;
     min-height: 100vh;
     display: flex;
     align-items: center;
-    margin-top: 50px;
+    margin-top: 100px;
     margin-bottom: 100px;
 }
 
@@ -130,6 +167,7 @@
     font-size: 2.5rem;
     font-weight: 700;
     color: #333;
+    margin-top: 60px;
     margin-bottom: 60px;
     letter-spacing: -0.5px;
 }
@@ -271,6 +309,128 @@
         font-size: 2.2rem;
         margin-bottom: 50px;
     }
+}
+/* === Kegiatan Kami Section === */
+#kegiatan-kami {
+  padding: 60px 0;
+  background-color: #f9f9f9;
+}
+
+.kegiatan-section .section-title {
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 40px;
+  position: relative;
+}
+
+.carousel-section2 {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  padding: 0 30px;
+}
+
+.carousel-container2 {
+  overflow: hidden;
+}
+
+.carousel-wrapper2 {
+  display: flex;
+  gap: 2rem;
+  transition: transform 0.5s ease-in-out;
+}
+
+.carousel-item2 {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+  flex: 0 0 100%;
+  max-width: 100%;
+  transition: transform 0.4s ease;
+}
+
+.carousel-item2:hover {
+  transform: translateY(-4px);
+}
+
+.item-image2 img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+}
+
+.item-content2 {
+  padding: 20px;
+}
+
+.item-description {
+  font-size: 0.95rem;
+  color: #444;
+}
+
+/* ==== Buttons ==== */
+.nav-button2 {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: #1d4ed8;
+  color: #fff;
+  border: none;
+  padding: 12px 16px;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 2;
+  transition: background 0.3s ease;
+}
+
+.nav-button2:hover {
+  background-color: #0c3a91;
+}
+
+.nav-prev2 {
+  left: 0;
+}
+
+.nav-next2 {
+  right: 0;
+}
+
+/* ==== Indicators ==== */
+.carousel-indicators {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.carousel-indicators div {
+  width: 10px;
+  height: 10px;
+  background-color: #ccc;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.carousel-indicators .active {
+  background-color: #1d4ed8;
+}
+
+/* ===== Responsive Carousel (1 - 3 columns) ===== */
+@media (min-width: 768px) {
+  .carousel-item2 {
+    flex: 0 0 48%;
+    max-width: 48%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .carousel-item2 {
+    flex: 0 0 32%;
+    max-width: 32%;
+  }
 }
 
 /* Tablets (768px - 991px) */
@@ -1011,62 +1171,75 @@
 
 @section('content')
 
-<!-- Konten 1 -->
+<!-- Konten 1: Program Unggulan -->
 <section id="program-unggulan" class="py-5 mb-2 mb-md-0">
-    <div class="container h-100">
-        <div class="section-title">
-            <h1 class="text-center fw-bold mb-4 judul-section">
-                Program <span>Andalan Kita:</span>
-            </h1>
-            <div class="underline"></div>
+  <div class="container h-100">
+    <div class="section-title">
+      <h1 class="text-center fw-bold mb-4 judul-section">
+        Program <span>Andalan Kita:</span>
+      </h1>
+      <div class="underline"></div>
+    </div>
+
+    <!-- Carousel -->
+    <div id="carouselProgram" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-inner">
+        <!-- Slide 1 -->
+        <div class="carousel-item active">
+          <div class="row align-items-center g-4">
+            <div class="col-md-6 text-center">
+              <img src="asset/img/6.png" class="img-fluid rounded-4 shadow-sm slider-img" alt="Program Pemagangan Jepang" />
+            </div>
+            <div class="col-md-6">
+              <h3 class="fw-bold mb-3">Program Pemagangan ke Jepang</h3>
+              <p class="mb-4">Ikuti program pemagangan resmi ke Jepang yang dirancang untuk membekali peserta dengan keterampilan dan etos kerja unggul.</p>
+              <button class="button-primary px-4 py-2">Lebih Lengkap..</button>
+            </div>
+          </div>
         </div>
-    
-        <!-- Carousel -->
-        <div id="carouselProgram" class="carousel slide" data-bs-ride="carousel">
-            <div class="carousel-inner">
-            <!-- Slide 1 -->
-            <div class="carousel-item active">
-                <div class="row align-items-center g-4">
-                <div class="col-md-6 text-center ">
-                    <img src="{{ asset('Asset/img/6.jpg') }}" class="img-fluid rounded-4 shadow-sm slider-img" alt="Program 1"/>
-                </div>
-                <div class="col-md-6">
-                    <h3 class="fw-bold mb-3">Kelas Bahasa Jepang Intensif:</h3>
-                    <p class="mb-4">Dijamin nggak cuma hafal kata-kata, tapi bener-bener bisa komunikasi lancar di segala situasi.</p>
-                    <button class="button-primary px-4 py-2">Lebih Lengkap..</button>
-                </div>
-                </div>
-            </div>
 
-            <!-- Slide 2 -->
-            <div class="carousel-item">
-                <div class="row align-items-center g-4">
-                <div class="col-md-6 text-center">
-                    <img src="{{ asset('Asset/img/6.jpg') }}" class="img-fluid rounded-4 shadow-sm" alt="Program 2"/>
-                </div>
-                <div class="col-md-6">
-                    <h3 class="fw-bold mb-3">Kelas Bahasa Inggris Profesional:</h3>
-                    <p class="mb-4">Bangun kemampuan speaking & listening agar percaya diri berbicara dengan orang asing.</p>
-                    <button class="btn btn-primary px-4 py-2">Lebih Lengkap..</button>
-                </div>
-                </div>
+        <!-- Slide 2 -->
+        <div class="carousel-item">
+          <div class="row align-items-center g-4">
+            <div class="col-md-6 text-center">
+              <img src="asset/img/6.png" class="img-fluid rounded-4 shadow-sm" alt="Program Tokutei Ginou" />
             </div>
+            <div class="col-md-6">
+              <h3 class="fw-bold mb-3">Program Tokutei Ginou (Specified Skilled Worker)</h3>
+              <p class="mb-4">Persiapan kerja di Jepang dengan status visa kerja Tokutei Ginou di berbagai bidang seperti perhotelan, pertanian, dan kesehatan.</p>
+              <button class="button-primary px-4 py-2">Lebih Lengkap..</button>
+            </div>
+          </div>
+        </div>
 
-            <!-- Slide 3 -->
-            <div class="carousel-item">
-                <div class="row align-items-center g-4">
-                <div class="col-md-6 text-center">
-                    <img src="{{ asset('Asset/img/6.jpg') }}" class="img-fluid rounded-4 shadow-sm" alt="Program 3"/>
-                </div>
-                <div class="col-md-6">
-                    <h3 class="fw-bold mb-3">Persiapan Interview Kerja Jepang:</h3>
-                    <p class="mb-4">Latihan langsung teknik wawancara dengan skenario dunia kerja Jepang, siap lolos seleksi!</p>
-                    <button class="btn btn-primary px-4 py-2">Lebih Lengkap..</button>
-                </div>
-                </div>
+        <!-- Slide 3 -->
+        <div class="carousel-item">
+          <div class="row align-items-center g-4">
+            <div class="col-md-6 text-center">
+              <img src="asset/img/6.png" class="img-fluid rounded-4 shadow-sm" alt="Program Nihongo Gakko" />
             </div>
+            <div class="col-md-6">
+              <h3 class="fw-bold mb-3">Program Nihongo Gakkou</h3>
+              <p class="mb-4">Belajar di sekolah bahasa Jepang (Nihongo Gakkou) sebagai jalan menuju pendidikan lanjutan atau karir profesional di Jepang.</p>
+              <button class="button-primary px-4 py-2">Lebih Lengkap..</button>
+            </div>
+          </div>
+        </div>
 
+        <!-- Slide 4 -->
+        <div class="carousel-item">
+          <div class="row align-items-center g-4">
+            <div class="col-md-6 text-center">
+              <img src="asset/img/6.png" class="img-fluid rounded-4 shadow-sm" alt="Program Engineering Jepang" />
             </div>
+            <div class="col-md-6">
+              <h3 class="fw-bold mb-3">Program Engineering Jepang</h3>
+              <p class="mb-4">Kesempatan untuk bekerja di Jepang sebagai engineer dengan pelatihan khusus dan dukungan penempatan kerja langsung.</p>
+              <button class="button-primary px-4 py-2">Lebih Lengkap..</button>
+            </div>
+          </div>
+        </div>
+      </div>
 
             <!-- Controls -->
             <button class="carousel-control-prev d-none d-md-block" type="button" data-bs-target="#carouselProgram" data-bs-slide="prev">
@@ -1129,104 +1302,68 @@
   </div>
 </section>
 
-<!-- Konten 3 - Fixed -->
+<!-- Konten 3 - Final -->
 <section id="kegiatan-kami" class="mt-5 mt-md-0">
-    <div class="container">
-        <div class="kegiatan-section">
-            <h1 class="section-title">Kegiatan Kami</h1>
-            
-            <div class="carousel-section2">
-                <button class="nav-button2 nav-prev2" onclick="previousSlide()">
-                    <i class="fa fa-chevron-left"></i>
-                </button>
-                
-                <div class="carousel-container2">
-                    <div class="carousel-wrapper2" id="carouselWrapper">
-                        <div class="carousel-item2">
-                            <div class="item-image2">
-                                <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=400&h=250&fit=crop&crop=center" alt="Kegiatan Siswa" loading="lazy">
-                            </div>
-                            <div class="item-content2">
-                                <p class="item-description">
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do 
-                                    eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                </p>
-                            </div>
-                        </div>
-                        
-                        <div class="carousel-item2">
-                            <div class="item-image2">
-                                <img src="https://images.unsplash.com/photo-1577896851231-70ef18881754?w=400&h=250&fit=crop&crop=center" alt="Kegiatan Sekolah" loading="lazy">
-                            </div>
-                            <div class="item-content2">
-                                <p class="item-description">
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do 
-                                    eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                </p>
-                            </div>
-                        </div>
-                        
-                        <div class="carousel-item2">
-                            <div class="item-image2">
-                                <img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?w=400&h=250&fit=crop&crop=center" alt="Aktivitas Pembelajaran" loading="lazy">
-                            </div>
-                            <div class="item-content2">
-                                <p class="item-description">
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do 
-                                    eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                </p>
-                            </div>
-                        </div>
-                        
-                        <div class="carousel-item2">
-                            <div class="item-image2">
-                                <img src="https://images.unsplash.com/photo-1571260899304-425eee4c7efc?w=400&h=250&fit=crop&crop=center" alt="Kegiatan Ekstrakurikuler" loading="lazy">
-                            </div>
-                            <div class="item-content2">
-                                <p class="item-description">
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do 
-                                    eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                </p>
-                            </div>
-                        </div>
-                        
-                        <div class="carousel-item2">
-                            <div class="item-image2">
-                                <img src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=400&h=250&fit=crop&crop=center" alt="Kegiatan Olahraga" loading="lazy">
-                            </div>
-                            <div class="item-content2">
-                                <p class="item-description">
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do 
-                                    eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                </p>
-                            </div>
-                        </div>
-                        
-                        <div class="carousel-item2">
-                            <div class="item-image2">
-                                <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=400&h=250&fit=crop&crop=center" alt="Kegiatan Seni" loading="lazy">
-                            </div>
-                            <div class="item-content2">
-                                <p class="item-description">
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do 
-                                    eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <button class="nav-button2 nav-next2" onclick="nextSlide()">
-                    <i class="fa fa-chevron-right"></i>
-                </button>
-                <div class="carousel-indicators" id="indicators">
-                    <!-- Indicators akan di-generate oleh JavaScript -->
-                </div>
+  <div class="container">
+    <div class="kegiatan-section">
+      <h1 class="section-title">Kegiatan Kami</h1>
+
+      <div class="carousel-section2">
+        <button class="nav-button2 nav-prev2" onclick="previousSlide()">
+          <i class="fa fa-chevron-left"></i>
+        </button>
+
+        <div class="carousel-container2">
+          <div class="carousel-wrapper2" id="carouselWrapper">
+            <!-- Kegiatan 1 -->
+            <div class="carousel-item2">
+              <div class="item-image2">
+                <img src="asset/img/pemantapan.png" alt="Kelas Pemantapan" loading="lazy">
+              </div>
+              <div class="item-content2">
+                <p class="item-description">
+                  Kegiatan kelas pemantapan materi bahasa Jepang dan pembekalan kerja sebelum peserta menghadapi wawancara kerja dan proses keberangkatan.
+                </p>
+              </div>
             </div>
-            
+
+            <!-- Kegiatan 2 -->
+            <div class="carousel-item2">
+              <div class="item-image2">
+                <img src="asset/img/olahraga.png" alt="Kelas Olahraga Fisik" loading="lazy">
+              </div>
+              <div class="item-content2">
+                <p class="item-description">
+                  Latihan fisik rutin yang dilakukan peserta untuk menjaga kesehatan jasmani dan disiplin sebelum keberangkatan ke Jepang.
+                </p>
+              </div>
+            </div>
+
+            <!-- Kegiatan 3 -->
+            <div class="carousel-item2">
+              <div class="item-image2">
+                <img src="asset/img/ujian.png" alt="Ujian Bahasa dan Interview" loading="lazy">
+              </div>
+              <div class="item-content2">
+                <p class="item-description">
+                  Ujian dan simulasi wawancara kerja langsung dilakukan oleh tim LPK sebagai bentuk evaluasi kesiapan kerja ke Jepang.
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
+
+        <button class="nav-button2 nav-next2" onclick="nextSlide()">
+          <i class="fa fa-chevron-right"></i>
+        </button>
+        <div class="carousel-indicators" id="indicators">
+          <!-- Diisi lewat JS -->
+        </div>
+      </div>
     </div>
+  </div>
 </section>
+
 
 <!-- Gallery Section -->
   <section id="gallery">
@@ -1242,7 +1379,7 @@
         <div class="swiper-wrapper">
           <!-- Slide 1 -->
           <div class="swiper-slide">
-            <img src="{{ asset('Asset/img/1.jpg') }}" alt="Olahraga">
+            <img src="asset/img/1.png"alt="Olahraga">
             <div class="title">
               <span>Olahraga</span>
               <div class="subtitle">Kegiatan Fisik & Kesehatan</div>
@@ -1251,7 +1388,7 @@
 
           <!-- Slide 2 -->
           <div class="swiper-slide">
-            <img src="{{ asset('Asset/img/6.jpg') }}" alt="Pendidikan">
+            <img src="asset/img/2.png" alt="Pendidikan">
             <div class="title">
               <span>Pendidikan</span>
               <div class="subtitle">Program Belajar Mengajar</div>
@@ -1260,7 +1397,7 @@
 
           <!-- Slide 3 -->
           <div class="swiper-slide">
-            <img src="{{ asset('Asset/img/5.jpg') }}" alt="Teknologi">
+            <img src="asset/img/5.png" alt="Teknologi">
             <div class="title">
              <span>Penempatan Kerja</span>
               <div class="subtitle">Pengurusan Kontrak Kerja/Magang Perusahaan</div>
@@ -1269,7 +1406,7 @@
 
           <!-- Slide 4 -->
           <div class="swiper-slide">
-            <img src="{{ asset('Asset/img/8.jpg') }}" alt="Seni & Budaya">
+            <img src="asset/img/8.png" alt="Seni & Budaya">
             <div class="title">
               <span>Interview Online</span>
               <div class="subtitle">Proses Wawancara Online dengan Perusahaan Jepang</div>
@@ -1278,7 +1415,7 @@
 
           <!-- Slide 5 -->
           <div class="swiper-slide">
-            <img src="{{ asset('Asset/img/7.jpg') }}" alt="Lingkungan">
+            <img src="asset/img/7.png"alt="Lingkungan">
             <div class="title">
               <span>Interview Offline</span>
               <div class="subtitle">Proses Wawancara Offline dengan perwakilan Perusahaan Jepang</div>
@@ -1287,7 +1424,7 @@
 
           <!-- Slide 6 -->
           <div class="swiper-slide">
-            <img src="{{ asset('Asset/img/4.jpg') }}" alt="Bisnis">
+            <img src="asset/img/4.png" alt="Bisnis">
             <div class="title">
               <span>Passport</span>
               <div class="subtitle">Proses Pembuatan Passport</div>

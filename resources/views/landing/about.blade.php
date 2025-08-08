@@ -972,7 +972,7 @@
                 <div class="col-lg-10">
                     <div class="about-content">
                         <h1 class="section-title text-white">About Us</h1>
-                        <div class="decorative-line"><img src="{{ asset('Asset/line/Vector 1.png') }}" alt=""></div>
+                        <div class="decorative-line"><img src="asset/line/Vector 1.png" alt=""></div>
                     </div>
                 </div>
             </div>
@@ -997,7 +997,7 @@
                     </p>
                 </div>
                 <div class="col-lg-6 position-relative company-image">
-                    <img src="{{ asset('Asset/img/foto.png') }}" alt="Group Photo" class="img-fluid rounded">
+                    <img src="asset/img/foto.png" alt="Group Photo" class="img-fluid rounded">
                 </div>
             </div>
 
@@ -1038,7 +1038,7 @@
         <div class="container py-5">
             <div class="row align-items-center">
                 <div class="col-lg-6 position-relative pendiri-image2">
-                    <img src="{{ asset('Asset/img/pendiri.png') }}" alt="Profile Pendiri" class="img-fluid rounded-5">
+                    <img src="asset/img/pendiri.png" alt="Profile Pendiri" class="img-fluid rounded-5">
                 </div>
                 <div class="col-lg-6 pendiri-content">
                     <h3 class="judul-h3 text-reveal">
@@ -1048,9 +1048,11 @@
                         PT. Amarta Indonesia
                     </h1>
                     <p class="text-body mt-3 text-reveal">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...
+                        LPK Amarta Cabang Bekasi berdiri sebagai bagian dari komitmen untuk mencetak generasi muda yang siap bersaing di dunia kerja internasional, khususnya di Jepang. Cabang ini dipimpin langsung oleh sosok yang berdedikasi tinggi dalam pengembangan sumber daya manusia—beliau memiliki pengalaman panjang dalam bidang pendidikan dan ketenagakerjaan luar negeri.
+                        <br><br>
+                        Melalui kepemimpinan yang visioner dan penuh integritas, LPK Amarta Bekasi hadir dengan berbagai program unggulan yang menitikberatkan pada pembinaan mental, penguasaan bahasa, serta kesiapan kerja. Fokus utama cabang ini adalah membekali peserta didik tidak hanya dengan keterampilan, tetapi juga dengan karakter kuat dan semangat kerja tinggi.
+                        <br><br>
+                        Dengan dukungan fasilitas lengkap dan tenaga pengajar profesional, LPK Amarta Bekasi terus berupaya memberikan pelatihan terbaik bagi generasi muda Indonesia untuk sukses berkarier di Jepang.
                     </p>
                 </div>
             </div>
@@ -1079,7 +1081,7 @@
                         <!-- Slide 1 -->
                         <div class="certificate-card">
                             <div class="certificate-image">
-                                <img src="{{ asset('Asset/img/legal1.png') }}" alt="">
+                                <img src="asset/img/legal1.png"  alt="">
                             </div>
                             <div class="certificate-info-overlay">
                                 <h3 class="certificate-title">Surat Dinas Tenaga Kerja</h3>
@@ -1093,7 +1095,7 @@
                         <!-- Slide 2 -->
                         <div class="certificate-card">
                             <div class="certificate-image">
-                                    <img src="{{ asset('Asset/img/legal2.jpg') }}" alt="">
+                                    <img src="asset/img/legal2.png"  alt="">
                             </div>
                             <div class="certificate-info-overlay">
                                 <h3 class="certificate-title">Sertifikat Perizinan LPK</h3>
@@ -1108,7 +1110,7 @@
                         <div class="certificate-card">
                             <div class="certificate-image">
                                 
-                                    <img src="{{ asset('Asset/img/legal3.jpg') }}" alt="">
+                                    <img src="asset/img/legal3.png"  alt="">
                             
                             </div>
                             <div class="certificate-info-overlay">
@@ -1125,7 +1127,7 @@
                         <div class="certificate-card">
                             <div class="certificate-image">
                                 
-                                    <img src="{{ asset('Asset/img/legal2.jpg') }}" alt="">
+                                    <img src="asset/img/legal2.png"  alt="">
                                 
                             </div>
                             <div class="certificate-info-overlay">
