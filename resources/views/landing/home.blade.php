@@ -1,10 +1,75 @@
 @extends('layouts.app')
+@push('styles')
+<style>
+.section-title .underline {
+  width: 60px;
+  height: 4px;
+  background-color: var(--color-primary);
+  margin: 10px auto 30px;
+  border-radius: 4px;
+}
+/* Animated underline */
+.underline {
+    width: min(733px, 80%);
+    height: 4px;
+    background-color: var(--color-primary);
+    margin: 0 auto;
+    border-radius: 2px;
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    transform: scaleX(0);
+    transform-origin: center;
+    animation: underlineGrow 1s ease-out 0.5s forwards;
+}
 
+@keyframes underlineGrow {
+    to {
+        transform: scaleX(1);
+    }
+}
+
+.underline::before,
+.underline::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%) scale(0);
+    width: 22px;
+    height: 22px;
+    background-color: var(--color-primary);
+    border-radius: 50%;
+    animation: dotPop 0.4s ease-out 1.2s forwards;
+}
+
+@keyframes dotPop {
+    0% {
+        transform: translateY(-50%) scale(0);
+    }
+    50% {
+        transform: translateY(-50%) scale(1.2);
+    }
+    100% {
+        transform: translateY(-50%) scale(1);
+    }
+}
+
+.underline::before {
+    left: -10px;
+    animation-delay: 1.2s;
+}
+
+.underline::after {
+    right: -10px;
+    animation-delay: 1.4s;
+}
+</style>
+@endpush
 @section('content')
     <!-- Hero Section -->
     <section id="hero">
         <div class="container">
-            <div class="row align-items-center h-100">
+            <div class="row align-items-center min-vh-100">
+                <!-- Konten Kiri -->
                 <div class="col-lg-6 hero-content">
                     <div class="hero-tagline">
                         <h1>
@@ -17,15 +82,17 @@
                         </p>
                         <div class="hero-buttons">
                             <button class="px-4 py-2 button-dark button-hover poppins-bold">Klik Disini!</button>
-                            <a href="{{ url('about') }}" class="hero-link poppins-regular">
-                                Tentang LPK PT Amarta <span>></span>
+                            <a href="about" class="hero-link poppins-regular">
+                                Tentang LPK Amarta Bekasi <span>&gt;</span>
                             </a>
                         </div>
                     </div>
                 </div>
+
+                <!-- Gambar Hero -->
                 <div class="col-lg-6 hero-image d-none d-lg-block">
-                    <div class="text-center ">
-                        <img src="{{ asset('Asset/img/hero.png') }}" alt="">
+                    <div class="text-center">
+                        <img img src="asset/img/hero.png" alt="Hero Image">
                     </div>
                 </div>
             </div>
@@ -35,8 +102,8 @@
     <!-- Alasan Section -->
     <section id="alasan">
         <div class="container">
-            <div class="section-title">
-                <h1>Kenapa Harus <span>PT. Amarta?</span></h1>
+            <div class="section-title text-center">
+                <h1>Kenapa Harus <span>Amarta Cabang Bekasi</span></h1>
                 <div class="underline"></div>
             </div>
             
@@ -48,9 +115,7 @@
                     </div>
                     <h3 class="alasan-title">Belajar Bahasa Jepang Sampai Jago!</h3>
                     <p class="alasan-text">
-                        Kurikulum kami itu udah didesain khusus supaya kamu cepat fasih berbahasa Jepang.
-                        Nggak cuma nulis atau baca, tapi yang paling penting: jago ngobrol buat kerja!
-                        Kami juga siapin kamu buat ujian JLPT atau JFT biar makin pede.
+                        Kurikulum kami udah didesain supaya kamu cepat fasih bahasa Jepang. Nggak cuma nulis atau baca, tapi jago ngobrol buat kerja! Kami siapin juga buat ujian JLPT atau JFT biar makin pede.
                     </p>
                 </div>
 
@@ -59,9 +124,9 @@
                     <div class="icon-wrapper">
                         <i class="fas fa-chalkboard-teacher"></i>
                     </div>
-                    <h3 class="alasan-title">Mentor Kelas Kakap (Plus Guru dari Jepang Langsung!)</h3>
+                    <h3 class="alasan-title">Mentor Kelas Kakap & Native Speaker!</h3>
                     <p class="alasan-text">
-                        Bayangin, kamu bakal diajar sama para mentor yang udah punya pengalaman di Jepang, plus ada guru native speaker dari Jepang langsung! Ini berkat dukungan keren dari Incollex Jepang. Jadi, kamu dapat ilmunya authentic banget!
+                        Kamu bakal diajar mentor berpengalaman dari Jepang + native speaker langsung dari Jepang (thanks to Incollex). Belajar langsung dari sumbernya!
                     </p>
                 </div>
 
@@ -70,9 +135,9 @@
                     <div class="icon-wrapper">
                         <i class="fas fa-hands-helping"></i>
                     </div>
-                    <h3 class="alasan-title">Ditemenin Terus Sampai Jepang</h3>
+                    <h3 class="alasan-title">Ditemenin Sampai Dapet Job di Jepang</h3>
                     <p class="alasan-text">
-                        Dari awal masuk Amarta, belajar, ngurusin dokumen, latihan wawancara, sampai kamu terbang dan adaptasi di Jepang, kami bakal temenin kamu di setiap langkahnya. Nggak bakal dilepas sendirian!
+                        Dari awal belajar, dokumen, wawancara, sampai kamu adaptasi di Jepang — tim kami bakal dampingi kamu. No worries!
                     </p>
                 </div>
             </div>
@@ -90,7 +155,7 @@
                 <!-- Image Section -->
                 <div class="image-section">
                     <div class="bg-hover p-5 rounded text-center">
-                        <img src="{{ asset('Asset/img/foto-konten3.png') }}" alt="LPK Amarta Training">
+                        <img src="asset/img/foto-konten3.png" alt="LPK Amarta Training">
                         <h3 class="text-dark mt-3">LPK Amarta Training Center</h3>
                     </div>
                 </div>
@@ -99,7 +164,7 @@
                 <div class="content-section">
                     <div class="description">
                         <p>
-                            <span class="company-name">LPK Amarta</span> <span class="legal-name">(PT Amarta Bangun Indonesia)</span> adalah Lembaga pelatihan kerja
+                            <span class="company-name">LPK Amarta Bekasi</span> <span class="legal-name">(PT Amarta Bangun Indonesia)</span> adalah Lembaga pelatihan kerja
                             terkemuka yang berdedikasi untuk mencetak tenaga kerja Indonesia yang
                             kompeten, berbudaya, dan siap bersaing di pasar global, khususnya Jepang.
                             Kami membimbing Anda dari nol hingga siap menghadapi tantangan dan peluang di Jepang.
@@ -110,8 +175,7 @@
                         <div class="vision">
                             <h3>VISI</h3>
                             <p>
-                                TURUT BERKONTRIBUSI MEMBANGUN SUMBER DAYA MANUSIA PROFESIONAL TANGGUH DAN BERBUDAYA SAING GLOBAL UNTUK INDONESIA MAJU
-                            </p>
+                                Turut berkontribusi membangun sumber daya manusia profesional, tangguh, dan berbudaya saing global untuk Indonesia maju                            </p>
                         </div>
                         
                         <div class="mission">
@@ -129,115 +193,132 @@
     </section>
 
     <!-- Lowongan Section -->
-    <section id="lowongan">
-        <div class="container h-100">
-            <div class="section-title">
-                <h1>Lowongan <span>Magang</span></h1>
-                <div class="underline"></div>
-            </div>
-            
-            <div class="lowongan-container">
-                <!-- Card 1 -->
-                <div class="lowongan-card">
-                    <div class="icon-wrapper">
-                        <i class="fas fa-cogs"></i>
-                    </div>
-                    <h3 class="lowongan-title">Manufaktur</h3>
-                </div>
-
-                <!-- Card 2 -->
-                <div class="lowongan-card">
-                    <div class="icon-wrapper">
-                        <i class="fas fa-tractor"></i>
-                    </div>
-                    <h3 class="lowongan-title">Pertanian dan Perikanan</h3>
-                </div>
-
-                <!-- Card 3 -->
-                <div class="lowongan-card">
-                    <div class="icon-wrapper">
-                        <i class="fas fa-utensils"></i>
-                    </div>
-                    <h3 class="lowongan-title">Pengelohan Makanan dan Minuman</h3>
-                </div>
-
-                <!-- Card 4 -->
-                 <div class="lowongan-card">
-                    <div class="icon-wrapper">
-                        <i class="fas fa-hard-hat"></i>
-                    </div>
-                    <h3 class="lowongan-title">Kontruksi</h3>
-                </div>
-            </div>
-        </div>
-  </section>
-
-  <!-- Testimonial Section  -->
-   <section id="testimoni">
-    <div class="container">
-        <div class="testimonial-container">
-            <div class="section-title">
-                <h1>Testimoni <span>User</span></h1>
-                <div class="underline"></div>
-            </div>
-            <!-- Navigation Arrows -->
-            <div class="nav-arrow prev" onclick="changeTestimonial(-1)">
-                <svg viewBox="0 0 24 24">
-                    <path d="M15 18l-6-6 6-6"/>
-                </svg>
-            </div>
-            <div class="nav-arrow next" onclick="changeTestimonial(1)">
-                <svg viewBox="0 0 24 24">
-                    <path d="M9 18l6-6-6-6"/>
-                </svg>
-            </div>
-
-            <!-- Testimonials -->
-            <div class="testimonial-wrapper">
-                <div class="testimonial-card">
-                    <div class="profile-container">
-                        <div class="profile-ring">
-                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face" alt="Michael Jackson" class="profile-image">
-                        </div>
-                    </div>
-                    <h3 class="user-name">Michael Jackson</h3>
-                    <p class="user-title">SMAN 1 Bekasi</p>
-                    <div class="fas fa-quote-right"></div>
-                    <p class="testimonial-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                </div>
-
-                <div class="testimonial-card active">
-                    <div class="profile-container">
-                        <div class="profile-ring">
-                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face" alt="Michael Jackson" class="profile-image">
-                        </div>
-                    </div>
-                    <h3 class="user-name">Michael Jackson</h3>
-                    <p class="user-title">SMAN 1 Bekasi</p>
-                    <div class="fas fa-quote-right"></div>
-                    <p class="testimonial-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                </div>
-
-                <div class="testimonial-card">
-                    <div class="profile-container">
-                        <div class="profile-ring">
-                            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&crop=face" alt="Michael Jackson" class="profile-image">
-                        </div>
-                    </div>
-                    <h3 class="user-name">Michael Jackson</h3>
-                    <p class="user-title">SMAN 1 Bekasi</p>
-                    <div class="fas fa-quote-right"></div>
-                    <p class="testimonial-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                </div>
-            </div>
-        </div>
+<!-- Lowongan Section -->
+<section id="lowongan">
+  <div class="container">
+    <div class="section-title">
+      <h2>Lowongan <span>Magang</span></h2>
+      <div class="underline"></div>
     </div>
-        <!-- Navigation Dots -->
-        <div class="testimonial-nav">
-            <div class="nav-dot" onclick="goToSlide(0)"></div>
-            <div class="nav-dot active" onclick="goToSlide(1)"></div>
-            <div class="nav-dot" onclick="goToSlide(2)"></div>
+
+    <div class="lowongan-container">
+      <!-- Card 1 -->
+      <a href="/lowongan_kerja" class="lowongan-card">
+        <div class="icon-wrapper">
+          <i class="fas fa-cogs"></i>
         </div>
+        <h3 class="lowongan-title">Manufaktur</h3>
+        <span class="detail-btn">Detail</span>
+      </a>
+
+      <!-- Card 2 -->
+      <a href="/lowongan_kerja" class="lowongan-card">
+        <div class="icon-wrapper">
+          <i class="fas fa-tractor"></i>
+        </div>
+        <h3 class="lowongan-title">Pertanian dan Perikanan</h3>
+        <span class="detail-btn">Detail</span>
+      </a>
+
+      <!-- Card 3 -->
+      <a href="/lowongan_kerja" class="lowongan-card">
+        <div class="icon-wrapper">
+          <i class="fas fa-utensils"></i>
+        </div>
+        <h3 class="lowongan-title">Pengolahan Makanan dan Minuman</h3>
+        <span class="detail-btn">Detail</span>
+      </a>
+
+      <!-- Card 4 -->
+      <a href="/lowongan_kerja" class="lowongan-card">
+        <div class="icon-wrapper">
+          <i class="fas fa-hard-hat"></i>
+        </div>
+        <h3 class="lowongan-title">Konstruksi</h3>
+        <span class="detail-btn">Detail</span>
+      </a>
+
+      <!-- Card 5 -->
+      <a href="/lowongan_kerja" class="lowongan-card">
+        <div class="icon-wrapper">
+          <i class="fas fa-paw"></i>
+        </div>
+        <h3 class="lowongan-title">Peternakan</h3>
+        <span class="detail-btn">Detail</span>
+      </a>
     </div>
-   </section>
+  </div>
+</section>
+
+
+
+ <!-- Testimonial Section -->
+<section id="testimoni">
+  <div class="container">
+    <div class="testimonial-container">
+      <div class="section-title text-center mb-12">
+        <h1>Testimoni <span>User</span></h1>
+        <div class="underline mx-auto mt-2"></div>
+      </div>
+
+      <!-- Navigation Arrows -->
+      <div class="nav-arrow prev" onclick="changeTestimonial(-1)">
+        <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+      </div>
+      <div class="nav-arrow next" onclick="changeTestimonial(1)">
+        <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+      </div>
+
+      <!-- Testimonials -->
+      <div class="testimonial-wrapper">
+        <!-- Card 1 -->
+        <div class="testimonial-card">
+          <div class="profile-container">
+            <div class="profile-ring">
+              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face" alt="User Image" class="profile-image">
+            </div>
+          </div>
+          <h3 class="user-name">Michael Jackson</h3>
+          <p class="user-title">SMAN 1 Bekasi</p>
+          <div class="quote-icon fas fa-quote-right"></div>
+          <p class="testimonial-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+        </div>
+
+        <!-- Card 2 (Active) -->
+        <div class="testimonial-card active">
+          <div class="profile-container">
+            <div class="profile-ring">
+              <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face" alt="User Image" class="profile-image">
+            </div>
+          </div>
+          <h3 class="user-name">Michael Jackson</h3>
+          <p class="user-title">SMAN 1 Bekasi</p>
+          <div class="quote-icon fas fa-quote-right"></div>
+          <p class="testimonial-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="testimonial-card">
+          <div class="profile-container">
+            <div class="profile-ring">
+              <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&crop=face" alt="User Image" class="profile-image">
+            </div>
+          </div>
+          <h3 class="user-name">Michael Jackson</h3>
+          <p class="user-title">SMAN 1 Bekasi</p>
+          <div class="quote-icon fas fa-quote-right"></div>
+          <p class="testimonial-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation Dots -->
+    <div class="testimonial-nav">
+      <div class="nav-dot" onclick="goToSlide(0)"></div>
+      <div class="nav-dot active" onclick="goToSlide(1)"></div>
+      <div class="nav-dot" onclick="goToSlide(2)"></div>
+    </div>
+  </div>
+</section>
+
 @endsection
