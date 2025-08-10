@@ -987,7 +987,7 @@
             <div class="row align-items-center">
                 <div class="col-lg-6 company-content">
                     <h3 class="fw-semibold txt-dark text-center company-title">Lembaga Pelatihan Kerja</h3>
-                    <h1 class="fw-bold txt-primary text-center company-subtitle">PT. Amarta Indonesia</h1>
+                    <h1 class="fw-bold txt-primary text-center company-subtitle">Amarta Cabang Bekasi</h1>
                     <p class="text-body mt-3 company-description">
                         PT. Amarta Bangun Indonesia (PT. ABI), berdiri tahun 2020 dikarawang. PT. ABI bergerak di bidang recruitment consulting dalam negri, seiiring waktu PT. ABI mendirikan sebuah LPK dengan nama LPK Amarta Kazoku. 
                         PT. ABI mempunyai klien di dalam negri terutama area karawang dan bekasi, kebanyaka klien PT. ABI berasal dari pma Jepang. PT. ABI mengembangkan bisnis dengan membuka pelatian bahasa Jepang dan juga pelatihan keperawatan yang di suport oleh perusahaan besar di Jepang yaitu Iincollex. <br>
@@ -1038,7 +1038,7 @@
         <div class="container py-5">
             <div class="row align-items-center">
                 <div class="col-lg-6 position-relative pendiri-image2">
-                    <img src="asset/img/pendiri.png" alt="Profile Pendiri" class="img-fluid rounded-5">
+                    <img src="asset/img/photo2 (60).jpg" alt="Profile Pendiri" class="img-fluid rounded-5">
                 </div>
                 <div class="col-lg-6 pendiri-content">
                     <h3 class="judul-h3 text-reveal">
