@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Dashboard') - LPK PT Amarta Indonesia</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
     <style>
         :root {
             --color-primary: #0d5ea6;
@@ -420,6 +422,7 @@
             line-height: 1.3;
         }
     </style>
+    @stack('styles')
 </head>
 <body>
     <!-- Navbar -->
@@ -438,7 +441,7 @@
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
-                            <img src="https://via.placeholder.com/40" alt="User" class="user-avatar me-2">
+                            <img src="{{ asset('storage/' . Auth::user()->photo) }}" alt="User" class="user-avatar me-2">
                             <span>{{ Auth::user()->name }}</span>
                         </a>
                         <ul class="dropdown-menu">
@@ -520,7 +523,7 @@
     </form>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         // Add some interactive effects
         document.querySelectorAll('.dashboard-card').forEach(card => {
@@ -609,7 +612,6 @@
         setInterval(updateStats, 30000);
     </script>
 
-    @stack('scripts')
-
+@stack('scripts')
 </body>
 </html>

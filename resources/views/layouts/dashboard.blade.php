@@ -1,10 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>@yield('title', 'Dashboard') - LPK PT Amarta Indonesia</title>
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
             --color-primary: #0d5ea6;
@@ -46,6 +52,7 @@
             color: white !important;
             font-weight: bold;
             font-size: 1.5rem;
+            margin-left: 3rem;
         }
 
         .navbar-nav .nav-link {
@@ -159,13 +166,14 @@
             margin-bottom: 0.5rem;
         }
 
-</style>
+    </style>
+@stack('styles')
 </head>
 <body>
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
         <div class="container-fluid ">
-            <a class="navbar-brand" href="{{ url('dashboard/user') }}">
+            <a class="navbar-brand" href="{{ url('dashboard/users') }}">
                 <i class="fas fa-graduation-cap me-2"></i>
                 Amarta
             </a>
@@ -174,11 +182,15 @@
                 <i class="fas fa-bars text-white"></i>
             </button>
 
-            <div class="collapse navbar-collapse" id="navbarNav">
+            <div class="collapse navbar-collapse" id="navbarNav"> 
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
-                            <img src="https://via.placeholder.com/40" alt="User" class="user-avatar me-2">
+                            @if(Auth::user()->photo)
+                                <img src="{{ asset('storage/' . Auth::user()->photo) }}" alt="User" class="user-avatar me-2">
+                            @else
+                                <i class="fas fa-user-circle fa-2x me-2"></i>
+                            @endif
                             <span>{{ Auth::user()->name }}</span>
                         </a>
                         <ul class="dropdown-menu">
@@ -187,7 +199,7 @@
                             <li><hr class="dropdown-divider"></li>
                             <li>
                                 <a class="dropdown-item" href="{{ route('logout') }}" 
-                                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                     <i class="fas fa-sign-out-alt me-2"></i>Logout
                                 </a>
                             </li>
@@ -205,17 +217,17 @@
         </div>
         <ul class="sidebar-menu">
             <li>
-                <a href="{{ url('dashboard/user') }}" class="{{ request()->routeIs('dashboard.user') ? 'active' : '' }}">
+                <a href="{{ url('dashboard/users') }}" class="{{ request()->routeIs('dashboard.users') ? 'active' : '' }}">
                     <i class="fas fa-tachometer-alt"></i>Dashboard
                 </a>
             </li>
             <li>
-                <a href="{{ url('users/transaksi') }}" class="{{ request()->routeIs('users.transaksi') ? 'active' : '' }}">
+                <a href="{{ url('users/keuangan') }}" class="{{ request()->routeIs('users.keuangan') ? 'active' : '' }}">
                     <i class="fas fa-credit-card"></i>Transaksi
                 </a>
             </li>
             <li>
-                <a href="{{ url('users/profile') }}" class="{{ request()->routeIs('users.profile') ? 'active' : '' }}">
+                <a href="{{ url('users/profile') }}" class="{{ request()->routeIs('users.profile.show') ? 'active' : '' }}">
                     <i class="fas fa-users"></i>Profile
                 </a>
             </li>
@@ -252,7 +264,8 @@
     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
         @csrf
     </form>
-
+    <!-- Bootstrap JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    @stack('scripts')
 </body>
 </html>

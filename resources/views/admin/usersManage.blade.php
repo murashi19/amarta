@@ -2,6 +2,7 @@
 
 @section('title', 'Manajemen Pengguna')
 
+@section('content')
 @push('styles')
 <style>
     .badge {
@@ -71,8 +72,6 @@
     }
 </style>
 @endpush
-
-@section('content')
 <div class="container-fluid">
     <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -89,7 +88,7 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between">
                         <div>
-                            <h3 class="mb-0">{{ $users->total() ?? 0 }}</h3>
+                            <h3 class="mb-0">{{ isset($users) ? $users->total() : 0 }}</h3>
                             <p class="mb-0">Total Pengguna</p>
                         </div>
                         <div>
@@ -104,7 +103,11 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between">
                         <div>
-                            <h3 class="mb-0">{{ isset($users) ? $users->where('status.name', 'Active')->count() : 0 }}</h3>
+                            <h3 class="mb-0">
+                                {{ isset($users) ? $users->filter(function($user) { 
+                                    return $user->status && $user->status->name === 'Active'; 
+                                })->count() : 0 }}
+                            </h3>
                             <p class="mb-0">Pengguna Aktif</p>
                         </div>
                         <div>
@@ -119,11 +122,15 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between">
                         <div>
-                            <h3 class="mb-0">{{ isset($users) ? $users->where('is_verified', true)->count() : 0 }}</h3>
-                            <p class="mb-0">Terverifikasi</p>
+                            <h3 class="mb-0">
+                                {{ isset($users) ? $users->filter(function($user) { 
+                                    return $user->status && in_array($user->status->name, ['Booking Paid', 'Meeting Joined', 'DP Paid', 'Active']); 
+                                })->count() : 0 }}
+                            </h3>
+                            <p class="mb-0">Sudah Bayar Booking</p>
                         </div>
                         <div>
-                            <i class="fas fa-shield-alt fa-2x opacity-75"></i>
+                            <i class="fas fa-credit-card fa-2x opacity-75"></i>
                         </div>
                     </div>
                 </div>
@@ -134,8 +141,12 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between">
                         <div>
-                            <h3 class="mb-0">{{ isset($users) ? $users->where('is_verified', false)->count() : 0 }}</h3>
-                            <p class="mb-0">Belum Verifikasi</p>
+                            <h3 class="mb-0">
+                                {{ isset($users) ? $users->filter(function($user) { 
+                                    return $user->status && $user->status->name === 'Registered'; 
+                                })->count() : 0 }}
+                            </h3>
+                            <p class="mb-0">Belum Bayar Booking</p>
                         </div>
                         <div>
                             <i class="fas fa-clock fa-2x opacity-75"></i>
@@ -281,7 +292,7 @@
                                 <td>
                                     <div class="d-flex align-items-center">
                                         @if($user->photo)
-                                            <img src="{{ public_path('storage/' . $user->photo) }}" alt="Foto Pengguna" width="100">
+                                            <img src="{{ asset('storage/' . $user->photo) }}" alt="Foto Pengguna" width="35" height="35" class="avatar bg-primary me-3">
                                         @else
                                             <div class="avatar bg-primary me-3">
                                                 {{ strtoupper(substr($user->name ?? 'U', 0, 2)) }}
@@ -366,7 +377,11 @@
                                             </li>
                                             <li><hr class="dropdown-divider"></li>
                                             <li>
-                                                <a class="dropdown-item text-danger" onclick="deleteUser({{ $user->id }}, '{{ $user->name }}')">
+                                                <a class="dropdown-item text-danger" href="#" 
+                                                   data-bs-toggle="modal" 
+                                                   data-bs-target="#deleteModal"
+                                                   data-user-id="{{ $user->id }}"
+                                                   data-user-name="{{ $user->name }}">
                                                     <i class="fas fa-trash me-2"></i> Hapus
                                                 </a>
                                             </li>
@@ -403,4 +418,102 @@
     </div>
 </div>
 
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title text-danger" id="deleteModalLabel">
+                    <i class="fas fa-exclamation-triangle me-2"></i>Konfirmasi Hapus
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center py-4">
+                <div class="mb-3">
+                    <i class="fas fa-trash-alt text-danger" style="font-size: 3rem;"></i>
+                </div>
+                <h6 class="mb-3">Apakah Anda yakin ingin menghapus pengguna:</h6>
+                <p class="fw-bold text-dark mb-3" id="userNameToDelete"></p>
+                <div class="alert alert-warning">
+                    <small>
+                        <i class="fas fa-info-circle me-1"></i>
+                        Data yang dihapus tidak dapat dikembalikan!
+                    </small>
+                </div>
+            </div>
+            <div class="modal-footer border-0 justify-content-center">
+                <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i>Batal
+                </button>
+                <form id="deleteForm" method="POST" style="display: inline;">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-danger px-4" id="confirmDeleteBtn">
+                        <i class="fas fa-trash me-2"></i>Hapus
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Success Modal -->
+<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+            <div class="modal-body text-center py-4">
+                <div class="mb-3">
+                    <i class="fas fa-check-circle text-success" style="font-size: 3rem;"></i>
+                </div>
+                <h6 class="text-success mb-3">Berhasil!</h6>
+                <p class="mb-0">Pengguna berhasil dihapus.</p>
+            </div>
+            <div class="modal-footer border-0 justify-content-center">
+                <button type="button" class="btn btn-success px-4" data-bs-dismiss="modal">
+                    <i class="fas fa-check me-2"></i>OK
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+@push('scripts')
+<script>
+    function viewUserDetail(userId) {
+        window.location.href = "{{ route('admin.userDetail', ':userId') }}".replace(':userId', userId);
+    }
+
+    // Handle delete modal
+    document.addEventListener('DOMContentLoaded', function() {
+        const deleteModal = document.getElementById('deleteModal');
+        const deleteForm = document.getElementById('deleteForm');
+        const userNameElement = document.getElementById('userNameToDelete');
+        const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+
+        deleteModal.addEventListener('show.bs.modal', function(event) {
+            const button = event.relatedTarget;
+            const userId = button.getAttribute('data-user-id');
+            const userName = button.getAttribute('data-user-name');
+
+            // Update modal content
+            userNameElement.textContent = userName;
+            deleteForm.action = "{{ route('admin.usersManage.deleteUser', ':userId') }}".replace(':userId', userId);
+        });
+
+        // Handle form submission with loading state
+        deleteForm.addEventListener('submit', function(e) {
+            confirmDeleteBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Menghapus...';
+            confirmDeleteBtn.disabled = true;
+        });
+    });
+
+    // Show success modal if there's a success message
+    @if(session('success'))
+        document.addEventListener('DOMContentLoaded', function() {
+            const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+            successModal.show();
+        });
+    @endif
+</script>
+@endpush
 @endsection
+

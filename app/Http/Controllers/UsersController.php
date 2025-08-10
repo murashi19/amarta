@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
@@ -200,7 +202,7 @@ class UsersController extends Controller
             ]);
         }
 
-        return view('admin.usersManage.show', compact('user'));
+        return view('admin.userDetail', compact('user'));
     }
 
     public function edit(User $user)
@@ -302,30 +304,68 @@ class UsersController extends Controller
         }
     }
 
-    public function destroy(User $user)
+   public function deleteUser(User $user)
     {
         try {
-            $user->roles()->detach();
+            // Cek apakah user ditemukan
+            if (!$user) {
+                if (request()->ajax() || request()->wantsJson()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'User tidak ditemukan.'
+                    ], 404);
+                }
+                
+                return redirect()->back()->with('error', 'User tidak ditemukan.');
+            }
+
+            // Store user name for success message
+            $userName = $user->name;
+
+            // Detach role jika ada
+            if ($user->roles()->exists()) {
+                $user->roles()->detach();
+            }
+
+            // Hapus foto jika ada
+            if ($user->photo && Storage::exists('public/' . $user->photo)) {
+                Storage::delete('public/' . $user->photo);
+            }
+
+            // Hapus user
             $user->delete();
 
+            // Respon untuk AJAX atau JSON
             if (request()->ajax() || request()->wantsJson()) {
                 return response()->json([
                     'success' => true,
-                    'message' => 'User berhasil dihapus'
+                    'message' => "User '{$userName}' berhasil dihapus."
                 ]);
             }
 
-            return redirect()->route('admin.usersManage')->with('success', 'User berhasil dihapus');
-        } catch (\Exception $e) {
+            // Respon redirect untuk request biasa
+            return redirect()->route('admin.usersManage')->with('success', "User '{$userName}' berhasil dihapus.");
+            
+        } catch (\Throwable $e) {
+            // Logging untuk debugging
+            \Log::error('Gagal hapus user: ' . $e->getMessage(), [
+                'user_id' => $user->id ?? null,
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            // Respon untuk AJAX atau JSON
             if (request()->ajax() || request()->wantsJson()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Terjadi kesalahan saat menghapus data'
+                    'message' => 'Terjadi kesalahan saat menghapus data. Silakan coba lagi.'
                 ], 500);
             }
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat menghapus data');
+
+            // Respon redirect untuk request biasa
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menghapus data. Silakan coba lagi.');
         }
     }
+
 
     // Method tambahan untuk mendapatkan data user dalam format JSON
     public function getData(Request $request)
@@ -357,5 +397,79 @@ class UsersController extends Controller
             'success' => true,
             'data' => $users
         ]);
+    }
+
+
+    // Profile User
+    public function profile()
+    {
+        $user = auth()->user()->load(['roles', 'status']);
+        return view('users.profile', compact('user'));
+    }
+
+    // Tampilkan form edit profil
+    public function editProfile()
+    {
+        $user = Auth::user();
+        return view('users.editprofile', compact('user'));
+    }
+
+     public function updateProfile(Request $request)
+    {
+        $user = Auth::user();
+
+        // Validasi data
+        $validated = $request->validate([
+            'name'            => 'required|string|max:255',
+            'email'           => [
+                'required',
+                'email',
+                'max:255',
+                Rule::unique('users')->ignore($user->id),
+            ],
+            'phone_number'    => 'nullable|string|max:20',
+            'gender'          => 'nullable|in:Laki-laki,Perempuan',
+            'birth_place'     => 'nullable|string|max:100',
+            'birth_date'      => 'nullable|date',
+            'education_level' => 'nullable|string|max:50',
+            'address'         => 'nullable|string|max:500',
+            'photo'           => 'nullable|image|mimes:jpg,jpeg,png|max:5120',
+        ]);
+
+        // Upload foto baru jika ada
+        if ($request->hasFile('photo')) {
+            try {
+                $photo = $request->file('photo');
+
+                // Pastikan direktori ada
+                if (!Storage::disk('public')->exists('photos')) {
+                    Storage::disk('public')->makeDirectory('photos');
+                }
+
+                // Hapus foto lama jika ada
+                if ($user->photo && Storage::disk('public')->exists($user->photo)) {
+                    Storage::disk('public')->delete($user->photo);
+                }
+
+                // Buat nama file unik
+                $filename = time() . '_' . uniqid() . '.' . $photo->getClientOriginalExtension();
+
+                // Simpan file
+                $photoPath = $photo->storeAs('photos', $filename, 'public');
+
+                // Simpan path untuk database (TANPA "storage/")
+                $validated['photo'] = $photoPath;
+
+                Log::info('Photo uploaded successfully:', ['path' => $photoPath]);
+            } catch (\Exception $e) {
+                Log::error('Photo upload failed:', ['error' => $e->getMessage()]);
+                return back()->withErrors(['photo' => 'Gagal mengupload foto: ' . $e->getMessage()]);
+            }
+        }
+
+        // Update data user
+        $user->update($validated);
+
+        return redirect()->route('users.profile')->with('success', 'Profil berhasil diperbarui.');
     }
 }

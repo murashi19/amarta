@@ -20,9 +20,14 @@ class Announcement extends Model
         'has_payment_button',// true/false
         'meet_link',         // opsional, jika announcement meeting
         'scheduled_at',      // tanggal tampil / berlaku
-        'views_count',       // int, default 0
+        'created_by'
     ];
 
+    protected $casts = [
+        'has_payment_button' => 'boolean',
+        'scheduled_at' => 'datetime',
+    ];
+    
     // Relasi ke user
     public function users()
     {

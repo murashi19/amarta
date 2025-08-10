@@ -132,7 +132,7 @@
                                     <option value="">Pilih Tingkat Pendidikan</option>
                                     <option value="SMP/Sederajat" {{ old('education_level') == 'SMP/Sederajat' ? 'selected' : '' }}>SMP/Sederajat</option>
                                     <option value="SMA/SMK/Sederajat" {{ old('education_level') == 'SMA/SMK/Sederajat' ? 'selected' : '' }}>SMA/SMK/Sederajat</option>
-                                    <option value="Diploma 3 (D3)" {{ old('education_level') == 'SMA/SMK/Sederajat' ? 'selected' : '' }}>Diploma 3 (D3)</option>
+                                    <option value="Diploma 3 (D3)" {{ old('education_level') == 'Diploma 3 (D3)' ? 'selected' : '' }}>Diploma 3 (D3)</option>
                                     <option value="Sarjana (S1)" {{ old('education_level') == 'S1' ? 'selected' : '' }}>Sarjana (S1)</option>
                                     <option value="Lainnya" {{ old('education_level') == 'Lainnya' ? 'selected' : '' }}>Lainnya</option>
                                 </select>
@@ -230,7 +230,6 @@
         </div>
     </div>
 </div>
-@endsection
 
 @push('scripts')
 <script>
@@ -271,3 +270,4 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 @endpush
+@endsection
