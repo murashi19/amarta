@@ -1,5 +1,6 @@
 @extends('layouts.app')
 
+@section('content')
 @push('styles')
 <style>
  :root {
@@ -1457,456 +1458,457 @@
       </div>
     </div>
   </section>
-@endsection
+
 @push('scripts')
-<script>
-    // ================================= ENHANCED GALLERY SWIPER =================================
-const GallerySwiper = {
-    swiper: null,
-    isMobile: window.innerWidth <= 768,
+    <script>
+        // ================================= ENHANCED GALLERY SWIPER =================================
+        const GallerySwiper = {
+            swiper: null,
+            isMobile: window.innerWidth <= 768,
 
-    init() {
-        // Pastikan DOM sudah ready
-        const swiperContainer = document.querySelector('.swiper');
-        if (!swiperContainer) {
-            console.warn('Swiper container not found');
-            return;
-        }
+            init() {
+                // Pastikan DOM sudah ready
+                const swiperContainer = document.querySelector('.swiper');
+                if (!swiperContainer) {
+                    console.warn('Swiper container not found');
+                    return;
+                }
 
-        // Check if we're on mobile
-        this.isMobile = window.innerWidth <= 768;
-        console.log('Device type:', this.isMobile ? 'Mobile' : 'Desktop');
+                // Check if we're on mobile
+                this.isMobile = window.innerWidth <= 768;
+                console.log('Device type:', this.isMobile ? 'Mobile' : 'Desktop');
 
-        try {
-            this.swiper = new Swiper('.swiper', {
-                // Effect - Use different effects for mobile vs desktop
-                effect: this.isMobile ? 'slide' : 'coverflow',
-                grabCursor: true,
-                centeredSlides: true,
-                slidesPerView: 'auto',
-                initialSlide: 2,
-
-                // Touch Settings - CRITICAL for mobile
-                touchRatio: 1,
-                touchAngle: 45,
-                simulateTouch: true,
-                allowTouchMove: true,
-                touchStartPreventDefault: false,
-                touchStartForcePreventDefault: false,
-                touchMoveStopPropagation: false,
-                resistanceRatio: 0.85,
-
-                // Swipe Settings
-                threshold: 10,
-                longSwipesRatio: 0.5,
-                longSwipesMs: 300,
-                followFinger: true,
-
-                // Coverflow Effect Parameters (for desktop)
-                coverflowEffect: {
-                    rotate: 60,
-                    stretch: 80,
-                    depth: 200,
-                    modifier: 1.5,
-                    slideShadows: true,
-                },
-
-                // Loop Configuration
-                loop: true,
-                loopedSlides: 8, // Match your slide count
-
-                // Autoplay Configuration - Different for mobile
-                autoplay: this.isMobile ? {
-                    delay: 4000,
-                    disableOnInteraction: false,
-                    pauseOnMouseEnter: false, // Mouse events don't apply on mobile
-                } : {
-                    delay: 3500,
-                    disableOnInteraction: false,
-                    pauseOnMouseEnter: true,
-                },
-
-                // Speed and Animation
-                speed: this.isMobile ? 600 : 800,
-
-                // Pagination
-                pagination: {
-                    el: '.swiper-pagination',
-                    clickable: true,
-                    dynamicBullets: true,
-                    dynamicMainBullets: this.isMobile ? 3 : 5,
-                },
-
-                // Navigation - Make sure it works on mobile
-                navigation: {
-                    nextEl: '.swiper-button-next',
-                    prevEl: '.swiper-button-prev',
-                },
-
-                // Keyboard Control - Disable on mobile
-                keyboard: {
-                    enabled: !this.isMobile,
-                    onlyInViewport: true,
-                },
-
-                // Mouse wheel control - Disable on mobile
-                mousewheel: this.isMobile ? false : {
-                    thresholdDelta: 70,
-                    sensitivity: 1,
-                },
-
-                // Enhanced Responsive Breakpoints
-                breakpoints: {
-                    // Mobile Portrait
-                    320: {
-                        effect: 'slide',
-                        slidesPerView: 1,
-                        spaceBetween: 20,
+                try {
+                    this.swiper = new Swiper('.swiper', {
+                        // Effect - Use different effects for mobile vs desktop
+                        effect: this.isMobile ? 'slide' : 'coverflow',
+                        grabCursor: true,
                         centeredSlides: true,
-                        coverflowEffect: {
-                            rotate: 0,
-                            stretch: 0,
-                            depth: 0,
-                            modifier: 1,
-                            slideShadows: false,
-                        },
-                        touchRatio: 1.5, // More sensitive on small screens
-                        longSwipesRatio: 0.3,
-                    },
-                    // Mobile Landscape / Small Tablet
-                    480: {
-                        effect: 'slide',
-                        slidesPerView: 1.2,
-                        spaceBetween: 15,
-                        centeredSlides: true,
-                        touchRatio: 1.3,
-                        coverflowEffect: {
-                            rotate: 0,
-                            stretch: 0,
-                            depth: 0,
-                            modifier: 1,
-                            slideShadows: false,
-                        }
-                    },
-                    // Tablet
-                    640: {
-                        effect: 'coverflow',
-                        slidesPerView: 2.2,
-                        spaceBetween: -40,
-                        coverflowEffect: {
-                            rotate: 35,
-                            stretch: 40,
-                            depth: 120,
-                            modifier: 1.2,
-                            slideShadows: true,
-                        }
-                    },
-                    // Large Tablet
-                    768: {
-                        effect: 'coverflow',
-                        slidesPerView: 2.5,
-                        spaceBetween: -45,
-                        coverflowEffect: {
-                            rotate: 45,
-                            stretch: 60,
-                            depth: 150,
-                            modifier: 1.3,
-                            slideShadows: true,
-                        }
-                    },
-                    // Desktop
-                    1024: {
-                        effect: 'coverflow',
-                        slidesPerView: 3,
-                        spaceBetween: -50,
+                        slidesPerView: 'auto',
+                        initialSlide: 2,
+
+                        // Touch Settings - CRITICAL for mobile
+                        touchRatio: 1,
+                        touchAngle: 45,
+                        simulateTouch: true,
+                        allowTouchMove: true,
+                        touchStartPreventDefault: false,
+                        touchStartForcePreventDefault: false,
+                        touchMoveStopPropagation: false,
+                        resistanceRatio: 0.85,
+
+                        // Swipe Settings
+                        threshold: 10,
+                        longSwipesRatio: 0.5,
+                        longSwipesMs: 300,
+                        followFinger: true,
+
+                        // Coverflow Effect Parameters (for desktop)
                         coverflowEffect: {
                             rotate: 60,
                             stretch: 80,
                             depth: 200,
                             modifier: 1.5,
                             slideShadows: true,
-                        }
-                    }
-                },
+                        },
 
-                // Enhanced Events
-                on: {
-                    init: function () {
-                        console.log('Swiper initialized successfully');
-                        console.log('Current breakpoint:', this.currentBreakpoint);
-                        console.log('Slides per view:', this.params.slidesPerView);
-                        
-                        document.querySelector('.swiper')?.classList.add('loaded');
-                        
-                        // Add mobile-specific class
-                        if (GallerySwiper.isMobile) {
-                            document.querySelector('.swiper')?.classList.add('mobile-mode');
-                        }
-                    },
+                        // Loop Configuration
+                        loop: true,
+                        loopedSlides: 8, // Match your slide count
 
-                    slideChange: function () {
-                        console.log('Slide changed to:', this.activeIndex);
-                        const activeSlide = document.querySelector('.swiper-slide-active');
-                        if (activeSlide && !GallerySwiper.isMobile) {
-                            activeSlide.style.animation = 'none';
-                            setTimeout(() => {
-                                activeSlide.style.animation = 'pulse 0.6s ease-in-out';
-                            }, 10);
-                        }
-                    },
+                        // Autoplay Configuration - Different for mobile
+                        autoplay: this.isMobile ? {
+                            delay: 4000,
+                            disableOnInteraction: false,
+                            pauseOnMouseEnter: false, // Mouse events don't apply on mobile
+                        } : {
+                            delay: 3500,
+                            disableOnInteraction: false,
+                            pauseOnMouseEnter: true,
+                        },
 
-                    touchStart: function (swiper, event) {
-                        console.log('Touch start detected');
-                        this.autoplay.stop();
-                    },
+                        // Speed and Animation
+                        speed: this.isMobile ? 600 : 800,
 
-                    touchMove: function (swiper, event) {
-                        // Optional: Add visual feedback during swipe
-                        console.log('Touch move detected');
-                    },
+                        // Pagination
+                        pagination: {
+                            el: '.swiper-pagination',
+                            clickable: true,
+                            dynamicBullets: true,
+                            dynamicMainBullets: this.isMobile ? 3 : 5,
+                        },
 
-                    touchEnd: function (swiper, event) {
-                        console.log('Touch end detected');
-                        setTimeout(() => {
-                            if (this.autoplay) {
-                                this.autoplay.start();
+                        // Navigation - Make sure it works on mobile
+                        navigation: {
+                            nextEl: '.swiper-button-next',
+                            prevEl: '.swiper-button-prev',
+                        },
+
+                        // Keyboard Control - Disable on mobile
+                        keyboard: {
+                            enabled: !this.isMobile,
+                            onlyInViewport: true,
+                        },
+
+                        // Mouse wheel control - Disable on mobile
+                        mousewheel: this.isMobile ? false : {
+                            thresholdDelta: 70,
+                            sensitivity: 1,
+                        },
+
+                        // Enhanced Responsive Breakpoints
+                        breakpoints: {
+                            // Mobile Portrait
+                            320: {
+                                effect: 'slide',
+                                slidesPerView: 1,
+                                spaceBetween: 20,
+                                centeredSlides: true,
+                                coverflowEffect: {
+                                    rotate: 0,
+                                    stretch: 0,
+                                    depth: 0,
+                                    modifier: 1,
+                                    slideShadows: false,
+                                },
+                                touchRatio: 1.5, // More sensitive on small screens
+                                longSwipesRatio: 0.3,
+                            },
+                            // Mobile Landscape / Small Tablet
+                            480: {
+                                effect: 'slide',
+                                slidesPerView: 1.2,
+                                spaceBetween: 15,
+                                centeredSlides: true,
+                                touchRatio: 1.3,
+                                coverflowEffect: {
+                                    rotate: 0,
+                                    stretch: 0,
+                                    depth: 0,
+                                    modifier: 1,
+                                    slideShadows: false,
+                                }
+                            },
+                            // Tablet
+                            640: {
+                                effect: 'coverflow',
+                                slidesPerView: 2.2,
+                                spaceBetween: -40,
+                                coverflowEffect: {
+                                    rotate: 35,
+                                    stretch: 40,
+                                    depth: 120,
+                                    modifier: 1.2,
+                                    slideShadows: true,
+                                }
+                            },
+                            // Large Tablet
+                            768: {
+                                effect: 'coverflow',
+                                slidesPerView: 2.5,
+                                spaceBetween: -45,
+                                coverflowEffect: {
+                                    rotate: 45,
+                                    stretch: 60,
+                                    depth: 150,
+                                    modifier: 1.3,
+                                    slideShadows: true,
+                                }
+                            },
+                            // Desktop
+                            1024: {
+                                effect: 'coverflow',
+                                slidesPerView: 3,
+                                spaceBetween: -50,
+                                coverflowEffect: {
+                                    rotate: 60,
+                                    stretch: 80,
+                                    depth: 200,
+                                    modifier: 1.5,
+                                    slideShadows: true,
+                                }
                             }
-                        }, 2000);
-                    },
+                        },
 
-                    transitionStart: function () {
-                        console.log('Transition started');
-                    },
+                        // Enhanced Events
+                        on: {
+                            init: function () {
+                                console.log('Swiper initialized successfully');
+                                console.log('Current breakpoint:', this.currentBreakpoint);
+                                console.log('Slides per view:', this.params.slidesPerView);
+                                
+                                document.querySelector('.swiper')?.classList.add('loaded');
+                                
+                                // Add mobile-specific class
+                                if (GallerySwiper.isMobile) {
+                                    document.querySelector('.swiper')?.classList.add('mobile-mode');
+                                }
+                            },
 
-                    transitionEnd: function () {
-                        console.log('Transition ended');
-                    },
+                            slideChange: function () {
+                                console.log('Slide changed to:', this.activeIndex);
+                                const activeSlide = document.querySelector('.swiper-slide-active');
+                                if (activeSlide && !GallerySwiper.isMobile) {
+                                    activeSlide.style.animation = 'none';
+                                    setTimeout(() => {
+                                        activeSlide.style.animation = 'pulse 0.6s ease-in-out';
+                                    }, 10);
+                                }
+                            },
 
-                    reachBeginning: function () {
-                        console.log('Reached beginning');
-                    },
+                            touchStart: function (swiper, event) {
+                                console.log('Touch start detected');
+                                this.autoplay.stop();
+                            },
 
-                    reachEnd: function () {
-                        console.log('Reached end');
-                    },
+                            touchMove: function (swiper, event) {
+                                // Optional: Add visual feedback during swipe
+                                console.log('Touch move detected');
+                            },
 
-                    navigationNext: function () {
-                        console.log('Next button clicked');
-                    },
+                            touchEnd: function (swiper, event) {
+                                console.log('Touch end detected');
+                                setTimeout(() => {
+                                    if (this.autoplay) {
+                                        this.autoplay.start();
+                                    }
+                                }, 2000);
+                            },
 
-                    navigationPrev: function () {
-                        console.log('Previous button clicked');
-                    },
+                            transitionStart: function () {
+                                console.log('Transition started');
+                            },
 
-                    resize: function () {
-                        console.log('Swiper resized');
-                        // Update mobile status on resize
-                        GallerySwiper.isMobile = window.innerWidth <= 768;
+                            transitionEnd: function () {
+                                console.log('Transition ended');
+                            },
+
+                            reachBeginning: function () {
+                                console.log('Reached beginning');
+                            },
+
+                            reachEnd: function () {
+                                console.log('Reached end');
+                            },
+
+                            navigationNext: function () {
+                                console.log('Next button clicked');
+                            },
+
+                            navigationPrev: function () {
+                                console.log('Previous button clicked');
+                            },
+
+                            resize: function () {
+                                console.log('Swiper resized');
+                                // Update mobile status on resize
+                                GallerySwiper.isMobile = window.innerWidth <= 768;
+                            }
+                        }
+                    });
+
+                    // Add CSS for animations
+                    this.addCustomStyles();
+
+                    // Add enhanced interaction effects (desktop only)
+                    if (!this.isMobile) {
+                        this.addInteractionEffects();
                     }
-                }
-            });
 
-            // Add CSS for animations
-            this.addCustomStyles();
-
-            // Add enhanced interaction effects (desktop only)
-            if (!this.isMobile) {
-                this.addInteractionEffects();
-            }
-
-            // Add mobile-specific enhancements
-            if (this.isMobile) {
-                this.addMobileEnhancements();
-            }
-
-            console.log('Gallery Swiper initialized successfully for', this.isMobile ? 'mobile' : 'desktop');
-
-        } catch (error) {
-            console.error('Error initializing Swiper:', error);
-            console.error('Error stack:', error.stack);
-        }
-    },
-
-    addCustomStyles() {
-        const existingStyle = document.getElementById('swiper-custom-styles');
-        if (existingStyle) return;
-
-        const style = document.createElement('style');
-        style.id = 'swiper-custom-styles';
-        style.textContent = `
-            @keyframes pulse {
-                0% { transform: scale(1.1); }
-                50% { transform: scale(1.15); }
-                100% { transform: scale(1.1); }
-            }
-
-            /* Mobile-specific styles */
-            .swiper.mobile-mode .swiper-slide {
-                transition: all 0.3s ease !important;
-            }
-
-            .swiper.mobile-mode .swiper-slide-active {
-                transform: scale(1.05) !important;
-            }
-
-            /* Enhanced touch feedback */
-            .swiper-slide {
-                user-select: none;
-                -webkit-user-select: none;
-                -webkit-touch-callout: none;
-                -webkit-tap-highlight-color: transparent;
-            }
-
-            /* Better navigation buttons for mobile */
-            @media (max-width: 768px) {
-                .swiper-button-next,
-                .swiper-button-prev {
-                    width: 44px !important;
-                    height: 44px !important;
-                    margin-top: -22px !important;
-                }
-                
-                .swiper-button-next:after,
-                .swiper-button-prev:after {
-                    font-size: 18px !important;
-                }
-            }
-        `;
-        document.head.appendChild(style);
-    },
-
-    addInteractionEffects() {
-        // Wait for slides to be ready
-        setTimeout(() => {
-            const slides = document.querySelectorAll('.swiper-slide');
-            slides.forEach(slide => {
-                slide.addEventListener('mouseenter', function () {
-                    if (!this.classList.contains('swiper-slide-active')) {
-                        this.style.transform += ' translateY(-10px)';
+                    // Add mobile-specific enhancements
+                    if (this.isMobile) {
+                        this.addMobileEnhancements();
                     }
-                });
 
-                slide.addEventListener('mouseleave', function () {
-                    if (!this.classList.contains('swiper-slide-active')) {
-                        this.style.transform = this.style.transform.replace(' translateY(-10px)', '');
+                    console.log('Gallery Swiper initialized successfully for', this.isMobile ? 'mobile' : 'desktop');
+
+                } catch (error) {
+                    console.error('Error initializing Swiper:', error);
+                    console.error('Error stack:', error.stack);
+                }
+            },
+
+            addCustomStyles() {
+                const existingStyle = document.getElementById('swiper-custom-styles');
+                if (existingStyle) return;
+
+                const style = document.createElement('style');
+                style.id = 'swiper-custom-styles';
+                style.textContent = `
+                    @keyframes pulse {
+                        0% { transform: scale(1.1); }
+                        50% { transform: scale(1.15); }
+                        100% { transform: scale(1.1); }
                     }
-                });
-            });
-        }, 500);
-    },
 
-    addMobileEnhancements() {
-        // Add swipe indicators or hints for mobile users
-        setTimeout(() => {
-            const swiperContainer = document.querySelector('.swiper');
-            if (swiperContainer && !document.querySelector('.swipe-hint')) {
-                const hint = document.createElement('div');
-                hint.className = 'swipe-hint';
-                hint.innerHTML = '← Swipe →';
-                hint.style.cssText = `
-                    position: absolute;
-                    bottom: 10px;
-                    left: 50%;
-                    transform: translateX(-50%);
-                    color: rgba(255,255,255,0.7);
-                    font-size: 12px;
-                    z-index: 10;
-                    pointer-events: none;
-                    animation: fadeInOut 3s ease-in-out;
+                    /* Mobile-specific styles */
+                    .swiper.mobile-mode .swiper-slide {
+                        transition: all 0.3s ease !important;
+                    }
+
+                    .swiper.mobile-mode .swiper-slide-active {
+                        transform: scale(1.05) !important;
+                    }
+
+                    /* Enhanced touch feedback */
+                    .swiper-slide {
+                        user-select: none;
+                        -webkit-user-select: none;
+                        -webkit-touch-callout: none;
+                        -webkit-tap-highlight-color: transparent;
+                    }
+
+                    /* Better navigation buttons for mobile */
+                    @media (max-width: 768px) {
+                        .swiper-button-next,
+                        .swiper-button-prev {
+                            width: 44px !important;
+                            height: 44px !important;
+                            margin-top: -22px !important;
+                        }
+                        
+                        .swiper-button-next:after,
+                        .swiper-button-prev:after {
+                            font-size: 18px !important;
+                        }
+                    }
                 `;
-                
-                swiperContainer.appendChild(hint);
-                
-                // Remove hint after animation
+                document.head.appendChild(style);
+            },
+
+            addInteractionEffects() {
+                // Wait for slides to be ready
                 setTimeout(() => {
-                    hint.remove();
-                }, 3000);
+                    const slides = document.querySelectorAll('.swiper-slide');
+                    slides.forEach(slide => {
+                        slide.addEventListener('mouseenter', function () {
+                            if (!this.classList.contains('swiper-slide-active')) {
+                                this.style.transform += ' translateY(-10px)';
+                            }
+                        });
+
+                        slide.addEventListener('mouseleave', function () {
+                            if (!this.classList.contains('swiper-slide-active')) {
+                                this.style.transform = this.style.transform.replace(' translateY(-10px)', '');
+                            }
+                        });
+                    });
+                }, 500);
+            },
+
+            addMobileEnhancements() {
+                // Add swipe indicators or hints for mobile users
+                setTimeout(() => {
+                    const swiperContainer = document.querySelector('.swiper');
+                    if (swiperContainer && !document.querySelector('.swipe-hint')) {
+                        const hint = document.createElement('div');
+                        hint.className = 'swipe-hint';
+                        hint.innerHTML = '← Swipe →';
+                        hint.style.cssText = `
+                            position: absolute;
+                            bottom: 10px;
+                            left: 50%;
+                            transform: translateX(-50%);
+                            color: rgba(255,255,255,0.7);
+                            font-size: 12px;
+                            z-index: 10;
+                            pointer-events: none;
+                            animation: fadeInOut 3s ease-in-out;
+                        `;
+                        
+                        swiperContainer.appendChild(hint);
+                        
+                        // Remove hint after animation
+                        setTimeout(() => {
+                            hint.remove();
+                        }, 3000);
+                    }
+                }, 1000);
+
+                // Add fade in/out animation for hint
+                const style = document.createElement('style');
+                style.textContent = `
+                    @keyframes fadeInOut {
+                        0%, 100% { opacity: 0; }
+                        50% { opacity: 1; }
+                    }
+                `;
+                document.head.appendChild(style);
+            },
+
+            // Enhanced debugging method
+            checkStatus() {
+                console.log('=== SWIPER DEBUG INFO ===');
+                console.log('Swiper instance:', this.swiper);
+                console.log('Is mobile:', this.isMobile);
+                console.log('Window width:', window.innerWidth);
+                
+                if (this.swiper) {
+                    console.log('Swiper initialized:', this.swiper.initialized);
+                    console.log('Current effect:', this.swiper.params.effect);
+                    console.log('Slides per view:', this.swiper.params.slidesPerView);
+                    console.log('Touch enabled:', this.swiper.allowTouchMove);
+                    console.log('Autoplay status:', this.swiper.autoplay?.running);
+                }
+
+                this.checkNavigation();
+                this.checkSlides();
+            },
+
+            checkNavigation() {
+                const nextBtn = document.querySelector('.swiper-button-next');
+                const prevBtn = document.querySelector('.swiper-button-prev');
+
+                console.log('Next button exists:', !!nextBtn);
+                console.log('Previous button exists:', !!prevBtn);
+
+                if (nextBtn) {
+                    console.log('Next button classes:', nextBtn.className);
+                    console.log('Next button disabled:', nextBtn.classList.contains('swiper-button-disabled'));
+                }
+                if (prevBtn) {
+                    console.log('Previous button classes:', prevBtn.className);
+                    console.log('Previous button disabled:', prevBtn.classList.contains('swiper-button-disabled'));
+                }
+            },
+
+            checkSlides() {
+                const slides = document.querySelectorAll('.swiper-slide');
+                console.log('Total slides found:', slides.length);
+                
+                if (this.swiper) {
+                    console.log('Active slide index:', this.swiper.activeIndex);
+                    console.log('Real index:', this.swiper.realIndex);
+                }
+            },
+
+            // Method to manually trigger slide change (for testing)
+            testSlide(direction = 'next') {
+                if (this.swiper) {
+                    if (direction === 'next') {
+                        this.swiper.slideNext();
+                    } else {
+                        this.swiper.slidePrev();
+                    }
+                }
+            },
+
+            // Reinitialize swiper (useful for debugging)
+            reinit() {
+                this.destroy();
+                setTimeout(() => {
+                    this.init();
+                }, 100);
+            },
+
+            destroy() {
+                if (this.swiper) {
+                    this.swiper.destroy(true, true);
+                    this.swiper = null;
+                    console.log('Swiper destroyed');
+                }
             }
-        }, 1000);
-
-        // Add fade in/out animation for hint
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes fadeInOut {
-                0%, 100% { opacity: 0; }
-                50% { opacity: 1; }
-            }
-        `;
-        document.head.appendChild(style);
-    },
-
-    // Enhanced debugging method
-    checkStatus() {
-        console.log('=== SWIPER DEBUG INFO ===');
-        console.log('Swiper instance:', this.swiper);
-        console.log('Is mobile:', this.isMobile);
-        console.log('Window width:', window.innerWidth);
-        
-        if (this.swiper) {
-            console.log('Swiper initialized:', this.swiper.initialized);
-            console.log('Current effect:', this.swiper.params.effect);
-            console.log('Slides per view:', this.swiper.params.slidesPerView);
-            console.log('Touch enabled:', this.swiper.allowTouchMove);
-            console.log('Autoplay status:', this.swiper.autoplay?.running);
-        }
-
-        this.checkNavigation();
-        this.checkSlides();
-    },
-
-    checkNavigation() {
-        const nextBtn = document.querySelector('.swiper-button-next');
-        const prevBtn = document.querySelector('.swiper-button-prev');
-
-        console.log('Next button exists:', !!nextBtn);
-        console.log('Previous button exists:', !!prevBtn);
-
-        if (nextBtn) {
-            console.log('Next button classes:', nextBtn.className);
-            console.log('Next button disabled:', nextBtn.classList.contains('swiper-button-disabled'));
-        }
-        if (prevBtn) {
-            console.log('Previous button classes:', prevBtn.className);
-            console.log('Previous button disabled:', prevBtn.classList.contains('swiper-button-disabled'));
-        }
-    },
-
-    checkSlides() {
-        const slides = document.querySelectorAll('.swiper-slide');
-        console.log('Total slides found:', slides.length);
-        
-        if (this.swiper) {
-            console.log('Active slide index:', this.swiper.activeIndex);
-            console.log('Real index:', this.swiper.realIndex);
-        }
-    },
-
-    // Method to manually trigger slide change (for testing)
-    testSlide(direction = 'next') {
-        if (this.swiper) {
-            if (direction === 'next') {
-                this.swiper.slideNext();
-            } else {
-                this.swiper.slidePrev();
-            }
-        }
-    },
-
-    // Reinitialize swiper (useful for debugging)
-    reinit() {
-        this.destroy();
-        setTimeout(() => {
-            this.init();
-        }, 100);
-    },
-
-    destroy() {
-        if (this.swiper) {
-            this.swiper.destroy(true, true);
-            this.swiper = null;
-            console.log('Swiper destroyed');
-        }
-    }
-};
-</script>
+        };
+    </script>
 @endpush
+@endsection

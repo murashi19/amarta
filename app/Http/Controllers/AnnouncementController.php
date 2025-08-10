@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Announcement;
+use App\Helpers\AnnouncementHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -11,177 +12,137 @@ class AnnouncementController extends Controller
     // --- Pengumuman ---
     public function index()
     {
-        $announcements = Announcement::orderBy('id', 'asc')->get();
+        $announcements = Announcement::orderBy('id', 'desc')->get();
         return view('admin.pengumuman', compact('announcements'));
     }
 
-    // --- Tambah Pengumuman ---
     public function store(Request $request)
     {
-        // Debug log untuk CREATE
-        \Log::info('🔍 CREATE REQUEST DATA:', [
-            'all_request' => $request->all(),
-            'has_payment_button_raw' => $request->input('has_payment_button')
-        ]);
-
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'content' => 'required|string',
-            'type' => 'required|string',
-            'status' => 'required|string',
-            'priority' => 'required|string',
-            'target_audience' => 'required|string',
+            'title' => 'nullable|string|max:255',
+            'content' => 'nullable|string',
+            'type' => 'required|string|in:manual,auto welcome,auto booking success,auto dp request,auto dp success',
+            'status' => 'required|string|in:draft,published,scheduled',
+            'priority' => 'required|string|in:low,medium,high',
+            'target_audience' => 'nullable|string|in:all students,new registrants,paid students,meeting joined,dp paid,active students',
             'meet_link' => 'nullable|url',
             'has_payment_button' => 'nullable|string',
             'scheduled_date' => 'nullable|date',
             'scheduled_time' => 'nullable',
         ]);
 
-        // Handle checkbox untuk CREATE
-        $checkboxValue = $request->input('has_payment_button');
-        
-        if ($checkboxValue === '1' || $checkboxValue === 1 || $checkboxValue === true || $checkboxValue === 'true') {
-            $validated['has_payment_button'] = true;
-        } else {
-            $validated['has_payment_button'] = false;
+        $validated['has_payment_button'] = $request->has('has_payment_button');
+        $validated['created_by'] = Auth::id();
+
+        switch ($validated['type']) {
+            case 'auto welcome':
+                $validated['has_payment_button'] = true;
+                if (empty($validated['title'])) {
+                    $validated['title'] = 'Selamat Datang di Program Kami';
+                }
+                break;
+
+            case 'auto dp request':
+                $validated['has_payment_button'] = true;
+                if (empty($validated['target_audience'])) {
+                    $validated['target_audience'] = 'meeting joined';
+                }
+                if (empty($validated['title'])) {
+                    $validated['title'] = 'Permintaan Pembayaran DP Program Kelas';
+                }
+                if (empty($validated['content'])) {
+                    $paymentUrl = route('transaksi.programKelas.createProgramKelas');
+                    $validated['content'] = 'Terima kasih telah melanjutkan program kelas kita, '
+                        . 'untuk bisa mengaktifkan kelas Anda, Anda harus membayar <strong>DP Program Kelas</strong> terlebih dahulu '
+                        . 'untuk melanjut ke Program Kelas Bahasa.<br><br>'
+                        . '<a href="' . $paymentUrl . '" class="btn btn-success" '
+                        . 'style="padding:10px 20px; font-size:16px; border-radius:6px;">💳 Bayar DP Program Kelas</a>';
+                }
+                break;
+
+            case 'auto booking success':
+                if (empty($validated['meet_link'])) {
+                    return back()->withErrors(['meet_link' => 'Link meeting wajib diisi untuk jenis Auto Booking Success'])->withInput();
+                }
+                $validated['has_payment_button'] = false;
+                break;
+
+            case 'auto dp success':
+                $validated['has_payment_button'] = false;
+                break;
         }
 
-        \Log::info('🔧 CREATE CHECKBOX PROCESSING:', [
-            'raw_value' => $checkboxValue,
-            'processed_value' => $validated['has_payment_button']
-        ]);
-
-        $announcement = Announcement::create($validated);
-
-        \Log::info('📝 CREATE RESULT:', [
-            'has_payment_button_in_db' => $announcement->has_payment_button,
-            'created_data' => $announcement->toArray()
-        ]);
-
-        // Check if request expects JSON (AJAX)
-        if ($request->expectsJson()) {
-            return response()->json([
-                'success' => true,
-                'message' => 'Pengumuman berhasil ditambahkan!'
-            ]);
-        }
+        Announcement::create($validated);
 
         return redirect()->route('admin.pengumuman')->with('success', 'Pengumuman berhasil ditambahkan!');
     }
 
-    // --- Edit Pengumuman ---
-    public function edit($id)
-    {
-        try {
-            $announcement = Announcement::findOrFail($id);
-            return response()->json($announcement);
-        } catch (\Exception $e) {
-            return response()->json([
-                'error' => 'Pengumuman tidak ditemukan'
-            ], 404);
-        }
-    }
-
-    // --- Update Pengumuman ---
     public function update(Request $request, $id)
     {
-        try {
-            // Debug log untuk melihat data yang masuk
-            \Log::info('🔍 UPDATE REQUEST DATA:', [
-                'all_request' => $request->all(),
-                'has_payment_button_raw' => $request->input('has_payment_button'),
-                'request_method' => $request->method(),
-                'content_type' => $request->header('Content-Type')
-            ]);
+        $validated = $request->validate([
+            'title' => 'nullable|string|max:255',
+            'content' => 'nullable|string',
+            'type' => 'required|string|in:manual,auto welcome,auto booking success,auto dp request,auto dp success',
+            'status' => 'required|string|in:draft,published,scheduled',
+            'priority' => 'required|string|in:low,medium,high',
+            'target_audience' => 'nullable|string|in:all students,new registrants,paid students,meeting joined,dp paid,active students',
+            'meet_link' => 'nullable|url',
+            'has_payment_button' => 'nullable|string',
+            'scheduled_date' => 'nullable|date',
+            'scheduled_time' => 'nullable',
+        ]);
 
-            $validated = $request->validate([
-                'title' => 'required|string|max:255',
-                'content' => 'required|string',
-                'type' => 'required|string',
-                'status' => 'required|string',
-                'priority' => 'required|string',
-                'target_audience' => 'required|string',
-                'meet_link' => 'nullable|url',
-                'has_payment_button' => 'nullable|string', // Terima sebagai string
-                'scheduled_date' => 'nullable|date',
-                'scheduled_time' => 'nullable',
-            ]);
+        $validated['has_payment_button'] = $request->has('has_payment_button');
 
-            // PERBAIKAN UTAMA: Handle checkbox dengan eksplisit
-            $checkboxValue = $request->input('has_payment_button');
-            
-            // Convert ke boolean dengan benar
-            if ($checkboxValue === '1' || $checkboxValue === 1 || $checkboxValue === true || $checkboxValue === 'true') {
+        switch ($validated['type']) {
+            case 'auto welcome':
                 $validated['has_payment_button'] = true;
-            } else {
+                if (empty($validated['title'])) {
+                    $validated['title'] = 'Selamat Datang di Program Kami';
+                }
+                break;
+
+            case 'auto dp request':
+                $validated['has_payment_button'] = true;
+                if (empty($validated['target_audience'])) {
+                    $validated['target_audience'] = 'meeting joined';
+                }
+                if (empty($validated['title'])) {
+                    $validated['title'] = 'Permintaan Pembayaran DP Program Kelas';
+                }
+                if (empty($validated['content'])) {
+                    $paymentUrl = route('transaksi.programKelas.createProgramKelas');
+                    $validated['content'] = 'Terima kasih telah melanjutkan program kelas kita, '
+                        . 'untuk bisa mengaktifkan kelas Anda, Anda harus membayar <strong>DP Program Kelas</strong> terlebih dahulu '
+                        . 'untuk melanjut ke Program Kelas Bahasa.<br><br>'
+                        . '<a href="' . $paymentUrl . '" class="btn btn-success" '
+                        . 'style="padding:10px 20px; font-size:16px; border-radius:6px;">💳 Bayar DP Program Kelas</a>';
+                }
+                break;
+
+            case 'auto booking success':
+                if (empty($validated['meet_link'])) {
+                    return back()->withErrors(['meet_link' => 'Link meeting wajib diisi untuk jenis Auto Booking Success'])->withInput();
+                }
                 $validated['has_payment_button'] = false;
-            }
+                break;
 
-            // Debug log detail
-            \Log::info('🔧 CHECKBOX PROCESSING:', [
-                'raw_value' => $checkboxValue,
-                'processed_value' => $validated['has_payment_button'],
-                'type_of_raw' => gettype($checkboxValue),
-                'type_of_processed' => gettype($validated['has_payment_button'])
-            ]);
-
-            $announcement = Announcement::findOrFail($id);
-            
-            // Update dengan data yang sudah diproses
-            $updated = $announcement->update($validated);
-            
-            // Log hasil update
-            \Log::info('📝 UPDATE RESULT:', [
-                'update_success' => $updated,
-                'has_payment_button_in_db' => $announcement->fresh()->has_payment_button,
-                'all_data_in_db' => $announcement->fresh()->toArray()
-            ]);
-
-            $announcement = $announcement->fresh(); // Refresh data dari DB
-
-            // Check if request expects JSON (AJAX)
-            if ($request->expectsJson()) {
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Pengumuman berhasil diperbarui!',
-                    'data' => $announcement
-                ]);
-            }
-
-            return redirect()->route('admin.pengumuman')->with('success', 'Pengumuman berhasil diperbarui!');
-
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            if ($request->expectsJson()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Validasi gagal',
-                    'errors' => $e->errors()
-                ], 422);
-            }
-            return back()->withErrors($e->errors())->withInput();
-
-        } catch (\Exception $e) {
-            if ($request->expectsJson()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Terjadi kesalahan saat memperbarui pengumuman'
-                ], 500);
-            }
-            return back()->with('error', 'Terjadi kesalahan saat memperbarui pengumuman');
+            case 'auto dp success':
+                $validated['has_payment_button'] = false;
+                break;
         }
+
+        $announcement = Announcement::findOrFail($id);
+        $announcement->update($validated);
+
+        return redirect()->route('admin.pengumuman')->with('success', 'Pengumuman berhasil diperbarui!');
     }
 
-    // --- Hapus Pengumuman ---
     public function destroy($id)
     {
-        try {
-            $announcement = Announcement::findOrFail($id);
-            $announcement->delete();
-
-            return redirect()->route('admin.pengumuman')->with('success', 'Pengumuman berhasil dihapus.');
-        } catch (\Exception $e) {
-            return redirect()->route('admin.pengumuman')->with('error', 'Gagal menghapus pengumuman.');
-        }
+        $announcement = Announcement::findOrFail($id);
+        $announcement->delete();
+        return redirect()->route('admin.pengumuman')->with('success', 'Pengumuman berhasil dihapus.');
     }
 
     // --- Lihat Detail Pengumuman ---
@@ -190,15 +151,33 @@ class AnnouncementController extends Controller
         try {
             $announcement = Announcement::findOrFail($id);
             
-            // If AJAX request, return JSON
+            // If AJAX request, return JSON with formatted data
             if (request()->expectsJson()) {
-                return response()->json($announcement);
+                return response()->json([
+                    'success' => true,
+                    'id' => $announcement->id,
+                    'title' => $announcement->title,
+                    'content' => $announcement->content,
+                    'type' => $announcement->type,
+                    'status' => $announcement->status,
+                    'priority' => $announcement->priority,
+                    'target_audience' => $announcement->target_audience,
+                    'meet_link' => $announcement->meet_link,
+                    'has_payment_button' => $announcement->has_payment_button,
+                    'scheduled_date' => $announcement->scheduled_date,
+                    'scheduled_time' => $announcement->scheduled_time,
+                    'created_at' => $announcement->created_at,
+                    'updated_at' => $announcement->updated_at,
+                ]);
             }
             
-            return view('admin.pengumuman-detail', compact('announcement'));
+            return view('admin.pengumuman', compact('announcement'));
         } catch (\Exception $e) {
             if (request()->expectsJson()) {
-                return response()->json(['error' => 'Pengumuman tidak ditemukan'], 404);
+                return response()->json([
+                    'success' => false,
+                    'error' => 'Pengumuman tidak ditemukan'
+                ], 404);
             }
             return redirect()->route('admin.pengumuman')->with('error', 'Pengumuman tidak ditemukan.');
         }
@@ -222,6 +201,205 @@ class AnnouncementController extends Controller
                 'success' => false,
                 'message' => 'Pengumuman tidak ditemukan'
             ], 404);
+        }
+    }
+
+
+    // --- Fungsi Pengumuman untuk User ---
+    public function getUserAnnouncements()
+    {
+        try {
+            $user = Auth::user()->load('status');
+
+            if (!$user) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'User tidak ditemukan'
+                ], 404);
+            }
+
+            // Tentukan target audience berdasarkan status user
+            $targetAudience = $this->getTargetAudienceByStatus($user->status->name ?? 'Registered');
+
+            // Ambil pengumuman yang sesuai target audience atau untuk semua siswa
+            $announcements = Announcement::where('status', 'published')
+                ->where(function ($query) use ($targetAudience) {
+                    $query->where('target_audience', $targetAudience)
+                        ->orWhere('target_audience', 'all students');
+                })
+                ->orderBy('priority', 'desc')
+                ->orderBy('created_at', 'desc')
+                ->get();
+
+            // Format response untuk frontend
+            $formattedAnnouncements = $announcements->map(function ($announcement) use ($user) {
+                return [
+                    'id' => $announcement->id,
+                    'title' => $announcement->title,
+                    'content' => $announcement->content,
+                    'type' => $announcement->type,
+                    'priority' => $announcement->priority,
+                    'target_audience' => $announcement->target_audience,
+                    'has_payment_button' => $announcement->has_payment_button,
+                    'meet_link' => $announcement->meet_link,
+                    'created_at' => $announcement->created_at->format('Y-m-d H:i:s'),
+
+                    // Logic tombol bayar otomatis
+                    'show_booking_button' => $this->shouldShowBookingButton($user, $announcement),
+                    'show_dp_button' => $this->shouldShowDpButton($user, $announcement),
+                ];
+            });
+
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'user_status' => $user->status->name ?? 'Registered',
+                    'announcements' => $formattedAnnouncements
+                ]
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Menentukan target audience berdasarkan status user
+     * 
+     * @param string $statusName
+     * @return string
+     */
+    private function getTargetAudienceByStatus($statusName)
+    {
+        $statusMapping = [
+            'Registered'     => 'new registrants',
+            'Booking Paid'   => 'paid students',
+            'Meeting Joined' => 'meeting joined', // khusus untuk auto dp request
+            'DP Paid'        => 'active students',
+            'Active'         => 'active students'
+        ];
+
+        return $statusMapping[$statusName] ?? 'new registrants';
+    }
+
+    /**
+     * Tombol Booking Class
+     * 
+     * @param User $user
+     * @param Announcement $announcement
+     * @return bool
+     */
+    private function shouldShowBookingButton($user, $announcement)
+    {
+        $userStatus = $user->status->name ?? 'Registered';
+
+        return $announcement->type === 'auto welcome' &&
+            $userStatus === 'Registered' &&
+            $announcement->has_payment_button;
+    }
+
+    /**
+     * Tombol DP Program Kelas
+     * 
+     * @param User $user
+     * @param Announcement $announcement
+     * @return bool
+     */
+    private function shouldShowDpButton($user, $announcement)
+    {
+        $userStatus = $user->status->name ?? 'Registered';
+
+        return $announcement->type === 'auto dp request' &&
+            $userStatus === 'Meeting Joined' &&
+            $announcement->has_payment_button;
+    }
+
+    /**
+     * Mendapatkan detail pengumuman berdasarkan ID
+     * 
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    
+    public function AnnountmentsUser()
+    {
+        try {
+            // Pastikan user sudah login
+            $user = Auth::user();
+            
+            if (!$user) {
+                return redirect()->route('login');
+            }
+
+            // Ambil status_id user dengan fallback
+            $userStatusId = $user->status_id ?? 1;
+
+            // Ambil semua announcements yang published
+            $allAnnouncements = Announcement::where('status', 'published')
+                ->orderByDesc('priority')
+                ->latest()
+                ->get();
+
+            // Filter sesuai target audience
+            $announcements = collect();
+            
+            if ($allAnnouncements->count() > 0) {
+                $announcements = $allAnnouncements->filter(function ($announcement) use ($userStatusId) {
+                    $isMatch = AnnouncementHelper::isAudienceMatch($announcement->target_audience, $userStatusId);
+                    
+                    // Debug - hapus setelah testing
+                    \Log::info("Checking announcement: {$announcement->title}");
+                    \Log::info("Target audience: '{$announcement->target_audience}'");
+                    \Log::info("User Status: {$userStatusId}");
+                    \Log::info("Match result: " . ($isMatch ? 'YES' : 'NO'));
+                    
+                    return $isMatch;
+                });
+            }
+
+            // Debug info - hapus setelah testing
+            \Log::info("User Status ID: {$userStatusId}");
+            \Log::info("Total announcements: " . $allAnnouncements->count());
+            \Log::info("Filtered announcements: " . $announcements->count());
+
+            // Tambahkan debug untuk semua target audience yang ada
+            $allTargetAudiences = $allAnnouncements->pluck('target_audience')->unique();
+            \Log::info("All target audiences in DB: " . $allTargetAudiences->toJson());
+
+            // Pastikan semua variabel dikirim ke view
+            return view('dashboard.users', [
+                'announcements' => $announcements,
+                'userStatusId' => $userStatusId,
+                'user' => $user,
+                'debug' => [
+                    'totalAnnouncements' => $allAnnouncements->count(),
+                    'filteredAnnouncements' => $announcements->count(),
+                    'userStatus' => $userStatusId,
+                    'allTargetAudiences' => $allTargetAudiences->toArray(),
+                    'allAnnouncementsData' => $allAnnouncements->map(function($a) use ($userStatusId) {
+                        return [
+                            'title' => $a->title,
+                            'target_audience' => $a->target_audience,
+                            'is_match' => AnnouncementHelper::isAudienceMatch($a->target_audience, $userStatusId)
+                        ];
+                    })
+                ]
+            ]);
+            
+        } catch (\Exception $e) {
+            // Handle error gracefully
+            \Log::error("Dashboard error: " . $e->getMessage());
+            \Log::error("Stack trace: " . $e->getTraceAsString());
+            
+            return view('dashboard.users', [
+                'announcements' => collect(),
+                'userStatusId' => 1,
+                'user' => Auth::user(),
+                'error' => $e->getMessage()
+            ]);
         }
     }
 }

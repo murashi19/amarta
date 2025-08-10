@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Role;
+use App\Mail\UserRegisteredMail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class AuthController extends Controller
 {
@@ -27,24 +29,22 @@ class AuthController extends Controller
             'phone_number' => ['required', 'string', 'max:255'],
             'address' => ['required', 'string', 'max:255'],
             'birth_date' => ['required', 'date'],
-            'education' => ['required', 'string', 'max:255'],
-            'japanese_level' => ['required', 'in:N1,N2,N3,N4,N5,Belum Menguasai'],
-            'motivation' => ['required', 'string', 'max:255'],
+            'education_level' => ['required', 'string', 'max:255'],
         ]);
 
+        $plainPassword = $request->password; // simpan sebelum di-hash
+
         $user = null;
-        DB::transaction(function () use ($request, &$user) {
+        DB::transaction(function () use ($request, &$user, $plainPassword) {
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
-                'password' => Hash::make($request->password),
+                'password' => Hash::make($plainPassword),
                 'phone_number' => $request->phone_number,
-                'status_id' => 1,
+                'status_id' => 1, // Registered
                 'address' => $request->address,
                 'birth_date' => $request->birth_date,
-                'education' => $request->education,
-                'japanese_level' => $request->japanese_level,
-                'motivation' => $request->motivation,
+                'education_level' => $request->education_level,
             ]);
 
             // Tambah role default User
@@ -54,8 +54,10 @@ class AuthController extends Controller
             }
         });
 
-        Auth::login($user);
-        return $this->redirectToDashboard()->with('success', 'Pendaftaran Berhasil');
+        // Kirim email ke user
+        Mail::to($user->email)->send(new UserRegisteredMail($user->name, $user->email, $plainPassword));
+
+        return redirect()->route('login')->with('success', 'Registrasi berhasil! Silahkan cek email Anda untuk informasi akun.');
     }
 
     // Halaman login
@@ -71,11 +73,20 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return $this->redirectToDashboard();
+
+            // Cek role user
+            $user = Auth::user();
+
+            if ($user->roles()->where('name', 'admin')->exists()) {
+                return redirect()->route('dashboard.admin');
+            }
+
+            return redirect()->route('dashboard.users');
         }
 
         return back()->withErrors(['email' => 'Email atau password salah']);
     }
+
 
     // Logout
     public function logout(Request $request)
@@ -84,15 +95,5 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect()->route('login');
-    }
-
-    // --- Helper: Redirect sesuai role ---
-    private function redirectToDashboard()
-    {
-        $user = Auth::user();
-        if ($user->roles()->where('name', 'Admin')->exists()) {
-            return redirect()->route('dashboard.admin');
-        }
-        return redirect()->route('dashboard.user');
     }
 }

@@ -5,20 +5,21 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class AuditLog extends Model
+class Notification extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'user_id',
-        'table_name',
-        'record_id',
-        'action',
-        'changes',
+        'type',        // email, whatsapp, sms
+        'content',
+        'is_sent',
+        'sent_at',
     ];
 
-    protected $casts = [
-        'changes' => 'array',
+     protected $casts = [
+        'is_sent' => 'boolean',
+        'sent_at' => 'datetime'
     ];
 
     public function user()
@@ -26,3 +27,4 @@ class AuditLog extends Model
         return $this->belongsTo(User::class);
     }
 }
+

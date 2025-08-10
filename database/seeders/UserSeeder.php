@@ -1,12 +1,10 @@
 <?php
 
-// database/seeders/UserSeeder.php
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
-use Carbon\Carbon;
 
 class UserSeeder extends Seeder
 {
@@ -19,11 +17,11 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('password123'),
                 'phone_number' => '081234567890',
                 'address' => 'Jl. Merdeka No. 123, Jakarta Pusat',
+                'birth_place' => 'Jakarta',
                 'birth_date' => '1990-05-15',
-                'education' => 'S1 Teknik Informatika',
-                'japanese_level' => 'N2',
-                'motivation' => 'Ingin mengembangkan karir di bidang teknologi dan berkontribusi dalam industri IT.',
-                'status_id' => 1, // Active
+                'education_level' => 'S1 Teknik Informatika',
+                'status_id' => 1,
+                'is_verified' => true,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -32,29 +30,15 @@ class UserSeeder extends Seeder
                 'email' => 'rafli.afiw@gmail.com',
                 'password' => Hash::make('rafliafiw123'),
                 'phone_number' => '084567890123',
-                'address' => 'Jl. Gatot Subroto No. 321, Medan',
+                'address' => 'Jl. Moch Toha No. 31, Kota Bandung',
+                'birth_place' => 'Bandung',
                 'birth_date' => '2005-03-10',
-                'education' => 'SMA Negeri 1 Medan',
-                'japanese_level' => 'Belum Menguasai',
-                'motivation' => 'Baru mulai belajar bahasa Jepang dan tertarik dengan teknologi Jepang.',
-                'status_id' => 1, // Active
+                'education_level' => 'SMA Negeri 1 Bandung',
+                'status_id' => 1,
+                'is_verified' => false,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-            // [
-            //     'name' => 'Jane Smith',
-            //     'email' => 'jane.smith@example.com',
-            //     'password_hash' => Hash::make('password123'),
-            //     'phone_number' => '083456789012',
-            //     'status_id' => 1, // Active
-            //     'address' => 'Jl. Diponegoro No. 789, Surabaya',
-            //     'birth_date' => '1992-08-22',
-            //     'education' => 'S1 Manajemen',
-            //     'japanese_level' => 'N4',
-            //     'motivation' => 'Ingin mengembangkan kemampuan bahasa Jepang untuk peluang karir internasional.',
-            //     'created_at' => now(),
-            //     'updated_at' => now(),
-            // ],
         ];
 
         foreach ($users as $user) {
