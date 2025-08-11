@@ -631,7 +631,7 @@
                 <div class="carousel-inner">
                     {{-- Carousel Item 1 --}}
                     <div class="carousel-item active">
-                        <img src="asset/line/photo (21).jpg" class="d-block w-100 carousel-image" alt="Image 1">
+                        <img src="asset/img/photo (21).jpg" class="d-block w-100 carousel-image" alt="Image 1">
                         <div class="carousel-caption d-flex align-items-center justify-content-center h-100">
                             <div class="text-center">
                                 <h1 class="display-3 fw-bold text-white">Contact Us</h1>
@@ -646,7 +646,7 @@
                     </div>
                     {{-- Carousel Item 2 --}}
                     <div class="carousel-item">
-                        <img src="asset/line/photo (19).jpg" class="d-block w-100 carousel-image" alt="Image 2">
+                        <img src="asset/img/photo (30).jpg" class="d-block w-100 carousel-image" alt="Image 2">
                         <div class="carousel-caption d-flex align-items-center justify-content-center h-100">
                             <div class="text-center">
                                 <h1 class="display-3 fw-bold text-white">Our Locations</h1>
@@ -755,8 +755,7 @@
                             <i class="fab fa-whatsapp"></i>
                         </div>
                         <h3 class="contact-title">+6285183123744</h3>
-                        <p class="contact-description">Hubungi kami untuk Informasi selanjutnya</a>
-                </a>
+                    </a>
                 </div>
 
                 {{-- Card 2: Email (Generic) --}}
@@ -766,9 +765,8 @@
                             <i class="fas fa-envelope"></i>
                         </div>
                         <h3 class="contact-title">lpkamartacibitung@gmail.com</h3>
-                        <p class="contact-description">Hubungi kami untuk Informasi selanjutnya</a>
-                </div>
-
+                       </div>
+                    </a>
                 {{-- Card 3: Phone (Generic, bisa juga ganti ke WhatsApp atau Telegram) --}}
                 <div class="col-md-4 mb-4">
                     <a href="tel:+6284373643434" class="contact-card phone-card text-decoration-none d-block">
@@ -776,8 +774,7 @@
                             <i class="fas fa-phone-alt"></i>
                         </div>
                         <h3 class="contact-title">+6285183123744</h3>
-                        <p class="contact-description">Hubungi kami untuk Informasi selanjutnya</a>
-                </a>
+                    </a>
                 </div>
             </div>
         </div>

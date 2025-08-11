@@ -605,7 +605,7 @@
             </p>
             <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
                 <a href="{{ url('form') }}" class="btn btn-warning btn-lg px-4 me-sm-3">LANJUT DAFTAR</a>
-                <a href="https://wa.me/NOMOR_WHATSAPP_ANDA" target="_blank" class="btn btn-outline-light btn-lg px-4">Konsultasi via WhatsApp <i class="fab fa-whatsapp ms-2"></i></a>
+                <a href="https://wa.me/6285183123744" target="_blank" class="btn btn-outline-light btn-lg px-4">Konsultasi via WhatsApp <i class="fab fa-whatsapp ms-2"></i></a>
             </div>
         </div>
     </section>
