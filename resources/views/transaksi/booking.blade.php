@@ -189,32 +189,318 @@
         }
         
         @media (max-width: 768px) {
-            .payment-header {
-                padding: 1.5rem 1rem;
-            }
-            
-            .amount-display {
-                padding: 1rem;
-            }
-            
-            .bank-info {
-                padding: 1rem;
-            }
-            
-            .upload-zone {
-                padding: 1.5rem 1rem;
-            }
-            
-            .progress-indicator {
-                flex-direction: column;
-                gap: 0.5rem;
-            }
-            
-            .step-connector {
-                width: 2px;
-                height: 30px;
-            }
+        /* Container dan Layout Utama */
+        .container-fluid {
+            padding: 1rem 0.5rem;
         }
+        
+        .payment-container {
+            margin: 0 0.5rem;
+        }
+        
+        /* Header Pembayaran */
+        .payment-header {
+            padding: 1.5rem 1rem;
+            text-align: center;
+        }
+        
+        .payment-header h3 {
+            font-size: 1.25rem;
+            line-height: 1.4;
+        }
+        
+        .payment-header p {
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+        }
+        
+        .payment-step {
+            font-size: 0.8rem;
+            padding: 0.4rem 0.8rem;
+        }
+        
+        /* Progress Indicator - Vertikal untuk mobile */
+        .progress-indicator {
+            flex-direction: column;
+            gap: 0.5rem;
+            margin: 1.5rem 0;
+        }
+        
+        .step {
+            width: 35px;
+            height: 35px;
+            font-size: 0.875rem;
+        }
+        
+        .step-connector {
+            width: 2px;
+            height: 25px;
+            margin: 0;
+        }
+        
+        /* Card Body */
+        .card-body {
+            padding: 1.5rem 1rem;
+        }
+        
+        /* Info Items */
+        .info-item {
+            padding: 0.5rem 0;
+            flex-direction: column;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        
+        .info-icon {
+            width: 35px;
+            height: 35px;
+            margin: 0 0 0.5rem 0;
+        }
+        
+        /* Amount Display */
+        .amount-display {
+            padding: 1.25rem 1rem;
+            margin: 1rem 0;
+        }
+        
+        .amount-display h6 {
+            font-size: 0.9rem;
+        }
+        
+        .amount-display h2 {
+            font-size: 1.5rem;
+            word-break: break-word;
+        }
+        
+        /* Status Badge */
+        .status-badge {
+            font-size: 0.875rem;
+            padding: 0.4rem 0.8rem;
+            display: block;
+            text-align: center;
+            margin: 1rem 0;
+        }
+        
+        /* Bank Information */
+        .bank-info {
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .bank-info h6 {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .bank-info .row .col-md-4 {
+            margin-bottom: 1rem;
+            text-align: center;
+            padding: 0.5rem;
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+        }
+        
+        .bank-info .h6 {
+            font-size: 0.95rem;
+            word-break: break-all;
+        }
+        
+        /* Alert dalam Bank Info */
+        .bank-info .alert {
+            margin-top: 1rem;
+            padding: 0.75rem;
+            font-size: 0.8rem;
+        }
+        
+        /* Upload Section */
+        .upload-zone {
+            padding: 1.5rem 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .upload-zone .fa-3x {
+            font-size: 2rem;
+        }
+        
+        .upload-zone h6 {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .upload-zone p {
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+        }
+        
+        /* Selected File Preview */
+        .selected-file {
+            padding: 0.75rem;
+            font-size: 0.875rem;
+            word-break: break-word;
+        }
+        
+        /* Proof Preview */
+        .proof-preview {
+            max-width: 150px;
+            margin-bottom: 1rem;
+        }
+        
+        /* Buttons */
+        .btn-modern {
+            padding: 0.65rem 1.25rem;
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+            width: 100%;
+            max-width: 280px;
+        }
+        
+        .btn-upload {
+            font-size: 0.9rem;
+            padding: 0.75rem 1.5rem;
+        }
+        
+        /* Action Buttons Container */
+        .text-center .btn-modern {
+            display: block;
+            margin: 0.5rem auto;
+            width: 100%;
+            max-width: 250px;
+        }
+        
+        /* Alert Boxes */
+        .alert {
+            padding: 0.75rem;
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+        
+        .alert strong {
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+        
+        /* Countdown Alert */
+        .alert-warning {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        #countdown {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #dc3545;
+            display: block;
+            margin-top: 0.5rem;
+        }
+        
+        /* Modal Responsiveness */
+        .modal-dialog {
+            margin: 0.5rem;
+            max-width: calc(100% - 1rem);
+        }
+        
+        .modal-body {
+            padding: 1rem;
+        }
+        
+        .modal-body h6 {
+            font-size: 0.95rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .modal-body ol {
+            font-size: 0.8rem;
+            padding-left: 1.25rem;
+        }
+        
+        .modal-body ol li {
+            margin-bottom: 0.25rem;
+            line-height: 1.4;
+        }
+        
+        .modal-body .col-md-6 {
+            margin-bottom: 1.5rem;
+        }
+        
+        /* Copy Button */
+        .btn-link {
+            font-size: 0.8rem;
+            padding: 0.25rem;
+        }
+        
+        /* Spacing Adjustments */
+        hr {
+            margin: 1.5rem 0;
+        }
+        
+        .mb-4 {
+            margin-bottom: 1.5rem !important;
+        }
+        
+        .mb-3 {
+            margin-bottom: 1rem !important;
+        }
+        
+        /* Text Adjustments */
+        .text-muted {
+            font-size: 0.8rem;
+        }
+        
+        strong, .fw-bold {
+            font-size: 0.9rem;
+        }
+        
+        /* Fix untuk row dalam bank info */
+        .bank-info .row {
+            margin: 0 -0.25rem;
+        }
+        
+        .bank-info .row [class*="col-"] {
+            padding: 0 0.25rem;
+        }
+        
+        /* Toast notification position */
+        .alert.position-fixed {
+            top: 10px !important;
+            right: 10px !important;
+            left: 10px !important;
+            right: auto;
+            font-size: 0.875rem;
+            z-index: 9999;
+        }
+        
+        /* Perbaikan untuk file preview */
+        #filePreview {
+            margin-top: 1rem;
+        }
+        
+        /* Perbaikan untuk border dan spacing */
+        .border-top {
+            padding-top: 1rem !important;
+            margin-top: 1rem;
+        }
+        
+        /* Success alert untuk bukti upload */
+        .alert-success {
+            text-align: center;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        /* Button grup dalam preview */
+        .proof-preview + div {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        
+        .proof-preview + div .btn {
+            width: 100%;
+            max-width: 200px;
+        }
+    }
     </style>
 @endpush
 <div class="container-fluid py-4">
@@ -250,21 +536,21 @@
                         @php
                             use App\Models\FeePayment;
 
-                            $latestProof = FeePayment::where('transaction_id', $trx->id)
+                            $latestProof = FeePayment::where('transaction_id', $transaction->id)
                                 ->whereNotNull('photo')
                                 ->latest()
                                 ->first();
                         @endphp
 
-                        @if ($trx->expires_at)
+                        @if ($transaction->expires_at)
                             @php
-                                $expiresAt = \Carbon\Carbon::parse($trx->expires_at);
+                                $expiresAt = \Carbon\Carbon::parse($transaction->expires_at);
                                 $now = \Carbon\Carbon::now();
                                 $remainingSeconds = $expiresAt->gt($now) ? $expiresAt->diffInSeconds($now) : 0;
                             @endphp
 
                             <div class="alert alert-warning">
-                                <strong>Batas Waktu Pembayaran:</strong> {{ $trx->expires_at->format('d-m-Y H:i') }}<br>
+                                <strong>Batas Waktu Pembayaran:</strong> {{ $transaction->expires_at->format('d-m-Y H:i') }}<br>
                                 <strong>Sisa Waktu:</strong>
                                 <span id="countdown"></span>
                             </div>
@@ -289,7 +575,7 @@
                                     </div>
                                     <div>
                                         <small class="text-muted d-block">Tanggal Transaksi</small>
-                                        <strong>{{ $trx->created_at->format('d M Y, H:i') }}</strong>
+                                        <strong>{{ $transaction->created_at->format('d M Y, H:i') }}</strong>
                                     </div>
                                 </div>
                             </div>
@@ -298,16 +584,16 @@
                         <!-- Amount Display -->
                         <div class="amount-display">
                             <h6 class="mb-2 opacity-90">Total Pembayaran</h6>
-                            <h2 class="mb-0 fw-bold">Rp{{ number_format($trx->amount, 0, ',', '.') }}</h2>
+                            <h2 class="mb-0 fw-bold">Rp{{ number_format($transaction->amount, 0, ',', '.') }}</h2>
                         </div>
 
                         <!-- Status -->
                         <div class="text-center mb-4">
-                            @if($trx->status === 'Completed')
+                            @if($transaction->status === 'Completed')
                                 <span class="status-badge status-paid">
                                     <i class="fas fa-check-circle"></i> Pembayaran Berhasil
                                 </span>
-                            @elseif($trx->status === 'Verification')
+                            @elseif($transaction->status === 'Verification')
                                 <span class="status-badge status-pending">
                                     <i class="fas fa-clock"></i> Menunggu Verifikasi
                                 </span>
@@ -379,7 +665,7 @@
                                     </div>
                                 </div>
                             @else
-                                <form action="{{ route('transaksi.booking.upload', $trx->id) }}" method="POST" enctype="multipart/form-data" id="uploadForm">
+                                <form action="{{ route('transaksi.booking.upload', $transaction->id) }}" method="POST" enctype="multipart/form-data" id="uploadForm">
                                     @csrf
                                     @method('PUT')
 
@@ -416,7 +702,7 @@
 
                         <!-- Action Buttons -->
                         <div class="text-center pt-3 border-top">
-                            <a href="{{ route('dashboard.users', ['id' => $trx->id]) }}" class="btn btn-outline-secondary btn-modern">
+                            <a href="{{ route('dashboard.users') }}" class="btn btn-outline-secondary btn-modern">
                                 <i class="fas fa-arrow-left me-2"></i>Kembali ke Dashboard
                             </a>
                             
@@ -454,7 +740,7 @@
                             <li>Pilih menu Transfer</li>
                             <li>Masukkan nomor rekening: <strong>1234567890</strong></li>
                             <li>Pastikan nama penerima: <strong>LPK Amarta Bangun Indonesia</strong></li>
-                            <li>Masukkan nominal: <strong>Rp{{ number_format($trx->amount, 0, ',', '.') }}</strong></li>
+                            <li>Masukkan nominal: <strong>Rp{{ number_format($transaction->amount, 0, ',', '.') }}</strong></li>
                             <li>Screenshot bukti transfer</li>
                         </ol>
                     </div>
@@ -465,7 +751,7 @@
                             <li>Pilih Transfer > Antar Bank</li>
                             <li>Pilih Bank BCA</li>
                             <li>Masukkan nomor rekening: <strong>1234567890</strong></li>
-                            <li>Masukkan nominal: <strong>Rp{{ number_format($trx->amount, 0, ',', '.') }}</strong></li>
+                            <li>Masukkan nominal: <strong>Rp{{ number_format($transaction->amount, 0, ',', '.') }}</strong></li>
                             <li>Foto struk sebagai bukti</li>
                         </ol>
                     </div>
@@ -482,127 +768,331 @@
         </div>
     </div>
 </div>
-
 @push('scripts')
     <script>
+        // Perbaikan JavaScript untuk Upload File
         document.addEventListener('DOMContentLoaded', function() {
             const uploadZone = document.getElementById('uploadZone');
             const fileInput = document.getElementById('fileInput');
             const filePreview = document.getElementById('filePreview');
             const fileName = document.getElementById('fileName');
             const uploadBtn = document.getElementById('uploadBtn');
+            const uploadForm = document.getElementById('uploadForm');
 
-            // Click to upload
+            // Pastikan semua element ada
+            if (!uploadZone || !fileInput || !filePreview || !fileName || !uploadBtn) {
+                console.error('Upload elements not found');
+                return;
+            }
+
+            // Click to upload - perbaikan event handling
             uploadZone.addEventListener('click', function(e) {
-                if (e.target !== fileInput) {
+                // Cegah event bubbling dan pastikan tidak mengklik button atau input yang sudah ada
+                if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'BUTTON') {
+                    e.preventDefault();
                     fileInput.click();
                 }
             });
 
-            // Drag and drop functionality
+            // Drag and drop functionality - diperbaiki
             uploadZone.addEventListener('dragover', function(e) {
                 e.preventDefault();
+                e.stopPropagation();
                 uploadZone.classList.add('dragover');
             });
 
             uploadZone.addEventListener('dragleave', function(e) {
                 e.preventDefault();
-                uploadZone.classList.remove('dragover');
+                e.stopPropagation();
+                // Hanya remove class jika benar-benar keluar dari zone
+                if (!uploadZone.contains(e.relatedTarget)) {
+                    uploadZone.classList.remove('dragover');
+                }
             });
 
             uploadZone.addEventListener('drop', function(e) {
                 e.preventDefault();
+                e.stopPropagation();
                 uploadZone.classList.remove('dragover');
                 
                 const files = e.dataTransfer.files;
                 if (files.length > 0) {
-                    fileInput.files = files;
-                    handleFileSelect();
+                    // Set file ke input
+                    const dt = new DataTransfer();
+                    dt.items.add(files[0]);
+                    fileInput.files = dt.files;
+                    
+                    // Trigger change event
+                    fileInput.dispatchEvent(new Event('change', { bubbles: true }));
                 }
             });
 
-            // File input change
-            fileInput.addEventListener('change', handleFileSelect);
+            // File input change - diperbaiki
+            fileInput.addEventListener('change', function(e) {
+                handleFileSelect(e.target.files[0]);
+            });
 
-            function handleFileSelect() {
-                const file = fileInput.files[0];
-                if (file) {
-                    // Validate file type
-                    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'];
-                    if (!allowedTypes.includes(file.type)) {
-                        alert('Format file tidak didukung. Gunakan JPG, PNG, atau PDF.');
-                        return;
-                    }
-
-                    // Validate file size (5MB)
-                    if (file.size > 5 * 1024 * 1024) {
-                        alert('Ukuran file terlalu besar. Maksimal 5MB.');
-                        return;
-                    }
-
-                    fileName.textContent = file.name;
-                    filePreview.classList.remove('d-none');
-                    uploadBtn.disabled = false;
-                }
-            }
-
-            window.removeFile = function() {
-                fileInput.value = '';
-                filePreview.classList.add('d-none');
-                uploadBtn.disabled = true;
-            }
-
-            window.copyToClipboard = function(text) {
-                navigator.clipboard.writeText(text).then(function() {
-                    // Create temporary toast notification
-                    const toast = document.createElement('div');
-                    toast.className = 'alert alert-success position-fixed';
-                    toast.style.top = '20px';
-                    toast.style.right = '20px';
-                    toast.style.zIndex = '9999';
-                    toast.innerHTML = '<i class="fas fa-check me-2"></i>Nomor rekening disalin!';
-                    document.body.appendChild(toast);
-                    
-                    setTimeout(function() {
-                        toast.remove();
-                    }, 2000);
+            // Button untuk pilih file
+            const selectFileBtn = uploadZone.querySelector('button[onclick*="fileInput"]');
+            if (selectFileBtn) {
+                selectFileBtn.removeAttribute('onclick');
+                selectFileBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    fileInput.click();
                 });
             }
-        });
 
-        document.addEventListener('DOMContentLoaded', function () {
-            let remaining = {{ $remainingSeconds ?? 0 }};
-            const countdownElement = document.getElementById('countdown');
-            const proofForm = document.getElementById('proof-form');
-            const expiredAlert = document.getElementById('expired-alert');
-
-            function updateCountdown() {
-                if (remaining <= 0) {
-                    countdownElement.innerHTML = 'Waktu habis';
-                    if (proofForm) {
-                        proofForm.style.display = 'none';
-                    }
-                    if (expiredAlert) {
-                        expiredAlert.style.display = 'block';
-                    }
+            function handleFileSelect(file) {
+                if (!file) {
+                    resetFileSelection();
                     return;
                 }
 
-                let hours = Math.floor(remaining / 3600);
-                let minutes = Math.floor((remaining % 3600) / 60);
-                let seconds = remaining % 60;
+                // Validate file type
+                const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'];
+                const fileType = file.type.toLowerCase();
+                
+                if (!allowedTypes.includes(fileType)) {
+                    showAlert('Format file tidak didukung. Gunakan JPG, PNG, atau PDF.', 'danger');
+                    resetFileSelection();
+                    return;
+                }
 
-                countdownElement.innerHTML =
-                    String(hours).padStart(2, '0') + ':' +
-                    String(minutes).padStart(2, '0') + ':' +
-                    String(seconds).padStart(2, '0');
+                // Validate file size (5MB)
+                const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+                if (file.size > maxSize) {
+                    showAlert('Ukuran file terlalu besar. Maksimal 5MB.', 'danger');
+                    resetFileSelection();
+                    return;
+                }
 
-                remaining--;
-                setTimeout(updateCountdown, 1000);
+                // Show file info
+                fileName.textContent = file.name + ' (' + formatFileSize(file.size) + ')';
+                filePreview.classList.remove('d-none');
+                uploadBtn.disabled = false;
+                
+                // Show preview if it's an image
+                showImagePreview(file);
+                
+                showAlert('File berhasil dipilih: ' + file.name, 'success');
             }
 
-            updateCountdown();
+            function resetFileSelection() {
+                fileInput.value = '';
+                filePreview.classList.add('d-none');
+                uploadBtn.disabled = true;
+                removeImagePreview();
+            }
+
+            function showImagePreview(file) {
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        let existingPreview = filePreview.querySelector('.image-preview');
+                        if (existingPreview) {
+                            existingPreview.remove();
+                        }
+                        
+                        const imagePreview = document.createElement('div');
+                        imagePreview.className = 'image-preview mt-2';
+                        imagePreview.innerHTML = `
+                            <img src="${e.target.result}" alt="Preview" style="max-width: 200px; max-height: 200px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                        `;
+                        filePreview.appendChild(imagePreview);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+
+            function removeImagePreview() {
+                const existingPreview = filePreview.querySelector('.image-preview');
+                if (existingPreview) {
+                    existingPreview.remove();
+                }
+            }
+
+            function formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+
+            function showAlert(message, type = 'info') {
+                // Remove existing alerts
+                const existingAlerts = document.querySelectorAll('.upload-alert');
+                existingAlerts.forEach(alert => alert.remove());
+                
+                // Create new alert
+                const alert = document.createElement('div');
+                alert.className = `alert alert-${type} alert-dismissible fade show upload-alert`;
+                alert.style.position = 'fixed';
+                alert.style.top = '20px';
+                alert.style.right = '20px';
+                alert.style.zIndex = '9999';
+                alert.style.minWidth = '300px';
+                alert.innerHTML = `
+                    ${message}
+                    <button type="button" class="btn-close" onclick="this.parentElement.remove()"></button>
+                `;
+                
+                document.body.appendChild(alert);
+                
+                // Auto remove after 5 seconds
+                setTimeout(function() {
+                    if (alert.parentElement) {
+                        alert.remove();
+                    }
+                }, 5000);
+            }
+
+            // Remove file function - diperbaiki
+            window.removeFile = function() {
+                resetFileSelection();
+            }
+
+            // Form submission handling - diperbaiki
+            if (uploadForm) {
+                uploadForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+
+                    if (!fileInput.files || fileInput.files.length === 0) {
+                        showAlert('Silakan pilih file terlebih dahulu.', 'warning');
+                        return;
+                    }
+
+                    // Disable button dan show loading
+                    uploadBtn.disabled = true;
+                    const originalText = uploadBtn.innerHTML;
+                    uploadBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Mengupload...';
+
+                    // Create FormData
+                    const formData = new FormData(uploadForm); // langsung ambil dari form
+                    formData.set('proof', fileInput.files[0]); // pastikan field proof
+                    formData.append('_method', 'PUT'); // karena pakai method PUT
+
+                    fetch(uploadForm.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Accept': 'application/json', // penting supaya Laravel kirim JSON
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            showAlert(data.message || 'Bukti pembayaran berhasil diupload!', 'success');
+                            setTimeout(() => window.location.reload(), 1500);
+                        } else {
+                            showAlert(data.message || 'Upload gagal.', 'danger');
+                            uploadBtn.disabled = false;
+                            uploadBtn.innerHTML = originalText;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Upload error:', error);
+                        showAlert('Gagal mengupload file: ' + error.message, 'danger');
+                        uploadBtn.disabled = false;
+                        uploadBtn.innerHTML = originalText;
+                    });
+                });
+            }
+
+            // Copy to clipboard function - diperbaiki
+            window.copyToClipboard = function(text) {
+                // Fallback untuk browser lama
+                if (!navigator.clipboard) {
+                    const textArea = document.createElement('textarea');
+                    textArea.value = text;
+                    document.body.appendChild(textArea);
+                    textArea.focus();
+                    textArea.select();
+                    try {
+                        document.execCommand('copy');
+                        showAlert('Nomor rekening berhasil disalin!', 'success');
+                    } catch (err) {
+                        showAlert('Gagal menyalin nomor rekening', 'danger');
+                    }
+                    document.body.removeChild(textArea);
+                    return;
+                }
+
+                navigator.clipboard.writeText(text).then(function() {
+                    showAlert('Nomor rekening berhasil disalin!', 'success');
+                }).catch(function(err) {
+                    showAlert('Gagal menyalin nomor rekening', 'danger');
+                });
+            }
+
+            // Countdown function - diperbaiki
+            const countdownElement = document.getElementById('countdown');
+            if (countdownElement) {
+                let remaining = parseInt(countdownElement.dataset.remaining) || 0;
+                
+                function updateCountdown() {
+                    if (remaining <= 0) {
+                        countdownElement.innerHTML = '<span class="text-danger fw-bold">Waktu habis</span>';
+                        
+                        // Disable upload form jika waktu habis
+                        if (uploadForm) {
+                            const formElements = uploadForm.querySelectorAll('input, button');
+                            formElements.forEach(el => el.disabled = true);
+                            uploadForm.style.opacity = '0.5';
+                        }
+                        
+                        showAlert('Waktu pembayaran telah habis. Silakan buat transaksi baru.', 'danger');
+                        return;
+                    }
+
+                    let hours = Math.floor(remaining / 3600);
+                    let minutes = Math.floor((remaining % 3600) / 60);
+                    let seconds = remaining % 60;
+
+                    countdownElement.innerHTML = 
+                        String(hours).padStart(2, '0') + ':' +
+                        String(minutes).padStart(2, '0') + ':' +
+                        String(seconds).padStart(2, '0');
+
+                    remaining--;
+                    setTimeout(updateCountdown, 1000);
+                }
+
+                updateCountdown();
+            }
         });
+
+        // Additional CSS untuk alert yang dinamis
+        const additionalCSS = `
+        <style>
+        .upload-alert {
+            max-width: 400px;
+            word-wrap: break-word;
+        }
+
+        .image-preview img {
+            transition: transform 0.2s ease;
+        }
+
+        .image-preview img:hover {
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 768px) {
+            .upload-alert {
+                right: 10px !important;
+                left: 10px !important;
+                right: auto;
+                max-width: calc(100vw - 20px);
+            }
+        }
+        </style>
+        `;
+
+        // Inject additional CSS
+        document.head.insertAdjacentHTML('beforeend', additionalCSS);
     </script>
 @endpush
 @endsection

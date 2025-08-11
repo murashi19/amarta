@@ -52,13 +52,19 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('/admin/createUser', [UsersController::class, 'store'])->name('admin.createUser.store'); // Proses tambah
     Route::get('/admin/{user}/editUser', [UsersController::class, 'edit'])->name('admin.editUser'); // Tampilan edit
     Route::put('/admin/editUser/{user}', [UsersController::class, 'update'])->name('admin.editUser.update'); // Proses edit
-    Route::get('/admin/{user}/userDetail', [UsersController::class, 'show'])->name('admin.usersManage');
+    Route::get('/admin/{user}/userDetail', [UsersController::class, 'show'])->name('admin.usersManage.show');
     Route::delete('/admin/usersManage/{user}', [UsersController::class, 'destroy'])->name('admin.usersManage.destroy');
 
     
     // Additional user routes
     Route::get('/admin/userDetail/{user}', [UsersController::class, 'show'])->name('admin.userDetail');
     Route::delete('/admin/usersManage/{user}', [UsersController::class, 'deleteUser'])->name('admin.usersManage.deleteUser');
+
+    // Profile
+    Route::get('/admin/profile', [UsersController::class, 'adminProfile'])->name('admin.profile');
+    Route::get('/admin/editProfile', [UsersController::class, 'editAdminProfile'])->name('admin.editProfile');
+    Route::put('/admin/editProfile', [UsersController::class, 'updateAdminProfile'])->name('admin.editProfile.updateProfile');
+    
     
     // API routes untuk AJAX
     Route::get('/admin/users/data', [UsersController::class, 'getData'])->name('admin.users.data');
@@ -98,18 +104,28 @@ Route::middleware(['auth'])->group(function () {
     // Transaksi
 
     // Transaksi Booking
-    Route::get('/transaksi/booking/{id}', [TransactionController::class, 'showBooking'])
-    ->middleware('ownsTransaction')
+   Route::get('/transaksi/booking/{transaction}', [TransactionController::class, 'showBooking'])
+    ->middleware(['auth', 'ownsTransaction'])
     ->name('transaksi.booking');
+
 
     Route::post('/transaksi/booking', [TransactionController::class, 'createBooking'])->name('transaksi.booking.createBooking');
     Route::put('/transaksi/booking/{id}/upload', [TransactionController::class, 'uploadProof'])->name('transaksi.booking.upload');
 
     // Transaksi Program Kelas
-    Route::get('/transaksi/programKelas/{id}', [TransactionController::class, 'showProgramKelas'])->name('transaksi.programKelas');
-    Route::get('/transaksi/programKelas', [TransactionController::class, 'createProgramKelas'])->name('transaksi.programKelas.createProgramKelas');
-    Route::post('/transaksi/{id}/programKelas', [TransactionController::class, 'storeInstallment'])->name('transaksi.programKelas.storeInstallment');
-    Route::get('/transaksi/programKelas/status/{id}', [TransactionController::class, 'checkStatus'])->name('transaksi.programKelas.checkStatus');
+    // Route::get('/transaksi/programKelas/{id}', [TransactionController::class, 'showProgramKelas'])->name('transaksi.programKelas');
+    // Route::get('/transaksi/programKelas', [TransactionController::class, 'createProgramKelas'])->name('transaksi.programKelas.createProgramKelas');
+    // Route::post('/transaksi/{id}/programKelas', [TransactionController::class, 'storeInstallment'])->name('transaksi.programKelas.storeInstallment');
+    // Route::get('/transaksi/programKelas/status/{id}', [TransactionController::class, 'checkStatus'])->name('transaksi.programKelas.checkStatus');
+    // Program Kelas routes
+    Route::get('/keuangan/program-kelas/create', [TransactionController::class, 'createProgramKelas'])
+        ->name('transaksi.programKelas.create');
+    
+    Route::get('/transaksi/program-kelas/{id}', [TransactionController::class, 'showProgramKelas'])
+        ->name('transaksi.programKelas');
+    
+    Route::post('/transaksi/program-kelas/{id}/cicilan', [TransactionController::class, 'storeInstallment'])
+        ->name('transaksi.programKelas.storeInstallment');
 
 
     Route::post('/translate', function (Request $request) {

@@ -472,4 +472,85 @@ class UsersController extends Controller
 
         return redirect()->route('users.profile')->with('success', 'Profil berhasil diperbarui.');
     }
+
+    public function adminProfile()
+    {
+        // Ambil data admin beserta role dan status
+        $admin = auth()->user()->load(['roles', 'status']);
+
+        // Pastikan hanya admin yang bisa akses
+        if (!$admin->roles->contains('name', 'Admin')) {
+            abort(403, 'Akses tidak diizinkan.');
+        }
+
+        return view('admin.profile', compact('admin'));
+    }
+
+    public function editAdminProfile()
+    {
+        $admin = Auth::user();
+
+        if (!$admin->roles->contains('name', 'Admin')) {
+            abort(403, 'Akses tidak diizinkan.');
+        }
+
+        return view('admin.editprofile', compact('admin'));
+    }
+
+    public function updateAdminProfile(Request $request)
+    {
+        $admin = Auth::user();
+
+        if (!$admin->roles->contains('name', 'Admin')) {
+            abort(403, 'Akses tidak diizinkan.');
+        }
+
+        // Validasi data
+        $validated = $request->validate([
+            'name'            => 'required|string|max:255',
+            'email'           => [
+                'required',
+                'email',
+                'max:255',
+                Rule::unique('users')->ignore($admin->id),
+            ],
+            'phone_number'    => 'nullable|string|max:20',
+            'gender'          => 'nullable|in:Laki-laki,Perempuan',
+            'birth_place'     => 'nullable|string|max:100',
+            'birth_date'      => 'nullable|date',
+            'education_level' => 'nullable|string|max:50',
+            'address'         => 'nullable|string|max:500',
+            'photo'           => 'nullable|image|mimes:jpg,jpeg,png|max:5120',
+        ]);
+
+        // Upload foto jika ada
+        if ($request->hasFile('photo')) {
+            try {
+                $photo = $request->file('photo');
+
+                if (!Storage::disk('public')->exists('photos')) {
+                    Storage::disk('public')->makeDirectory('photos');
+                }
+
+                if ($admin->photo && Storage::disk('public')->exists($admin->photo)) {
+                    Storage::disk('public')->delete($admin->photo);
+                }
+
+                $filename = time() . '_' . uniqid() . '.' . $photo->getClientOriginalExtension();
+                $photoPath = $photo->storeAs('photos', $filename, 'public');
+
+                $validated['photo'] = $photoPath;
+
+                Log::info('Admin photo uploaded successfully', ['path' => $photoPath]);
+            } catch (\Exception $e) {
+                Log::error('Admin photo upload failed', ['error' => $e->getMessage()]);
+                return back()->withErrors(['photo' => 'Gagal mengupload foto: ' . $e->getMessage()]);
+            }
+        }
+
+        // Update data admin
+        $admin->update($validated);
+
+        return redirect()->route('admin.profile')->with('success', 'Profil admin berhasil diperbarui.');
+    }
 }

@@ -5,13 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Dashboard') - LPK PT Amarta Indonesia</title>
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
-    <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
+   <style>
         :root {
             --color-primary: #0d5ea6;
             --color-secondary: #a6550d;
@@ -52,7 +49,6 @@
             color: white !important;
             font-weight: bold;
             font-size: 1.5rem;
-            margin-left: 3rem;
         }
 
         .navbar-nav .nav-link {
@@ -155,7 +151,69 @@
             box-shadow: var(--shadow-hover);
             transform: translateY(-5px);
         }
-         /* Welcome Section */
+
+        .stat-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .stat-label {
+            color: var(--color-disabletxt);
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        .stat-icon {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 3rem;
+            opacity: 0.1;
+        }
+
+        /* Color variations for cards */
+        .card-primary { --card-color: var(--color-primary); }
+        .card-success { --card-color: var(--color-success); }
+        .card-warning { --card-color: var(--color-warning); }
+        .card-danger { --card-color: var(--color-danger); }
+        .card-info { --card-color: var(--color-info); }
+
+        .card-primary::before { background: var(--color-primary); }
+        .card-success::before { background: var(--color-success); }
+        .card-warning::before { background: var(--color-warning); }
+        .card-danger::before { background: var(--color-danger); }
+        .card-info::before { background: var(--color-info); }
+
+        .card-primary .stat-number { color: var(--color-primary); }
+        .card-success .stat-number { color: var(--color-success); }
+        .card-warning .stat-number { color: var(--color-warning); }
+        .card-danger .stat-number { color: var(--color-danger); }
+        .card-info .stat-number { color: var(--color-info); }
+
+        .card-primary .stat-icon { color: var(--color-primary); }
+        .card-success .stat-icon { color: var(--color-success); }
+        .card-warning .stat-icon { color: var(--color-warning); }
+        .card-danger .stat-icon { color: var(--color-danger); }
+        .card-info .stat-icon { color: var(--color-info); }
+
+        /* Welcome Section */
         .welcome-card {
             background: var(--gradient-primary);
             color: white;
@@ -166,14 +224,213 @@
             margin-bottom: 0.5rem;
         }
 
+        /* Custom Buttons */
+        .btn-custom-primary {
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 10px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-custom-primary:hover {
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-2px);
+            color: white;
+        }
+
+        /* Page Header */
+        .page-header {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem 2rem;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .page-header h1 {
+            margin: 0;
+            color: var(--color-dark);
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+
+        .breadcrumb {
+            background: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .breadcrumb-item a {
+            color: var(--color-primary);
+            text-decoration: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.show {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 100px 15px 30px 15px;
+            }
+
+            .navbar-toggler {
+                display: block !important;
+            }
+        }
+
+        /* Custom scrollbar */
+        .sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: var(--color-primary);
+            border-radius: 10px;
+        }
+
+        /* Main Content Custom */
+        .card-stats {
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        .card-stats:hover {
+            transform: translateY(-5px);
+        }
+        .badge-auto {
+            background: linear-gradient(45deg, #28a745, #20c997);
+        }
+        .badge-manual {
+            background: linear-gradient(45deg, #007bff, #6610f2);
+        }
+        .priority-high {
+            border-left: 4px solid #dc3545;
+        }
+        .priority-medium {
+            border-left: 4px solid #ffc107;
+        }
+        .priority-low {
+            border-left: 4px solid #28a745;
+        }
+        .table th {
+        vertical-align: middle;
+        border-bottom: 2px solid #dee2e6;
+        font-weight: 600;
+        font-size: 0.875rem;
+        }
+
+        .table td {
+            vertical-align: middle;
+            padding: 1rem 0.75rem;
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: rgba(0, 123, 255, 0.05);
+        }
+
+        /* Badge styling */
+        .badge {
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        /* Dropdown button styling */
+        .dropdown-toggle::after {
+            display: none;
+        }
+
+        /* Card stats styling */
+        .card-stats {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        /* Table responsive improvements */
+        @media (max-width: 768px) {
+            .table-responsive {
+                font-size: 0.875rem;
+            }
+            
+            .table td, .table th {
+                padding: 0.5rem 0.25rem;
+            }
+            
+            .badge {
+                font-size: 0.7rem;
+            }
+        }
+
+        /* Status badge colors */
+        .badge.bg-info {
+            background-color: #17a2b8 !important;
+        }
+
+        .badge.bg-secondary {
+            background-color: #6c757d !important;
+        }
+
+        /* Table striped custom colors */
+        .table-striped > tbody > tr:nth-of-type(odd) > td {
+            background-color: rgba(0, 123, 255, 0.02);
+        }
+
+        /* Action dropdown */
+        .dropdown-menu {
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            border: none;
+            border-radius: 0.375rem;
+        }
+
+        .dropdown-item {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .dropdown-item.text-danger:hover {
+            background-color: #f8d7da;
+            color: #721c24 !important;
+        }
+
+        /* Title cell styling */
+        .table td div strong {
+            color: #495057;
+            font-size: 0.9rem;
+        }
+
+        .table td div small {
+            display: block;
+            margin-top: 0.25rem;
+            line-height: 1.3;
+        }
     </style>
+
 @stack('styles')
 </head>
 <body>
+
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
-        <div class="container-fluid ">
-            <a class="navbar-brand" href="{{ url('dashboard/users') }}">
+     <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{{ url('dashboard/admin') }}">
                 <i class="fas fa-graduation-cap me-2"></i>
                 Amarta
             </a>
@@ -182,20 +439,23 @@
                 <i class="fas fa-bars text-white"></i>
             </button>
 
-            <div class="collapse navbar-collapse" id="navbarNav"> 
+            <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
                             @if(Auth::user()->photo)
-                                <img src="{{ asset('storage/' . Auth::user()->photo) }}" alt="User" class="user-avatar me-2">
+                                <img 
+                                    src="{{ asset('storage/' . Auth::user()->photo) }}" 
+                                    alt="User" 
+                                    class="user-avatar me-2"
+                                >
                             @else
-                                <i class="fas fa-user-circle fa-2x me-2"></i>
+                                <i class="fas fa-user-circle me-2" style="font-size: 32px; color: white;"></i>
                             @endif
                             <span>{{ Auth::user()->name }}</span>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>Profile</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Settings</a></li>
+                            <li><a class="dropdown-item" href="{{ url('users/profile') }}"><i class="fas fa-user me-2"></i>Profile</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li>
                                 <a class="dropdown-item" href="{{ route('logout') }}" 
@@ -205,6 +465,7 @@
                             </li>
                         </ul>
                     </li>
+
                 </ul>
             </div>
         </div>
@@ -238,8 +499,8 @@
     <div class="main-content">
         @hasSection('page-header')
             <div class="page-header">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
+                    <div class="mb-3 mb-md-0">
                         <h1>@yield('page-title')</h1>
                         @hasSection('breadcrumb')
                             <nav aria-label="breadcrumb">
@@ -260,12 +521,104 @@
 
         @yield('content')
     </div>
+
     <!-- Hidden logout form -->
     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
         @csrf
     </form>
+
     <!-- Bootstrap JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JavaScript for Mobile Menu -->
+    <script>
+        // Add some interactive effects
+        document.querySelectorAll('.dashboard-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+
+        // Sidebar toggle for mobile
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebar = document.getElementById('sidebar');
+        
+        if (sidebarToggle) {
+            sidebarToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('show');
+            });
+        }
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            if (window.innerWidth <= 768) {
+                if (!sidebar.contains(event.target) && !sidebarToggle.contains(event.target)) {
+                    sidebar.classList.remove('show');
+                }
+            }
+        });
+
+        // Main Content Custom Javascript
+        document.getElementById('viewModalContent').innerHTML = content;
+            new bootstrap.Modal(document.getElementById('viewModal')).show();
+
+        // Auto-save draft setiap 30 detik (opsional)
+        let autoSaveInterval;
+
+        document.getElementById('announcementModal').addEventListener('shown.bs.modal', function () {
+            autoSaveInterval = setInterval(function() {
+                const title = document.getElementById('title').value;
+                const content = document.getElementById('content').value;
+                
+                if (title || content) {
+                    // Simulasi auto-save
+                    console.log('Auto-saving draft...');
+                }
+            }, 30000);
+        });
+
+        document.getElementById('announcementModal').addEventListener('hidden.bs.modal', function () {
+            if (autoSaveInterval) {
+                clearInterval(autoSaveInterval);
+            }
+        });
+
+        // Preview pengumuman saat mengetik
+        function previewAnnouncement() {
+            const title = document.getElementById('title').value;
+            const content = document.getElementById('content').value;
+            const type = document.getElementById('type').value;
+            
+            // Bisa ditambahkan preview real-time di sini
+        }
+
+        // Event listeners untuk real-time preview
+        document.getElementById('title').addEventListener('input', previewAnnouncement);
+        document.getElementById('content').addEventListener('input', previewAnnouncement);
+
+
+        // Statistics update (simulasi real-time)
+        function updateStats() {
+            // Simulasi update statistik real-time
+            const stats = {
+                total: Math.floor(Math.random() * 10) + 5,
+                published: Math.floor(Math.random() * 5) + 3,
+                draft: Math.floor(Math.random() * 3) + 1,
+                totalViews: Math.floor(Math.random() * 100) + 150
+            };
+            
+            // Update DOM jika diperlukan
+            // document.querySelector('.card-stats:nth-child(1) h3').textContent = stats.total;
+        }
+
+        // Update stats setiap 30 detik
+        setInterval(updateStats, 30000);
+    </script>
+
     @stack('scripts')
 </body>
 </html>

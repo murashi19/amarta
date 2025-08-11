@@ -710,27 +710,27 @@
     }
 
     // Auto Save Draft Tambah Pengumuman (optional)
-    let autoSaveInterval;
+    // let autoSaveInterval;
 
-    document.getElementById('announcementModal').addEventListener('shown.bs.modal', function () {
-        toggleAutoFields(); // trigger pertama kali saat modal dibuka
+    // document.getElementById('announcementModal').addEventListener('shown.bs.modal', function () {
+    //     toggleAutoFields(); // trigger pertama kali saat modal dibuka
 
-        autoSaveInterval = setInterval(() => {
-            const title = document.getElementById('title').value;
-            const content = document.getElementById('content').value;
+    //     autoSaveInterval = setInterval(() => {
+    //         const title = document.getElementById('title').value;
+    //         const content = document.getElementById('content').value;
 
-            if (title || content) {
-                console.log('Auto-saving draft (create)...');
-            }
-        }, 30000);
-    });
+    //         if (title || content) {
+    //             console.log('Auto-saving draft (create)...');
+    //         }
+    //     }, 30000);
+    // });
 
-    document.getElementById('announcementModal').addEventListener('hidden.bs.modal', function () {
-        clearInterval(autoSaveInterval);
-        document.getElementById('announcementForm').reset();
-        document.getElementById('_method').value = 'POST';
-        toggleAutoFields(); // reset field state
-    });
+    // document.getElementById('announcementModal').addEventListener('hidden.bs.modal', function () {
+    //     clearInterval(autoSaveInterval);
+    //     document.getElementById('announcementForm').reset();
+    //     document.getElementById('_method').value = 'POST';
+    //     toggleAutoFields(); // reset field state
+    // });
 
     // Fungsi: Toggle field tambahan saat tipe/status berubah (CREATE)
     function toggleAutoFields() {

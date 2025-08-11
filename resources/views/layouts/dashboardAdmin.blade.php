@@ -441,12 +441,19 @@
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
-                            <img src="{{ asset('storage/' . Auth::user()->photo) }}" alt="User" class="user-avatar me-2">
+                             @if(Auth::user()->photo)
+                                <img 
+                                    src="{{ asset('storage/' . Auth::user()->photo) }}" 
+                                    alt="User" 
+                                    class="user-avatar me-2"
+                                >
+                            @else
+                                <i class="fas fa-user-circle me-2" style="font-size: 32px; color: white;"></i>
+                            @endif
                             <span>{{ Auth::user()->name }}</span>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>Profile</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Settings</a></li>
+                            <li><a class="dropdown-item" href="{{ url('admin/profile') }}"><i class="fas fa-user me-2"></i>Profile</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li>
                                 <a class="dropdown-item" href="{{ route('logout') }}" 

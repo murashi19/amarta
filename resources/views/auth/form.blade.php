@@ -198,10 +198,10 @@
                                     </div>
 
                                     <div class="d-flex justify-content-between mt-4">
-                                        <button type="button" class="btn btn-outline-secondary btn-lg prev-step">
+                                        <button type="button" class="btn btn-outline-secondary mr-1 btn-lg2 prev-step">
                                             <i class="fas fa-arrow-left me-2"></i>Kembali
                                         </button>
-                                        <button type="button" class="btn btn-primary btn-lg next-step">
+                                        <button type="button" class="btn btn-primary btn-lg2 next-step">
                                             Selanjutnya <i class="fas fa-arrow-right ms-2"></i>
                                         </button>
                                     </div>
@@ -240,45 +240,13 @@
                                                 @enderror
                                             </div>
                                         </div>
-
-                                        <div class="col-lg-6">
-                                            <div class="form-floating">
-                                                <input type="file" 
-                                                       class="form-control @error('photo') is-invalid @enderror" 
-                                                       id="photo" 
-                                                       name="photo" 
-                                                       accept="image/*">
-                                                <label for="photo">
-                                                    <i class="fas fa-camera me-2"></i>Foto Profil (Opsional)
-                                                </label>
-                                                @error('photo')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                                <div class="form-text">
-                                                    <small class="text-muted">Format: JPG, PNG, maksimal 2MB</small>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-12">
-                                            <div class="form-floating">
-                                                <textarea class="form-control" 
-                                                          id="notes" 
-                                                          name="notes" 
-                                                          style="height: 100px"
-                                                          placeholder="Catatan tambahan (opsional)">{{ old('notes') }}</textarea>
-                                                <label for="notes">
-                                                    <i class="fas fa-sticky-note me-2"></i>Catatan Tambahan (Opsional)
-                                                </label>
-                                            </div>
-                                        </div>
                                     </div>
 
                                     <div class="d-flex justify-content-between mt-4">
-                                        <button type="button" class="btn btn-outline-secondary btn-lg prev-step">
+                                        <button type="button" class="btn btn-outline-secondary btn-lg2 prev-step">
                                             <i class="fas fa-arrow-left me-2"></i>Kembali
                                         </button>
-                                        <button type="button" class="btn btn-primary btn-lg next-step">
+                                        <button type="button" class="btn btn-primary btn-lg2 next-step">
                                             Selanjutnya <i class="fas fa-arrow-right ms-2"></i>
                                         </button>
                                     </div>
@@ -345,11 +313,11 @@
                                         </div>
                                     </div>
 
-                                    <div class="d-flex justify-content-between mt-4">
-                                        <button type="button" class="btn btn-outline-secondary btn-lg prev-step">
+                                    <div class="d-flex justify-content-between mt-4 ">
+                                        <button type="button" class="btn btn-outline-secondary btn-lg2 prev-step">
                                             <i class="fas fa-arrow-left me-2"></i>Kembali
                                         </button>
-                                        <button type="submit" class="btn btn-success btn-lg">
+                                        <button type="submit" id="submit" class="btn btn-success btn-lg3">
                                             <i class="fas fa-user-plus me-2"></i>Daftar Sekarang
                                         </button>
                                     </div>
@@ -382,7 +350,10 @@
         // Multi-step form functionality
         function updateProgress() {
             const progress = (currentStep / totalSteps) * 100;
-            document.getElementById('form-progress').style.width = progress + '%';
+            const progressBar = document.getElementById('form-progress');
+            if (progressBar) {
+                progressBar.style.width = progress + '%';
+            }
         }
         
         function showStep(step) {
@@ -399,6 +370,85 @@
             
             updateProgress();
         }
+        
+        // Simple validation for current step (extended)
+        function validateCurrentStep() {
+            const currentStepEl = document.getElementById('step-' + currentStep);
+            const requiredFields = currentStepEl.querySelectorAll('input[required], select[required], textarea[required]');
+            let isValid = true;
+
+            // Reset previous invalid styles
+            requiredFields.forEach(field => {
+                field.classList.remove('is-invalid');
+            });
+
+            // Cek setiap field
+            for (const field of requiredFields) {
+                // Check empty
+                if (!field.value.trim()) {
+                    field.classList.add('is-invalid');
+                    isValid = false;
+                    continue; // lanjut cek field lain
+                }
+                // Khusus validasi email
+                if (field.type === 'email') {
+                    if (!field.checkValidity()) {
+                        field.classList.add('is-invalid');
+                        alert('Harap isi email dengan format yang benar.');
+                        field.focus();
+                        return false; // stop validasi, langsung return false
+                    }
+                }
+                // Khusus validasi nomor telepon dengan pattern manual
+                if (field.name === 'phone_number') {
+                    const phonePattern = /^[0-9]{10,15}$/;
+                    if (!phonePattern.test(field.value.trim())) {
+                        field.classList.add('is-invalid');
+                        alert('Nomor telepon harus berupa angka dan memiliki panjang 11sampai 13 digit.');
+                        field.focus();
+                        return false; // stop validasi, langsung return false
+                    }
+                }
+            }
+
+            if (!isValid) {
+                // Tampilkan toast jika ada field kosong
+                showToast('Mohon lengkapi semua field yang wajib diisi.');
+            }
+
+            return isValid;
+        }
+
+        // Fungsi toast
+        function showToast(message) {
+            const existingToast = document.querySelector('.toast-container');
+            if (existingToast) existingToast.remove();
+
+            const toast = document.createElement('div');
+            toast.className = 'toast-container position-fixed top-0 end-0 p-3';
+            toast.innerHTML = `
+                <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="toast-header" style="background-color: var(--color-warning); color: var(--color-dark);">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong class="me-auto">Perhatian</strong>
+                        <button type="button" class="btn-close" aria-label="Close"></button>
+                    </div>
+                    <div class="toast-body">${message}</div>
+                </div>
+            `;
+            document.body.appendChild(toast);
+
+            // Close button handler
+            toast.querySelector('.btn-close').addEventListener('click', () => {
+                toast.remove();
+            });
+
+            setTimeout(() => {
+                toast.remove();
+            }, 4000);
+        }
+
+        
         
         // Next step buttons
         document.querySelectorAll('.next-step').forEach(btn => {
@@ -421,43 +471,9 @@
                 }
             });
         });
+
         
-        // Simple validation for current step
-        function validateCurrentStep() {
-            const currentStepEl = document.getElementById('step-' + currentStep);
-            const requiredFields = currentStepEl.querySelectorAll('input[required], select[required], textarea[required]');
-            let isValid = true;
-            
-            requiredFields.forEach(field => {
-                field.classList.remove('is-invalid');
-                if (!field.value.trim()) {
-                    field.classList.add('is-invalid');
-                    isValid = false;
-                }
-            });
-            
-            if (!isValid) {
-                const toast = document.createElement('div');
-                toast.className = 'toast-container position-fixed top-0 end-0 p-3';
-                toast.innerHTML = `
-                    <div class="toast show" role="alert">
-                        <div class="toast-header" style="background-color: var(--color-warning); color: var(--color-dark);">
-                            <i class="fas fa-exclamation-triangle me-2"></i>
-                            <strong class="me-auto">Perhatian</strong>
-                        </div>
-                        <div class="toast-body">
-                            Mohon lengkapi semua field yang wajib diisi.
-                        </div>
-                    </div>
-                `;
-                document.body.appendChild(toast);
-                setTimeout(() => toast.remove(), 3000);
-            }
-            
-            return isValid;
-        }
-        
-        // Password toggle functionality
+        // Password toggle functionality (tidak diubah)
         document.querySelectorAll('.toggle-password').forEach(button => {
             button.addEventListener('click', function () {
                 const target = document.querySelector(this.dataset.target);
@@ -476,18 +492,62 @@
         });
         
         // Phone number formatting
-        document.getElementById('phone_number').addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\D/g, '');
-            if (value.startsWith('08')) {
-                e.target.value = value;
-            } else if (value.startsWith('8')) {
-                e.target.value = '0' + value;
-            }
-        });
+        const phoneInput = document.getElementById('phone_number');
+        if (phoneInput) {
+            phoneInput.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.startsWith('08')) {
+                    e.target.value = value;
+                } else if (value.startsWith('8')) {
+                    e.target.value = '0' + value;
+                } else {
+                    e.target.value = value;
+                }
+            });
+        }
         
         // Initialize first step
-        updateProgress();
+        showStep(currentStep);
+
+        // Semua input di dalam form-step simpan dan load otomatis
+        function saveInputToLocalStorage(input) {
+            if (!input.name) return; // pastikan ada atribut name
+            localStorage.setItem('formInput_' + input.name, input.value);
+        }
+
+        function loadInputFromLocalStorage(input) {
+            if (!input.name) return;
+            const savedValue = localStorage.getItem('formInput_' + input.name);
+            if (savedValue !== null) {
+                input.value = savedValue;
+            }
+        }
+
+        // Ambil semua input di seluruh step
+        const allInputs = document.querySelectorAll('.form-step input, .form-step select, .form-step textarea');
+
+        // Load data dari localStorage saat halaman load
+        allInputs.forEach(input => {
+            loadInputFromLocalStorage(input);
+
+            // Simpan otomatis setiap ada perubahan
+            input.addEventListener('input', function() {
+                saveInputToLocalStorage(input);
+            });
+        });
+
+        const submitBtn = document.getElementById('submit');
+            if(submitBtn) {
+                submitBtn.addEventListener('click', function() {
+                    allInputs.forEach(input => {
+                        if(input.name) {
+                            localStorage.removeItem('formInput_' + input.name);
+                        }
+                    });
+                });
+            }
     });
+
 </script>
 @endpush
 
@@ -673,8 +733,25 @@
             }
             
             .btn-lg {
-                font-size: 1rem;
-                padding: 0.75rem 1.5rem;
+                font-size: 0.85rem;    
+                padding: 0.5rem 1rem;  
+                width: 100%;
+                height: 40px;          
+                box-sizing: border-box;
+            }
+            .btn-lg2{
+                font-size: 0.85rem;    
+                padding: 0.5rem 1rem;  
+                width: 140px;
+                height: 40px;          
+                box-sizing: border-box;
+            }
+            .btn-lg3{
+                font-size: 0.70rem;    
+                padding: 0.5rem 1rem;  
+                width: 140px;
+                height: 40px;          
+                box-sizing: border-box;
             }
             
             .step-icon {
@@ -686,6 +763,7 @@
                 font-size: 1.1rem;
             }
         }
+
     </style>
 @endpush
 @endsection

@@ -22,7 +22,8 @@ class ManageTransactionController extends Controller
     public function index(Request $request)
     {
         // Handle transactions
-        $transactionQuery = Transaction::with(['user']);
+        $transactionQuery = Transaction::with(['user', 'feePayments']);
+
 
         // Pencarian transaksi
         if ($request->filled('search')) {

@@ -560,19 +560,19 @@
                                                 </small>
                                             @endif
                                         </td>
-                                        <td class="text-center align-middle">
-                                            @if($transaction->proof_url)
-                                                <a href="{{ asset('storage/' . $transaction->proof_url) }}" 
-                                                   target="_blank" 
-                                                   class="btn btn-sm btn-outline-info">
-                                                    <i class="fas fa-image me-1"></i> Lihat
-                                                </a>
-                                            @else
-                                                <span class="text-muted">
-                                                    <i class="fas fa-minus"></i>
-                                                </span>
-                                            @endif
-                                        </td>
+                                            <td class="text-center align-middle">
+                                                @if($transaction->feePayments->isNotEmpty() && $transaction->feePayments->first()->photo)
+                                                    <a href="{{ asset('storage/' . $transaction->feePayments->first()->photo) }}" 
+                                                    target="_blank" 
+                                                    class="btn btn-sm btn-outline-info">
+                                                        <i class="fas fa-image me-1"></i> Lihat
+                                                    </a>
+                                                @else
+                                                    <span class="text-muted">
+                                                        <i class="fas fa-minus"></i>
+                                                    </span>
+                                                @endif
+                                            </td>
                                         <td class="align-middle">
                                             <div class="d-flex flex-column gap-1" role="group">
                                                 <!-- View Detail Button -->
@@ -1049,24 +1049,33 @@
                     </div>
 
                     <div class="mb-4">
-                        <label for="meet_link" class="form-label fw-semibold">
-                            <i class="fas fa-link me-2 text-primary"></i>Link Google Meet
+                        <label class="form-label fw-semibold">
+                            <i class="fas fa-video me-2 text-primary"></i>Pilih Platform Meeting
                         </label>
-                        <div class="input-group input-group-lg">
-                            <span class="input-group-text bg-light">
-                                <i class="fab fa-google text-danger"></i>
-                            </span>
-                            <input type="url" 
-                                   name="meet_link" 
-                                   id="meet_link"
-                                   class="form-control" 
-                                   placeholder="https://meet.google.com/abc-defg-hij" 
-                                   required>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="meeting_platform" id="platform_gmeet" value="google_meet" checked>
+                            <label class="form-check-label" for="platform_gmeet">
+                                <i class="fab fa-google text-danger me-1"></i> Google Meet
+                            </label>
                         </div>
-                        <div class="form-text">
-                            <i class="fas fa-lightbulb me-1"></i>
-                            Pastikan link Google Meet dapat diakses oleh semua peserta
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="meeting_platform" id="platform_zoom" value="zoom">
+                            <label class="form-check-label" for="platform_zoom">
+                                <i class="fas fa-video text-primary me-1"></i> Zoom Meeting
+                            </label>
                         </div>
+                    </div>
+
+                    <div class="mb-4" id="link-input-wrapper">
+                        <label for="meet_link" class="form-label fw-semibold" id="link-label">
+                            <i class="fab fa-google text-danger me-2" id="link-icon"></i>Link Google Meet
+                        </label>
+                        <input type="url" 
+                            name="meet_link" 
+                            id="meet_link"
+                            class="form-control form-control-lg" 
+                            placeholder="https://meet.google.com/abc-defg-hij" 
+                            required>
                     </div>
 
                     <div class="row">
