@@ -242,6 +242,7 @@
             margin-right: 0.5rem;
         }
 
+        /* CSS untuk Tampilan Mobile */
         @media (max-width: 768px) {
             .page-header h1 {
                 font-size: 2rem;
@@ -258,7 +259,65 @@
             }
             
             .table-responsive {
-                font-size: 0.9rem;
+                font-size: 0.85rem; /* Sedikit diperkecil dari 0.9rem */
+            }
+
+            /* CSS untuk Button di Tabel pada Mobile */
+            .table .btn-custom {
+                padding: 0.3rem 0.6rem; /* Lebih kecil dari default */
+                font-size: 0.75rem; /* Font size diperkecil */
+                border-radius: 18px; /* Radius lebih kecil */
+                min-width: auto;
+                white-space: nowrap; /* Cegah text wrap */
+            }
+            
+            .table .btn-sm {
+                padding: 0.25rem 0.5rem; 
+                font-size: 0.7rem;
+                border-radius: 15px;
+            }
+            
+            /* Khusus untuk button di dalam cell tabel */
+            .table td .btn-custom,
+            .table td .btn {
+                padding: 0.25rem 0.5rem;
+                font-size: 0.7rem;
+                line-height: 1.2;
+                border-radius: 15px;
+                display: inline-block;
+            }
+            
+            /* Badge status juga diperkecil */
+            .table .badge-status {
+                padding: 0.25rem 0.5rem;
+                font-size: 0.65rem;
+                border-radius: 12px;
+                white-space: nowrap;
+            }
+            
+            /* Icon di button diperkecil */
+            .table .btn i {
+                font-size: 0.65rem;
+                margin-right: 0.2rem;
+            }
+            
+            /* Outline button untuk disabled state */
+            .table .btn-outline-secondary {
+                padding: 0.25rem 0.5rem;
+                font-size: 0.7rem;
+                border-radius: 15px;
+            }
+            
+            /* Perbaikan untuk kolom aksi agar tidak terlalu lebar */
+            .table td:last-child {
+                width: 80px; /* Batasi lebar kolom aksi */
+                text-align: center;
+            }
+            
+            /* Badge number di kolom pertama juga diperkecil */
+            .table .badge {
+                font-size: 0.7rem;
+                padding: 0.25rem 0.4rem;
             }
         }
 
@@ -285,7 +344,7 @@
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-md-8">
-                    <h1><i class="fas fa-wallet me-3"></i>Keuangan LPK Amarta</h1>
+                    <h2 class="text-white ml-5"><i class="fas fa-wallet me-3 text-white"></i>Keuangan LPK Amarta</h2>
                     <p class="lead mb-0">Kelola pembayaran program Anda dengan mudah</p>
                 </div>
                 <div class="col-md-4 text-md-end">
@@ -433,11 +492,6 @@
                     <li class="nav-item" role="presentation">
                         <button class="nav-link active" id="tagihan-tab" data-bs-toggle="pill" data-bs-target="#tagihan" type="button">
                             <i class="fas fa-list-alt me-2"></i>Ringkasan Tagihan
-                        </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="booking-tab" data-bs-toggle="pill" data-bs-target="#booking" type="button">
-                            <i class="fas fa-bookmark me-2"></i>Booking Class
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
@@ -672,146 +726,197 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Konten Booking Class Tab -->
+            
+            <!-- Konten Program Kelas Tab -->
             <div class="tab-pane fade" id="programkelas" role="tabpanel">
-            <div class="row">
-                <div class="col-lg-4 mb-4">
-                    <div class="card table-card">
-                        <div class="card-body text-center">
-                            <div class="card-icon mx-auto mb-3" style="background: linear-gradient(135deg, #4ecdc4, #44a08d);">
-                                <i class="fas fa-book-open"></i>
-                            </div>
-                            <h5>Program Kelas Bahasa</h5>
-                            <h3 class="text-info">
-                                Rp {{ number_format($biayaDp ?? 7000000, 0, ',', '.') }}
-                            </h3>
-                            <p class="text-muted">
-                                Status: 
-                                @if($dpTransaction && $dpTransaction->status == 'Completed')
-                                    <span class="badge badge-paid">Sudah Dibayar</span>
-                                @elseif($bookingTransaction && $bookingTransaction->status == 'Completed')
-                                    <span class="badge badge-pending">Belum Lunas</span>
+                <div class="row">
+                    <div class="col-lg-4 mb-4">
+                        <div class="card table-card">
+                            <div class="card-body text-center">
+                                <div class="card-icon mx-auto mb-3" style="background: linear-gradient(135deg, #4ecdc4, #44a08d);">
+                                    <i class="fas fa-book-open"></i>
+                                </div>
+                                <h5>Biaya Program Kelas</h5>
+                                @if(in_array($user->status->name, ['Booking Paid', 'Meeting Joined', 'Active']))
+                                    <h3 class="text-info">Rp {{ number_format($biayaDp ?? 7000000, 0, ',', '.') }}</h3>
                                 @else
-                                    <span class="badge badge-waiting">Menunggu Booking</span>
+                                    <h3 class="text-muted">-</h3>
                                 @endif
-                            </p>
+                                <p class="text-muted">
+                                    Status: 
+                                    @if($dpTransaction && $dpTransaction->status == 'Completed')
+                                        <span class="badge badge-paid">Sudah Dibayar</span>
+                                    @elseif($bookingTransaction && $bookingTransaction->status == 'Completed')
+                                        <span class="badge badge-pending">Belum Dibayar</span>
+                                    @else
+                                        <span class="badge badge-waiting">Menunggu Program Kelas</span>
+                                    @endif
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-8 mb-4">
+                        <div class="alert info-alert">
+                            <h6><i class="fas fa-info-circle me-2"></i>Informasi Biaya Program Kelas</h6>
+                            <ul class="mb-0">
+                                <li>Anda harus membayar biaya Program Kelas sebelum tahap akhir.</li>
+                                <li>Akses tahap akhir akan diberikan setelah pembayaran selesai.</li>
+                                @if(!$bookingTransaction || $bookingTransaction->status !== 'Completed')
+                                    <li><strong>Anda harus menyelesaikan Program Kelas terlebih dahulu.</strong></li>
+                                @endif
+                            </ul>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-8 mb-4">
-                    <div class="alert info-alert">
-                        <h6><i class="fas fa-info-circle me-2"></i>Informasi Program Kelas</h6>
-                        <ul class="mb-0">
-                            <li>Pembayaran bisa dilakukan dengan DP atau cicilan</li>
-                            <li>Total biaya: Rp {{ number_format($biayaDp ?? 7000000, 0, ',', '.') }}</li>
-                            <li>Akses penuh diberikan setelah pembayaran selesai</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            @if($bookingTransaction && $bookingTransaction->status == 'Completed')
-                {{-- Tabel Transaksi Program Kelas --}}
-                <div class="card table-card mb-4">
-                    <div class="card-header bg-transparent border-0 p-3">
-                        <h5 class="mb-0"><i class="fas fa-book-open me-2"></i>Detail Program Kelas</h5>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Tanggal</th>
-                                    <th>Keterangan</th>
-                                    <th>Jumlah</th>
-                                    <th>Status</th>
-                                    <th>Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <strong>Program Kelas - {{ $userClass->classProgram->name ?? 'Bahasa Jepang N5' }}</strong>
-                                        <br><small>Biaya pelatihan & materi pembelajaran</small>
-                                    </td>
-                                    <td><strong class="text-info">Rp {{ number_format($dpTransaction->amount ?? $biayaDp ?? 7000000, 0, ',', '.') }}</strong></td>
-                                    <td>
-                                        @if($dpTransaction && $dpTransaction->status == 'Completed')
-                                            <span class="badge badge-paid">Lunas</span>
-                                        @else
-                                            <span class="badge badge-pending">Belum Lunas</span>
-                                        @endif
-                                    </td>
-                                    <td>
-                                        @if(!$dpTransaction || $dpTransaction->status != 'Completed')
-                                            <a href="{{ route('transaksi.programKelas', ['id' => $dpTransaction->id]) }}" class="btn btn-custom btn-pay btn-sm">
-                                                <i class="fas fa-credit-card me-1"></i>Bayar / Cicilan
-                                            </a>
-                                        @else
-                                            <span class="btn btn-custom btn-success-custom btn-sm">
-                                                <i class="fas fa-check me-1"></i>Lunas
-                                            </span>
-                                        @endif
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                {{-- Riwayat Cicilan --}}
-                @if(isset($feePayments) && count($feePayments) > 0)
-                    <div class="card table-card">
+                @if($bookingTransaction && $bookingTransaction->status == 'Completed')
+                    <div class="card table-card mb-4">
                         <div class="card-header bg-transparent border-0 p-3">
-                            <h5 class="mb-0"><i class="fas fa-list me-2"></i>Riwayat Cicilan</h5>
+                            <h5 class="mb-0"><i class="fas fa-book-open me-2"></i>Detail Biaya Pemantapan</h5>
                         </div>
                         <div class="table-responsive">
-                            <table class="table">
+                            <table class="table align-middle">
                                 <thead>
                                     <tr>
+                                        <th>Program Kelas</th>
                                         <th>Tanggal</th>
                                         <th>Jumlah</th>
                                         <th>Status</th>
-                                        <th>Bukti</th>
+                                        <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($feePayments as $cicilan)
-                                        <tr>
-                                            <td>{{ $cicilan->created_at->format('d/m/Y H:i') }}</td>
-                                            <td>Rp {{ number_format($cicilan->amount, 0, ',', '.') }}</td>
-                                            <td>
-                                                @if($cicilan->status == 'Completed')
-                                                    <span class="badge badge-paid">Lunas</span>
-                                                @else
-                                                    <span class="badge badge-pending">Pending</span>
-                                                @endif
-                                            </td>
-                                            <td>
-                                                @if($cicilan->photo)
-                                                    <a href="{{ asset('storage/'.$cicilan->photo) }}" target="_blank" class="btn btn-outline-primary btn-sm">
-                                                        <i class="fas fa-eye"></i> Lihat
-                                                    </a>
-                                                @else
-                                                    -
-                                                @endif
-                                            </td>
-                                        </tr>
-                                    @endforeach
+                                    <tr>
+                                        <td>
+                                            <strong>{{ $userClass->classProgram->name ?? 'Bahasa Jepang N5' }}</strong>
+                                            <br>
+                                            <small class="text-muted">Biaya pelatihan & materi pembelajaran</small>
+                                        </td>
+                                        <td>
+                                            <i class="fas fa-calendar-alt me-1"></i>
+                                            {{ optional($dpTransaction->created_at)->format('d/m/Y') ?? date('d/m/Y') }}
+                                        </td>
+                                        <td>
+                                            <strong class="text-info">
+                                                Rp {{ number_format($dpTransaction->amount ?? $biayaDp ?? 7000000, 0, ',', '.') }}
+                                            </strong>
+                                        </td>
+                                        <td>
+                                            @if($dpTransaction && $dpTransaction->status == 'Completed')
+                                                <span class="badge bg-success"><i class="fas fa-check me-1"></i>Lunas</span>
+                                            @else
+                                                <span class="badge bg-warning text-dark"><i class="fas fa-clock me-1"></i>Belum Lunas</span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if(!$dpTransaction || $dpTransaction->status != 'Completed')
+                                                <a href="{{ $dpTransaction && $dpTransaction->id 
+                                                    ? route('transaksi.programKelas', ['id' => $dpTransaction->id]) 
+                                                    : route('transaksi.programKelas.createProgramKelas') }}" 
+                                                    class="btn btn-primary btn-sm">
+                                                    <i class="fas fa-credit-card me-1"></i>Bayar
+                                                </a>
+                                            @else
+                                                <span class="btn btn-success btn-sm disabled">
+                                                    <i class="fas fa-check me-1"></i>Lunas
+                                                </span>
+                                            @endif
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
                     </div>
-                @endif
-            @else
-                <div class="empty-state">
-                    <div class="empty-state-icon">
-                        <i class="fas fa-hourglass-half"></i>
-                    </div>
-                    <h4>Program Kelas Belum Tersedia</h4>
-                    <p>Silahkan selesaikan pembayaran Booking Class terlebih dahulu</p>
                 </div>
-            @endif
+            </div>
+
+                    {{-- Riwayat Cicilan --}}
+                    @if(!empty($feePayments) && $feePayments->count() > 0)
+                        <div class="card table-card">
+                            <div class="card-header bg-transparent border-0 p-3">
+                                <h5 class="mb-0"><i class="fas fa-list me-2"></i>Riwayat Cicilan Program Kelas</h5>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table align-middle">
+                                    <thead>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Tanggal Bayar</th>
+                                            <th>Jumlah</th>
+                                            <th>Status</th>
+                                            <th>Bukti Bayar</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($feePayments as $index => $cicilan)
+                                            <tr>
+                                                <td><span class="badge bg-primary">{{ $index + 1 }}</span></td>
+                                                <td>
+                                                    <i class="fas fa-calendar-alt me-1"></i>
+                                                    {{ $cicilan->created_at->format('d/m/Y H:i') }}
+                                                </td>
+                                                <td>
+                                                    <strong class="text-success">
+                                                        Rp {{ number_format($cicilan->amount, 0, ',', '.') }}
+                                                    </strong>
+                                                </td>
+                                                <td>
+                                                    @if($cicilan->status == 'Completed')
+                                                        <span class="badge bg-success"><i class="fas fa-check me-1"></i>Lunas</span>
+                                                    @elseif($cicilan->status == 'Pending')
+                                                        <span class="badge bg-warning text-dark"><i class="fas fa-clock me-1"></i>Pending</span>
+                                                    @else
+                                                        <span class="badge bg-secondary"><i class="fas fa-hourglass-half me-1"></i>Menunggu</span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    @if($cicilan->photo)
+                                                        <a href="{{ asset('storage/'.$cicilan->photo) }}" target="_blank" class="btn btn-outline-primary btn-sm">
+                                                            <i class="fas fa-eye me-1"></i>Lihat Bukti
+                                                        </a>
+                                                    @else
+                                                        <span class="text-muted"><i class="fas fa-minus me-1"></i>Tidak Ada</span>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                    <tfoot>
+                                        <tr class="table-info">
+                                            <td colspan="2"><strong>Total Dibayar:</strong></td>
+                                            <td>
+                                                <strong class="text-success">
+                                                    Rp {{ number_format($feePayments->where('status', 'Completed')->sum('amount'), 0, ',', '.') }}
+                                                </strong>
+                                            </td>
+                                            <td colspan="2">
+                                                <small class="text-muted">
+                                                    {{ $feePayments->where('status', 'Completed')->count() }} dari {{ $feePayments->count() }} pembayaran berhasil
+                                                </small>
+                                            </td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    @endif
+
+                @else
+                    {{-- Empty State --}}
+                    <div class="empty-state text-center p-4">
+                        <div class="empty-state-icon mb-3">
+                            <i class="fas fa-hourglass-half fa-2x"></i>
+                        </div>
+                        <h4>Program Kelas Belum Tersedia</h4>
+                        <p class="text-muted">
+                            Silahkan selesaikan pembayaran Booking Class terlebih dahulu untuk mengakses Program Kelas
+                        </p>
+                        <a href="#" class="btn btn-primary" onclick="document.getElementById('tagihan-tab').click()">
+                            <i class="fas fa-list-alt me-2"></i>Lihat Ringkasan Tagihan
+                        </a>
+                    </div>
+                @endif
+            </div>
         </div>
 
 
@@ -1082,8 +1187,6 @@
 </div>
 
 @push('scripts')
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -1097,15 +1200,15 @@
         });
 
         // Smooth scrolling
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            });
-        });
+        // document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        //     anchor.addEventListener('click', function (e) {
+        //         e.preventDefault();
+        //         const target = document.querySelector(this.getAttribute('href'));
+        //         if (target) {
+        //             target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        //         }
+        //     });
+        // });
 
         // Hover card effect
         const cards = document.querySelectorAll('.summary-card, .table-card');

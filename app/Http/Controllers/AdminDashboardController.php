@@ -39,23 +39,41 @@ class AdminDashboardController extends Controller
         $statusCounts = [
             'registered' => User::whereHas('status', function($q) {
                 $q->where('name', 'Registered');
+            })->whereDoesntHave('roles', function($q) {
+                $q->where('name', 'admin');
             })->count(),
+
             'booking_paid' => User::whereHas('status', function($q) {
                 $q->where('name', 'Booking Paid');
+            })->whereDoesntHave('roles', function($q) {
+                $q->where('name', 'admin');
             })->count(),
+
             'meeting_joined' => User::whereHas('status', function($q) {
                 $q->where('name', 'Meeting Joined');
+            })->whereDoesntHave('roles', function($q) {
+                $q->where('name', 'admin');
             })->count(),
+
             'dp_paid' => User::whereHas('status', function($q) {
                 $q->where('name', 'DP Paid');
+            })->whereDoesntHave('roles', function($q) {
+                $q->where('name', 'admin');
             })->count(),
+
             'active' => User::whereHas('status', function($q) {
                 $q->where('name', 'Active');
+            })->whereDoesntHave('roles', function($q) {
+                $q->where('name', 'admin');
             })->count(),
+
             'ready_depart' => User::whereHas('status', function($q) {
                 $q->where('name', 'Ready to Depart');
+            })->whereDoesntHave('roles', function($q) {
+                $q->where('name', 'admin');
             })->count(),
         ];
+
 
         // 3. Tipe Transaksi
         $transactionTypes = [

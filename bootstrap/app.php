@@ -17,7 +17,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'admin' => \App\Http\Middleware\AdminOnly::class,
             'ownsTransaction' => \App\Http\Middleware\OwnsTransaction::class,
-            'CheckFinanceAccess' => \App\Http\Middleware\CheckFinanceAccess::class
+            'CheckFinanceAccess' => \App\Http\Middleware\CheckFinanceAccess::class,
+            'ownsPaymentOrder' => \App\Http\Middleware\OwnsPaymentOrder::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

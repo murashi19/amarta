@@ -25,18 +25,21 @@
                         <div class="row mb-4">
                             <div class="col-12 text-center">
                                 <div class="position-relative d-inline-block">
-                                    <div id="photo-preview" class="mb-3">
+                                    <div id="photo-preview" class="mb-3 d-flex justify-content-center align-items-center">
                                         @if($user->photo)
                                             <img src="{{ asset('storage/' . $user->photo) }}?t={{ time() }}" 
-                                                alt="Current Photo" class="img-thumbnail" style="width:120px; height:120px; object-fit:cover;">
+                                                alt="Current Photo" 
+                                                class="rounded-circle shadow" 
+                                                style="width:120px; height:120px; object-fit:cover;"
+                                                id="preview-image">
                                         @else
-                                            <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center shadow"
+                                            <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center shadow mx-auto"
                                                 style="width: 120px; height: 120px;" id="preview-placeholder">
-                                                <i class="fas fa-users text-white" style="font-size: 36px;"></i>
+                                                <i class="fas fa-user text-white" style="font-size: 36px;"></i>
                                             </div>
                                         @endif
                                     </div>
-                                    <div>
+                                    <div class="text-center">
                                         <label for="photo" class="btn btn-primary btn-sm">
                                             <i class="fas fa-camera me-2"></i>Ubah Foto
                                         </label>
@@ -195,35 +198,35 @@
 
 @push('scripts')
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const photoInput = document.getElementById('photo');
-    const previewImage = document.getElementById('preview-image');
-    const previewPlaceholder = document.getElementById('preview-placeholder');
-    
-    photoInput.addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                if (previewImage) {
-                    previewImage.src = e.target.result;
-                } else {
-                    // Create new image element if placeholder exists
+    document.addEventListener('DOMContentLoaded', function() {
+        const photoInput = document.getElementById('photo');
+        const photoPreviewContainer = document.getElementById('photo-preview');
+        
+        photoInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    // Clear existing content
+                    photoPreviewContainer.innerHTML = '';
+                    
+                    // Create new image element
                     const newImg = document.createElement('img');
                     newImg.src = e.target.result;
-                    newImg.className = 'rounded-circle shadow';
+                    newImg.className = 'rounded-circle shadow mx-auto';
                     newImg.style.width = '120px';
                     newImg.style.height = '120px';
                     newImg.style.objectFit = 'cover';
+                    newImg.style.display = 'block';
                     newImg.id = 'preview-image';
                     
-                    previewPlaceholder.replaceWith(newImg);
-                }
-            };
-            reader.readAsDataURL(file);
-        }
+                    // Add to container
+                    photoPreviewContainer.appendChild(newImg);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
     });
-});
 </script>
 @endpush
 

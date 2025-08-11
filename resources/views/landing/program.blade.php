@@ -113,6 +113,10 @@
     right: -60px;
 }
 
+.img-custom1 {
+    height: 814px;
+}
+
 
 /*========================================
   PROGRAM TAMBAHAN
@@ -1189,7 +1193,7 @@
         <div class="carousel-item active">
           <div class="row align-items-center g-4">
             <div class="col-md-6 text-center">
-              <img src="asset/img/6.png" class="img-fluid rounded-4 shadow-sm slider-img" alt="Program Pemagangan Jepang" />
+              <img src="Asset/img/6.jpg" class="img-fluid rounded-4 shadow-sm slider-img" alt="Program Pemagangan Jepang" />
             </div>
             <div class="col-md-6">
               <h3 class="fw-bold mb-3">Program Pemagangan ke Jepang</h3>
@@ -1203,7 +1207,7 @@
         <div class="carousel-item">
           <div class="row align-items-center g-4">
             <div class="col-md-6 text-center">
-              <img src="asset/img/6.png" class="img-fluid rounded-4 shadow-sm" alt="Program Tokutei Ginou" />
+              <img src="Asset/img/6.jpg" class="img-fluid rounded-4 shadow-sm " alt="Program Tokutei Ginou" />
             </div>
             <div class="col-md-6">
               <h3 class="fw-bold mb-3">Program Tokutei Ginou (Specified Skilled Worker)</h3>
@@ -1217,7 +1221,7 @@
         <div class="carousel-item">
           <div class="row align-items-center g-4">
             <div class="col-md-6 text-center">
-              <img src="asset/img/6.png" class="img-fluid rounded-4 shadow-sm" alt="Program Nihongo Gakko" />
+              <img src="Asset/img/6.jpg" class="img-fluid  rounded-4 shadow-sm" alt="Program Nihongo Gakko" />
             </div>
             <div class="col-md-6">
               <h3 class="fw-bold mb-3">Program Nihongo Gakkou</h3>
@@ -1231,7 +1235,7 @@
         <div class="carousel-item">
           <div class="row align-items-center g-4">
             <div class="col-md-6 text-center">
-              <img src="asset/img/6.png" class="img-fluid rounded-4 shadow-sm" alt="Program Engineering Jepang" />
+              <img src="Asset/img/6.jpg" class="img-fluid rounded-4 shadow-sm" alt="Program Engineering Jepang" />
             </div>
             <div class="col-md-6">
               <h3 class="fw-bold mb-3">Program Engineering Jepang</h3>
@@ -1319,7 +1323,7 @@
             <!-- Kegiatan 1 -->
             <div class="carousel-item2">
               <div class="item-image2">
-                <img src="asset/img/pemantapan.png" alt="Kelas Pemantapan" loading="lazy">
+                <img src="Asset/img/6.jpg" alt="Kelas Pemantapan" loading="lazy">
               </div>
               <div class="item-content2">
                 <p class="item-description">
@@ -1331,7 +1335,7 @@
             <!-- Kegiatan 2 -->
             <div class="carousel-item2">
               <div class="item-image2">
-                <img src="asset/img/olahraga.png" alt="Kelas Olahraga Fisik" loading="lazy">
+                <img src="Asset/img/1.jpg" alt="Kelas Olahraga Fisik" loading="lazy">
               </div>
               <div class="item-content2">
                 <p class="item-description">
@@ -1343,7 +1347,7 @@
             <!-- Kegiatan 3 -->
             <div class="carousel-item2">
               <div class="item-image2">
-                <img src="asset/img/ujian.png" alt="Ujian Bahasa dan Interview" loading="lazy">
+                <img src="Asset/img/7.jpg" alt="Ujian Bahasa dan Interview" loading="lazy">
               </div>
               <div class="item-content2">
                 <p class="item-description">
@@ -1380,7 +1384,7 @@
         <div class="swiper-wrapper">
           <!-- Slide 1 -->
           <div class="swiper-slide">
-            <img src="asset/img/1.png"alt="Olahraga">
+            <img src="Asset/img/1.jpg"alt="Olahraga">
             <div class="title">
               <span>Olahraga</span>
               <div class="subtitle">Kegiatan Fisik & Kesehatan</div>
@@ -1389,7 +1393,7 @@
 
           <!-- Slide 2 -->
           <div class="swiper-slide">
-            <img src="asset/img/2.png" alt="Pendidikan">
+            <img src="Asset/img/2.jpg" alt="Pendidikan">
             <div class="title">
               <span>Pendidikan</span>
               <div class="subtitle">Program Belajar Mengajar</div>
@@ -1398,7 +1402,7 @@
 
           <!-- Slide 3 -->
           <div class="swiper-slide">
-            <img src="asset/img/5.png" alt="Teknologi">
+            <img src="Asset/img/5.jpg" alt="Teknologi">
             <div class="title">
              <span>Penempatan Kerja</span>
               <div class="subtitle">Pengurusan Kontrak Kerja/Magang Perusahaan</div>
@@ -1407,7 +1411,7 @@
 
           <!-- Slide 4 -->
           <div class="swiper-slide">
-            <img src="asset/img/8.png" alt="Seni & Budaya">
+            <img src="Asset/img/8.jpg" alt="Seni & Budaya">
             <div class="title">
               <span>Interview Online</span>
               <div class="subtitle">Proses Wawancara Online dengan Perusahaan Jepang</div>
@@ -1416,7 +1420,7 @@
 
           <!-- Slide 5 -->
           <div class="swiper-slide">
-            <img src="asset/img/7.png"alt="Lingkungan">
+            <img src="Asset/img/7.jpg"alt="Lingkungan">
             <div class="title">
               <span>Interview Offline</span>
               <div class="subtitle">Proses Wawancara Offline dengan perwakilan Perusahaan Jepang</div>
@@ -1425,7 +1429,7 @@
 
           <!-- Slide 6 -->
           <div class="swiper-slide">
-            <img src="asset/img/4.png" alt="Bisnis">
+            <img src="Asset/img/4.jpg" alt="Bisnis">
             <div class="title">
               <span>Passport</span>
               <div class="subtitle">Proses Pembuatan Passport</div>
@@ -1433,7 +1437,7 @@
           </div>
           <!-- Slide 7 -->
           <div class="swiper-slide">
-            <img src="{{ asset('Asset/img/9.jpg') }}" alt="Bisnis">
+            <img src="{{ Asset('Asset/img/9.jpg') }}" alt="Bisnis">
             <div class="title">
               <span>Pemberangkatan</span>
               <div class="subtitle">Proses Akhir Pemberangkatan ke Jepang</div>
@@ -1441,7 +1445,7 @@
           </div>
           <!-- Slide 8 -->
           <div class="swiper-slide">
-            <img src="{{ asset('Asset/img/10.jpg') }}" alt="Bisnis">
+            <img src="{{ Asset('Asset/img/10.jpg') }}" alt="Bisnis">
             <div class="title">
               <span>Sudah bekerja</span>
               <div class="subtitle">Foto siswa sudah di Jepang dan bekerja</div>

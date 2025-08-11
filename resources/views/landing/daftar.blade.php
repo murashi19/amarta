@@ -320,7 +320,12 @@
 
         .cta-buttons .btn {
             width: 100%;
+            height: 50px;
             margin-bottom: 1rem;
+            font-size: 14px; /* atur ukuran font agar pas */
+            white-space: nowrap; /* agar teks tidak wrap ke baris baru */
+            overflow: hidden;   /* sembunyikan jika kelebihan */
+            text-overflow: ellipsis; /* tanda ... jika teks terlalu panjang */
         }
     }
 

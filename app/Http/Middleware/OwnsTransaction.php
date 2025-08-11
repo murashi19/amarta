@@ -16,13 +16,13 @@ class OwnsTransaction
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $id = $request->route('id');
-    $trx = \App\Models\Transaction::findOrFail($id);
+        $transaction = $request->route('transaction'); // sudah jadi model langsung
 
-    if ($trx->user_id !== Auth::id()) {
-        abort(403);
+        if ($transaction->user_id !== Auth::id()) {
+            abort(403, 'Kamu tidak punya akses ke transaksi ini.');
+        }
+
+        return $next($request);
     }
 
-    return $next($request);
-    }
 }
