@@ -631,7 +631,7 @@
                 <div class="carousel-inner">
                     {{-- Carousel Item 1 --}}
                     <div class="carousel-item active">
-                        <img src="{{ asset('Asset/img/crousel1.jpeg') }}" class="d-block w-100 carousel-image" alt="Image 1">
+                        <img src="asset/img/photo (21).jpg" class="d-block w-100 carousel-image" alt="Image 1">
                         <div class="carousel-caption d-flex align-items-center justify-content-center h-100">
                             <div class="text-center">
                                 <h1 class="display-3 fw-bold text-white">Contact Us</h1>
@@ -646,7 +646,7 @@
                     </div>
                     {{-- Carousel Item 2 --}}
                     <div class="carousel-item">
-                        <img src="{{ asset('Asset/img/crousel2.jpg') }}" class="d-block w-100 carousel-image" alt="Image 2">
+                        <img src="asset/img/photo (30).jpg" class="d-block w-100 carousel-image" alt="Image 2">
                         <div class="carousel-caption d-flex align-items-center justify-content-center h-100">
                             <div class="text-center">
                                 <h1 class="display-3 fw-bold text-white">Our Locations</h1>
@@ -661,7 +661,7 @@
                     </div>
                     {{-- Carousel Item 3 --}}
                     <div class="carousel-item">
-                        <img src="{{ asset('Asset/img/crousel3.jpg') }}" class="d-block w-100 carousel-image" alt="Image 3">
+                        <img src="asset/line/photo (22).jpg" class="d-block w-100 carousel-image" alt="Image 3">
                         <div class="carousel-caption d-flex align-items-center justify-content-center h-100">
                             <div class="text-center">
                                 <h1 class="display-3 fw-bold text-white">Get in Touch</h1>
@@ -750,12 +750,11 @@
             <div class="row justify-content-center">
                 {{-- Card 1: WhatsApp --}}
                 <div class="col-md-4 mb-4">
-                    <a href="https://wa.me/6284373643434" target="_blank" class="contact-card whatsapp-card text-decoration-none d-block">
+                    <a href="https://wa.me/6285183123744" target="_blank" class="contact-card whatsapp-card text-decoration-none d-block">
                         <div class="icon-circle whatsapp-green">
                             <i class="fab fa-whatsapp"></i>
                         </div>
-                        <h3 class="contact-title">+62 843 7364 3434</h3>
-                        <p class="contact-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                        <h3 class="contact-title">+6285183123744</h3>
                     </a>
                 </div>
 
@@ -765,19 +764,16 @@
                         <div class="icon-circle email-red">
                             <i class="fas fa-envelope"></i>
                         </div>
-                        <h3 class="contact-title">example@gmail.com</h3>
-                        <p class="contact-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                        <h3 class="contact-title">lpkamartacibitung@gmail.com</h3>
+                       </div>
                     </a>
-                </div>
-
                 {{-- Card 3: Phone (Generic, bisa juga ganti ke WhatsApp atau Telegram) --}}
                 <div class="col-md-4 mb-4">
                     <a href="tel:+6284373643434" class="contact-card phone-card text-decoration-none d-block">
                         <div class="icon-circle phone-blue">
                             <i class="fas fa-phone-alt"></i>
                         </div>
-                        <h3 class="contact-title">+62 843 7364 3434</h3>
-                        <p class="contact-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                        <h3 class="contact-title">+6285183123744</h3>
                     </a>
                 </div>
             </div>

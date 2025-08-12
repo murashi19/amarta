@@ -1174,8 +1174,10 @@
 @endpush
 
 
+
 @section('content')
 
+<!-- Konten 1: Program Unggulan -->
 <!-- Konten 1: Program Unggulan -->
 <section id="program-unggulan" class="py-5 mb-2 mb-md-0">
   <div class="container h-100">
@@ -1189,13 +1191,16 @@
     <!-- Carousel -->
     <div id="carouselProgram" class="carousel slide" data-bs-ride="carousel">
       <div class="carousel-inner">
+
         <!-- Slide 1 -->
         <div class="carousel-item active">
           <div class="row align-items-center g-4">
-            <div class="col-md-6 text-center">
-              <img src="Asset/img/6.jpg" class="img-fluid rounded-4 shadow-sm slider-img" alt="Program Pemagangan Jepang" />
-            </div>
             <div class="col-md-6">
+              <div class="ratio ratio-4x3">
+                <img src="asset/img/photo (30).jpg" class="img-fluid rounded-4 shadow-sm" style="object-fit: cover;" alt="Program Pemagangan Jepang" />
+              </div>
+            </div>
+            <div class="col-md-6 d-flex flex-column justify-content-center">
               <h3 class="fw-bold mb-3">Program Pemagangan ke Jepang</h3>
               <p class="mb-4">Ikuti program pemagangan resmi ke Jepang yang dirancang untuk membekali peserta dengan keterampilan dan etos kerja unggul.</p>
               <button class="button-primary px-4 py-2">Lebih Lengkap..</button>
@@ -1206,10 +1211,12 @@
         <!-- Slide 2 -->
         <div class="carousel-item">
           <div class="row align-items-center g-4">
-            <div class="col-md-6 text-center">
-              <img src="Asset/img/6.jpg" class="img-fluid rounded-4 shadow-sm " alt="Program Tokutei Ginou" />
-            </div>
             <div class="col-md-6">
+              <div class="ratio ratio-4x3">
+                <img src="asset/img/photo (33).jpg" class="img-fluid rounded-4 shadow-sm" style="object-fit: cover;" alt="Program Tokutei Ginou" />
+              </div>
+            </div>
+            <div class="col-md-6 d-flex flex-column justify-content-center">
               <h3 class="fw-bold mb-3">Program Tokutei Ginou (Specified Skilled Worker)</h3>
               <p class="mb-4">Persiapan kerja di Jepang dengan status visa kerja Tokutei Ginou di berbagai bidang seperti perhotelan, pertanian, dan kesehatan.</p>
               <button class="button-primary px-4 py-2">Lebih Lengkap..</button>
@@ -1220,10 +1227,12 @@
         <!-- Slide 3 -->
         <div class="carousel-item">
           <div class="row align-items-center g-4">
-            <div class="col-md-6 text-center">
-              <img src="Asset/img/6.jpg" class="img-fluid  rounded-4 shadow-sm" alt="Program Nihongo Gakko" />
-            </div>
             <div class="col-md-6">
+              <div class="ratio ratio-4x3">
+                <img src="asset/img/photo2 (30).jpg" class="img-fluid rounded-4 shadow-sm" style="object-fit: cover;" alt="Program Nihongo Gakkou" />
+              </div>
+            </div>
+            <div class="col-md-6 d-flex flex-column justify-content-center">
               <h3 class="fw-bold mb-3">Program Nihongo Gakkou</h3>
               <p class="mb-4">Belajar di sekolah bahasa Jepang (Nihongo Gakkou) sebagai jalan menuju pendidikan lanjutan atau karir profesional di Jepang.</p>
               <button class="button-primary px-4 py-2">Lebih Lengkap..</button>
@@ -1234,18 +1243,20 @@
         <!-- Slide 4 -->
         <div class="carousel-item">
           <div class="row align-items-center g-4">
-            <div class="col-md-6 text-center">
-              <img src="Asset/img/6.jpg" class="img-fluid rounded-4 shadow-sm" alt="Program Engineering Jepang" />
-            </div>
             <div class="col-md-6">
+              <div class="ratio ratio-4x3">
+                <img src="asset/img/photo2 (29).jpg" class="img-fluid rounded-4 shadow-sm" style="object-fit: cover;" alt="Program Engineering Jepang" />
+              </div>
+            </div>
+            <div class="col-md-6 d-flex flex-column justify-content-center">
               <h3 class="fw-bold mb-3">Program Engineering Jepang</h3>
               <p class="mb-4">Kesempatan untuk bekerja di Jepang sebagai engineer dengan pelatihan khusus dan dukungan penempatan kerja langsung.</p>
               <button class="button-primary px-4 py-2">Lebih Lengkap..</button>
             </div>
           </div>
         </div>
-      </div>
 
+      </div>
             <!-- Controls -->
             <button class="carousel-control-prev d-none d-md-block" type="button" data-bs-target="#carouselProgram" data-bs-slide="prev">
                 <span class="carousel-control-prev-icon"></span>
@@ -1323,7 +1334,7 @@
             <!-- Kegiatan 1 -->
             <div class="carousel-item2">
               <div class="item-image2">
-                <img src="Asset/img/6.jpg" alt="Kelas Pemantapan" loading="lazy">
+                <img src="asset/img/photo2 (36).jpg" alt="Kelas Pemantapan" loading="lazy">
               </div>
               <div class="item-content2">
                 <p class="item-description">
@@ -1335,7 +1346,7 @@
             <!-- Kegiatan 2 -->
             <div class="carousel-item2">
               <div class="item-image2">
-                <img src="Asset/img/1.jpg" alt="Kelas Olahraga Fisik" loading="lazy">
+                <img src="asset/img/photo2 (35).jpg" alt="Kelas Olahraga Fisik" loading="lazy">
               </div>
               <div class="item-content2">
                 <p class="item-description">
@@ -1347,7 +1358,7 @@
             <!-- Kegiatan 3 -->
             <div class="carousel-item2">
               <div class="item-image2">
-                <img src="Asset/img/7.jpg" alt="Ujian Bahasa dan Interview" loading="lazy">
+                <img src="asset/img/photo2 (45).jpg" alt="Ujian Bahasa dan Interview" loading="lazy">
               </div>
               <div class="item-content2">
                 <p class="item-description">
@@ -1371,6 +1382,79 @@
 
 
 <!-- Gallery Section -->
+<section id="gallery">
+  <div class="gallery-header">
+    <h1 class="text-white">Gallery</h1>
+  </div>
+  <h3 class="h3">
+    Kumpulan momen terbaik dari berbagai kegiatan kami
+  </h3>
+  <div class="container h-100">
+    <!-- Gallery Section dengan Coverflow 3D -->
+    <div class="swiper">
+      <div class="swiper-wrapper">
+        
+        <!-- Loop dari photo2 (42) sampai photo2 (59) -->
+        <div class="swiper-slide">
+          <img src="asset/img/photo2 (42).jpg" alt="Gallery 42">
+        </div>
+        <div class="swiper-slide">
+          <img src="asset/img/photo2 (43).jpg" alt="Gallery 43">
+        </div>
+        <div class="swiper-slide">
+          <img src="asset/img/photo2 (44).jpg" alt="Gallery 44">
+        </div>
+        <div class="swiper-slide">
+          <img src="asset/img/photo2 (45).jpg" alt="Gallery 45">
+        </div>
+        <div class="swiper-slide">
+          <img src="asset/img/photo2 (46).jpg" alt="Gallery 46">
+        </div>
+        <div class="swiper-slide">
+          <img src="asset/img/photo2 (47).jpg" alt="Gallery 47">
+        </div>
+        <div class="swiper-slide">
+          <img src="asset/img/photo2 (48).jpg" alt="Gallery 48">
+        </div>
+        <div class="swiper-slide">
+          <img src="asset/img/photo2 (49).jpg" alt="Gallery 49">
+        </div>
+        <div class="swiper-slide">
+          <img src="asset/img/photo2 (50).jpg" alt="Gallery 50">
+        </div>
+        <div class="swiper-slide">
+          <img src="asset/img/photo2 (51).jpg" alt="Gallery 51">
+        </div>
+        <div class="swiper-slide">
+          <img src="asset/img/photo2 (52).jpg" alt="Gallery 52">
+        </div>
+        <div class="swiper-slide">
+          <img src="asset/img/photo2 (53).jpg" alt="Gallery 53">
+        </div>
+        <div class="swiper-slide">
+          <img src="asset/img/photo2 (54).jpg" alt="Gallery 54">
+        </div>
+        <div class="swiper-slide">
+          <img src="asset/img/photo2 (55).jpg" alt="Gallery 55">
+        </div>
+        <div class="swiper-slide">
+          <img src="asset/img/photo2 (56).jpg" alt="Gallery 56">
+        </div>
+        <div class="swiper-slide">
+          <img src="asset/img/photo2 (57).jpg" alt="Gallery 57">
+        </div>
+        <div class="swiper-slide">
+          <img src="asset/img/photo2 (58).jpg" alt="Gallery 58">
+        </div>
+        <div class="swiper-slide">
+          <img src="asset/img/photo2 (59).jpg" alt="Gallery 59">
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
   <section id="gallery">
     <div class="gallery-header">
       <h1 class="text-white">Gallery</h1>

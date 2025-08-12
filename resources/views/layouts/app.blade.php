@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LPK PT Amarta Indonesia</title>
-
+    <meta name="google" content="notranslate">
+    
     <!-- Font Awesome CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Bootstrap CSS -->
@@ -53,7 +54,1062 @@
         --transition-normal: 0.3s ease;
         --transition-slow: 0.5s ease;
     }
+#program-unggulan {
+            width: 100%;
+            height: 100vh;
+        }
 
+        .judul-section {
+            font-size: 2rem;
+        }
+
+        .judul-section span {
+            color: var(--color-primary);
+        }
+
+        .carousel-indicators [data-bs-target] {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background-color: var(--color-disabletxt);
+        }
+
+        .carousel-indicators .active {
+            background-color: var(--color-primary);
+        }
+
+        .carousel-item {
+            margin-bottom: 80px;
+            margin-top: 30px;
+        }
+
+        .carousel-control-prev,
+        .carousel-control-next {
+            width: 50px;
+            height: 50px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: var(--color-light);
+            border-radius: 50%;
+            opacity: 0.9;
+            transition: var(--transition-normal);
+        }
+
+        .carousel-control-prev:hover,
+        .carousel-control-next:hover {
+            background-color: #0b5ed7;
+        }
+
+        .carousel-control-prev-icon,
+        .carousel-control-next-icon {
+            background-image: none;
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .carousel-control-prev-icon::after,
+        .carousel-control-next-icon::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 12px;
+            height: 12px;
+            border-top: 3px solid white;
+            border-right: 3px solid white;
+            transform: translate(-50%, -50%) rotate(-135deg);
+        }
+
+        .carousel-control-next-icon::after {
+            transform: translate(-50%, -50%) rotate(45deg);
+        }
+
+        .carousel-control-prev {
+            left: -60px;
+        }
+
+        .carousel-control-next {
+            right: -60px;
+        }
+
+        #program-tambahan {
+            width: 100%;
+            background-color: var(--color-hover);
+            height: 400px;
+            margin-bottom: 20px;
+        }
+
+        .card-program {
+            background-color: var(--color-light);
+            color: var(--color-dark);
+            border-radius: 20px;
+            width: 100%;
+            height: 200px;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition-normal);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .card-program:hover {
+            transform: scale(1.05);
+            background-color: var(--color-primary);
+            color: var(--color-light);
+        }
+
+        #kegiatan-kami {
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            margin-top: 100px;
+            margin-bottom: 100px;
+        }
+
+        .kegiatan-section {
+            margin: 0 auto;
+            width: 100%;
+            padding: 0 20px;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #333;
+            margin-top: 60px;
+            margin-bottom: 60px;
+            letter-spacing: -0.5px;
+        }
+
+        .carousel-section2 {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .carousel-container2 {
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            height: 500px;
+            margin: 0 auto;
+            flex: 1;
+            margin-bottom: 50px;
+        }
+
+        .carousel-wrapper2 {
+            display: flex;
+            height: 100%;
+            transition: transform 0.5s ease;
+            gap: 20px;
+        }
+
+        .carousel-item2 {
+            flex: 0 0 calc(33.333% - 13.333px);
+            height: 100%;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .carousel-item2:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .item-image2 {
+            width: 100%;
+            height: 300px;
+            background: #f8f9fa;
+            border-radius: 12px 12px 0 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .item-image2 img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .item-content2 {
+            padding: 24px;
+        }
+
+        .item-description {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #495057;
+            margin: 0;
+            text-align: justify;
+        }
+
+        .nav-button2 {
+            position: static;
+            width: 50px;
+            height: 50px;
+            background: #f8f9fa;
+            border: none;
+            border-radius: 12px;
+            color: #0066cc;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            flex-shrink: 0;
+        }
+
+        .nav-button2:hover {
+            background: #0066cc;
+            color: #ffffff;
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .nav-prev2 {
+            order: 1;
+        }
+
+        .nav-next2 {
+            order: 3;
+        }
+
+        .carousel-container2 {
+            order: 2;
+        }
+
+        .carousel-indicators {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #dee2e6;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .indicator.active {
+            background: #0066cc;
+            transform: scale(1.2);
+        }
+
+        @media (max-width: 1199px) {
+            .carousel-item2 {
+                flex: 0 0 calc(50% - 10px);
+            }
+
+            .section-title {
+                font-size: 2.2rem;
+                margin-bottom: 50px;
+            }
+        }
+
+        #kegiatan-kami {
+            padding: 60px 0;
+            background-color: #f9f9f9;
+        }
+
+        .kegiatan-section .section-title {
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .carousel-section2 {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            padding: 0 30px;
+        }
+
+        .carousel-container2 {
+            overflow: hidden;
+        }
+
+        .carousel-wrapper2 {
+            display: flex;
+            gap: 2rem;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .carousel-item2 {
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+            flex: 0 0 100%;
+            max-width: 100%;
+            transition: transform 0.4s ease;
+        }
+
+        .carousel-item2:hover {
+            transform: translateY(-4px);
+        }
+
+        .item-image2 img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+        }
+
+        .item-content2 {
+            padding: 20px;
+        }
+
+        .item-description {
+            font-size: 0.95rem;
+            color: #444;
+        }
+
+        .nav-button2 {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: #1d4ed8;
+            color: #fff;
+            border: none;
+            padding: 12px 16px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 2;
+            transition: background 0.3s ease;
+        }
+
+        .nav-button2:hover {
+            background-color: #0c3a91;
+        }
+
+        .nav-prev2 {
+            left: 0;
+        }
+
+        .nav-next2 {
+            right: 0;
+        }
+
+        .carousel-indicators {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .carousel-indicators div {
+            width: 10px;
+            height: 10px;
+            background-color: #ccc;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .carousel-indicators .active {
+            background-color: #1d4ed8;
+        }
+
+        @media (min-width: 768px) {
+            .carousel-item2 {
+                flex: 0 0 48%;
+                max-width: 48%;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .carousel-item2 {
+                flex: 0 0 32%;
+                max-width: 32%;
+            }
+        }
+
+        @media (max-width: 991px) {
+            #kegiatan-kami {
+                margin-top: 30px;
+                margin-bottom: 60px;
+                min-height: auto;
+            }
+
+            .kegiatan-section {
+                padding: 0 15px;
+            }
+
+            .section-title {
+                font-size: 2rem;
+                margin-bottom: 40px;
+            }
+
+            .carousel-container2 {
+                height: 450px;
+                margin-bottom: 30px;
+            }
+
+            .item-image2 {
+                height: 250px;
+            }
+
+            .item-content2 {
+                padding: 20px;
+            }
+
+            .nav-button2 {
+                width: 45px;
+                height: 45px;
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .carousel-section2 {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .carousel-container2 {
+                height: 400px;
+                order: 1;
+                margin-bottom: 0;
+            }
+
+            .carousel-item2 {
+                flex: 0 0 100%;
+            }
+
+            .nav-prev2,
+            .nav-next2 {
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                z-index: 10;
+                order: unset;
+            }
+
+            .nav-prev2 {
+                left: 10px;
+            }
+
+            .nav-next2 {
+                right: 10px;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+                margin-bottom: 30px;
+            }
+
+            .item-image2 {
+                height: 220px;
+            }
+
+            .item-content2 {
+                padding: 18px;
+            }
+
+            .item-description {
+                font-size: 0.9rem;
+                line-height: 1.5;
+            }
+
+            .carousel-indicators {
+                order: 2;
+                margin-top: 0;
+            }
+        }
+
+        @media (max-width: 575px) {
+            #kegiatan-kami {
+                margin-top: 20px;
+                margin-bottom: 40px;
+                min-height: 450px;
+            }
+
+            .kegiatan-section {
+                padding: 0 10px;
+            }
+
+            .section-title {
+                font-size: 1.6rem;
+                margin-bottom: 25px;
+                letter-spacing: -0.3px;
+            }
+
+            .carousel-container2 {
+                height: 350px;
+            }
+
+            .carousel-wrapper2 {
+                gap: 10px;
+                height: 300px;
+            }
+
+            .carousel-item2 {
+                border-radius: 8px;
+            }
+
+            .item-image2 {
+                height: 180px;
+                border-radius: 8px 8px 0 0;
+            }
+
+            .item-content2 {
+                padding: 15px;
+            }
+
+            .item-description {
+                font-size: 0.85rem;
+                line-height: 1.4;
+            }
+
+            .nav-button2 {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+                border-radius: 8px;
+            }
+
+            .nav-prev2 {
+                left: 5px;
+            }
+
+            .nav-next2 {
+                right: 5px;
+            }
+
+            .indicator {
+                width: 10px;
+                height: 10px;
+            }
+
+            .carousel-indicators {
+                gap: 8px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .section-title {
+                font-size: 1.4rem;
+            }
+
+            .carousel-container2 {
+                height: 320px;
+            }
+
+            .item-image2 {
+                height: 160px;
+            }
+
+            .item-content2 {
+                padding: 12px;
+            }
+
+            .item-description {
+                font-size: 0.8rem;
+            }
+
+            .nav-button2 {
+                width: 35px;
+                height: 35px;
+                font-size: 0.9rem;
+            }
+        }
+
+        #gallery {
+            padding: 100px 0;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #f1f5f9 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        #gallery::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(13, 94, 166, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(41, 123, 163, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(13, 94, 166, 0.05) 0%, transparent 50%);
+            animation: float 20s ease-in-out infinite;
+            z-index: 1;
+        }
+
+        @keyframes float {
+            0%,
+            100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+            33% {
+                transform: translateY(-20px) rotate(1deg);
+            }
+            66% {
+                transform: translateY(-10px) rotate(-1deg);
+            }
+        }
+
+        #gallery .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .gallery-header {
+            background: var(--color-primary);
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+            border-radius: 0 0 200px 200px;
+            margin-bottom: 40px;
+            box-shadow: 0 15px 35px rgba(46, 124, 231, 0.3);
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 100px;
+        }
+
+        .gallery-header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, var(--color-hover) 0%, transparent 80%);
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%,
+            100% {
+                transform: rotate(0deg) scale(1);
+                opacity: 0.3;
+            }
+            50% {
+                transform: rotate(180deg) scale(1.1);
+                opacity: 0.1;
+            }
+        }
+
+        .gallery-header h1 {
+            font-size: 4rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            position: relative;
+            z-index: 2;
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .h3 {
+            font-size: 30px;
+            text-align: center;
+            font-weight: 600;
+            letter-spacing: 2px;
+            position: relative;
+            z-index: 2;
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+            margin-bottom: 40px;
+        }
+
+        .gallery-title h2 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            color: var(--color-dark);
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .gallery-title h2 span {
+            color: var(--color-primary);
+            position: relative;
+        }
+
+        .gallery-title h2 span::after {
+            content: "";
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--color-primary), var(--color-info));
+            border-radius: 2px;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                box-shadow: 0 0 5px var(--color-primary);
+            }
+            to {
+                box-shadow: 0 0 20px var(--color-primary), 0 0 30px var(--color-info);
+            }
+        }
+
+        .swiper-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 20px;
+            padding: 20px 0;
+        }
+
+        .swiper-wrapper {
+            display: flex;
+            align-items: center;
+        }
+
+        @media (min-width: 768px) {
+            .swiper-slide {
+                position: relative;
+                border-radius: 16px;
+                overflow: hidden;
+                cursor: pointer;
+                transition: all 0.4s ease;
+                box-shadow: var(--shadow-md);
+                background: var(--color-light);
+            }
+
+            .swiper-slide:hover {
+                transform: translateY(-10px) scale(1.02);
+                box-shadow: var(--shadow-xl);
+            }
+
+            .swiper-slide img {
+                width: 100%;
+                height: 400px;
+                object-fit: cover;
+                transition: all 0.4s ease;
+                border-radius: 16px;
+            }
+
+            .swiper-slide:hover img {
+                transform: scale(1.1);
+                filter: brightness(0.7);
+            }
+
+            .swiper-slide .title {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: linear-gradient(45deg, rgba(13, 94, 166, 0.95) 0%, rgba(41, 123, 163, 0.9) 50%, rgba(13, 94, 166, 0.95) 100%);
+                color: white;
+                padding: 30px 25px;
+                text-align: center;
+                transform: translateY(100%);
+                transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+                backdrop-filter: blur(10px);
+                border-radius: 0 0 16px 16px;
+                z-index: 10;
+            }
+
+            .swiper-slide:hover .title {
+                transform: translateY(0);
+            }
+
+            .swiper-slide .title span {
+                display: block;
+                font-size: 1.8rem;
+                font-weight: 700;
+                letter-spacing: 1px;
+                margin-bottom: 8px;
+                text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+                position: relative;
+            }
+
+            .swiper-slide .title span::after {
+                content: "";
+                position: absolute;
+                bottom: -4px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 0;
+                height: 3px;
+                background: linear-gradient(90deg, #ffffff, rgba(255, 255, 255, 0.7));
+                border-radius: 2px;
+                transition: all 0.4s ease;
+            }
+
+            .swiper-slide:hover .title span::after {
+                width: 80%;
+            }
+
+            .swiper-slide .subtitle {
+                font-size: 1.1rem;
+                font-weight: 400;
+                opacity: 0.95;
+                line-height: 1.4;
+                text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+                letter-spacing: 0.5px;
+                margin-top: 5px;
+            }
+
+            .swiper-slide:hover .title span {
+                animation: titleGlow 1.5s ease-in-out infinite alternate;
+            }
+
+            @keyframes titleGlow {
+                from {
+                    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+                }
+                to {
+                    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3), 0 0 15px rgba(255, 255, 255, 0.3);
+                }
+            }
+
+            .swiper-slide::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: linear-gradient(to bottom, transparent 0%, transparent 60%, rgba(0, 0, 0, 0.3) 100%);
+                z-index: 5;
+                opacity: 0;
+                transition: opacity 0.4s ease;
+                border-radius: 16px;
+            }
+
+            .swiper-slide:hover::before {
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .swiper-slide {
+                position: relative;
+                border-radius: 16px;
+                overflow: hidden;
+                cursor: pointer;
+                transition: none !important;
+                box-shadow: var(--shadow-md);
+                background: var(--color-light);
+                transform: none !important;
+            }
+
+            .swiper-slide:hover {
+                transform: none !important;
+                box-shadow: var(--shadow-md) !important;
+            }
+
+            .swiper-slide img {
+                width: 100%;
+                height: 280px;
+                object-fit: cover;
+                transition: none !important;
+                border-radius: 16px;
+                transform: none !important;
+                filter: none !important;
+            }
+
+            .swiper-slide:hover img {
+                transform: none !important;
+                filter: none !important;
+            }
+
+            .swiper-slide .title {
+                position: static !important;
+                bottom: auto !important;
+                left: auto !important;
+                right: auto !important;
+                background: linear-gradient(135deg, rgba(13, 94, 166, 0.9) 0%, rgba(41, 123, 163, 0.85) 100%) !important;
+                color: white;
+                padding: 20px 15px !important;
+                text-align: center;
+                transform: none !important;
+                transition: none !important;
+                backdrop-filter: none !important;
+                border-radius: 0 0 16px 16px !important;
+                z-index: auto !important;
+            }
+
+            .swiper-slide:hover .title {
+                transform: none !important;
+            }
+
+            .swiper-slide .title span {
+                display: block;
+                font-size: 1.3rem !important;
+                font-weight: 700;
+                letter-spacing: 1px;
+                margin-bottom: 5px !important;
+                text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+                position: relative;
+                animation: none !important;
+            }
+
+            .swiper-slide .title span::after {
+                content: "";
+                position: absolute;
+                bottom: -4px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 80% !important;
+                height: 3px;
+                background: linear-gradient(90deg, #ffffff, rgba(255, 255, 255, 0.7));
+                border-radius: 2px;
+                transition: none !important;
+            }
+
+            .swiper-slide:hover .title span::after {
+                width: 80% !important;
+            }
+
+            .swiper-slide .subtitle {
+                font-size: 0.9rem !important;
+                font-weight: 400;
+                opacity: 0.95;
+                line-height: 1.4;
+                text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+                letter-spacing: 0.5px;
+                margin-top: 5px;
+            }
+
+            .swiper-slide:hover .title span {
+                animation: none !important;
+            }
+
+            .swiper-slide::before {
+                display: none !important;
+            }
+
+            .gallery-header h1 {
+                font-size: 2.5rem !important;
+            }
+
+            .h3 {
+                font-size: 1.5rem !important;
+                margin-bottom: 30px !important;
+            }
+
+            #gallery {
+                padding: 60px 0 !important;
+            }
+
+            .gallery-header {
+                margin-bottom: 60px !important;
+                padding: 30px 15px !important;
+            }
+        }
+
+        .swiper-button-next,
+        .swiper-button-prev {
+            width: 60px !important;
+            height: 60px !important;
+            background: var(--color-light) !important;
+            border-radius: 50% !important;
+            box-shadow: var(--shadow-lg) !important;
+            transition: all 0.3s ease !important;
+            color: var(--color-primary) !important;
+        }
+
+        .swiper-button-next:hover,
+        .swiper-button-prev:hover {
+            background: var(--color-primary) !important;
+            color: var(--color-light) !important;
+            transform: scale(1.1) !important;
+        }
+
+        .swiper-button-next:after,
+        .swiper-button-prev:after {
+            font-size: 1.2rem !important;
+            font-weight: 700 !important;
+        }
+
+        @media (max-width: 767px) {
+            .swiper-button-next,
+            .swiper-button-prev {
+                width: 44px !important;
+                height: 44px !important;
+                margin-top: -22px !important;
+            }
+
+            .swiper-button-next:after,
+            .swiper-button-prev:after {
+                font-size: 16px !important;
+            }
+
+            .swiper-button-next:hover,
+            .swiper-button-prev:hover {
+                transform: none !important;
+            }
+        }
+
+        .swiper-pagination {
+            position: relative !important;
+            margin-top: 40px !important;
+        }
+
+        .swiper-pagination-bullet {
+            width: 14px !important;
+            height: 14px !important;
+            background: var(--color-disabletxt) !important;
+            opacity: 1 !important;
+            transition: all 0.3s ease !important;
+        }
+
+        .swiper-pagination-bullet-active {
+            background: var(--color-primary) !important;
+            transform: scale(1.3) !important;
+            box-shadow: 0 0 10px rgba(13, 94, 166, 0.5) !important;
+        }
+
+        @media (max-width: 767px) {
+            .swiper-pagination {
+                margin-top: 30px !important;
+            }
+
+            .swiper-pagination-bullet {
+                width: 12px !important;
+                height: 12px !important;
+            }
+
+            .swiper-pagination-bullet-active {
+                transform: scale(1.2) !important;
+            }
+        }
+
+        @media (max-width: 767.98px) {
+            .card-mobile-size {
+                height: 80px !important;
+                min-height: 80px;
+            }
+
+            .card-mobile-size .card-body {
+                padding: 0.75rem !important;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .card-mobile-size {
+                height: 120px;
+                min-height: 120px;
+            }
+        }
+
+        .slider-img {
+            width: 100%;
+            height: 350px;
+            object-fit: cover;
+            border-radius: 12px;
+        }
     /*========================================
     FONT CLASSES
     ========================================*/
@@ -2206,7 +3262,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav mx-auto">
                     <li class="nav-item mx-2">
-                                                <a class="nav-link {{ Request::is('/') ? 'active' : '' }}" href="/">Home</a>
+                        <a class="nav-link {{ Request::is('/') ? 'active' : '' }}" href="/">Home</a>
                     </li>
                     <li class="nav-item mx-2">
                         <a class="nav-link" href="program">Program</a>
@@ -2219,14 +3275,13 @@
                     </li>
                 </ul>
                 <div class="language">
-                    <button onclick="setLanguage('id')">
-                        <img src="asset/img/indo.png" alt="indo" style="height: 15px;">
-                    </button>
+                    <button id="langID"><img src="asset/img/indo.png" alt="indo" style="height: 15px;"></button>
                     <span>|</span>
-                    <button onclick="setLanguage('ja')">
-                        <img src="asset/img/jap.png" alt="Jap" style="height: 15px;">
-                    </button>
+                    <button id="langJP"><img src="asset/img/jap.png" alt="Jap" style="height: 15px;"></button>
                 </div>
+
+                <!-- tempat widget tersembunyi -->
+                <div id="google_translate_element" style="display:none;"></div>
 
                 <div class="button-nav">
                     <a class="px-2 py-1 button-secondary button-hoversecondary poppins-medium" href="{{ url('daftar') }}">Register</a>
@@ -2237,9 +3292,9 @@
     </nav>
 
     <!-- CONTENT -->
-     <div class="content">
+    <div class="content">
         @yield('content')
-     </div>
+    </div>
         
     <!-- Footer -->
     <footer class="footer">
@@ -2300,7 +3355,42 @@
     </footer>
     
     <!-- Custom Scripts -->
-    
+    <!-- SCRIPT -->
+    <script>
+        function changeLanguage(lang) {
+            var frame = document.querySelector('iframe.goog-te-menu-frame');
+            if (!frame) {
+                alert("Google Translate belum siap, coba lagi sebentar.");
+                return;
+            }
+            var innerDoc = frame.contentDocument || frame.contentWindow.document;
+            var langLinks = innerDoc.querySelectorAll('.goog-te-menu2-item span.text');
+            langLinks.forEach(function(e) {
+                if (e.innerHTML.trim().toLowerCase() === lang.toLowerCase()) {
+                    e.click();
+                }
+            });
+        }
+
+        document.getElementById('langJP').addEventListener('click', function() {
+            changeLanguage('japanese');
+        });
+        document.getElementById('langID').addEventListener('click', function() {
+            changeLanguage('indonesian');
+        });
+    </script>
+
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement(
+                {pageLanguage: 'id', includedLanguages: 'id,ja', layout: google.translate.TranslateElement.InlineLayout.SIMPLE},
+                'google_translate_element'
+            );
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+
     <!-- Swiper JS -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
      <!-- Local Swiper JS -->
