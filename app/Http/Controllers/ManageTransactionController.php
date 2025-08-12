@@ -46,6 +46,18 @@ class ManageTransactionController extends Controller
 
         $transactions = $transactionQuery->latest()->paginate(15, ['*'], 'transactions_page');
 
+        // Filter transaksi setelah diambil
+        $transactions->getCollection()->transform(function ($transaction) {
+            if ($transaction->status === 'Verification') {
+                $totalPaid = $transaction->feePayments->sum('amount');
+                $isFullyPaid = $totalPaid >= $transaction->amount;
+                if (!$isFullyPaid) {
+                    // Jika belum lunas, ubah statusnya agar tombol verifikasi tidak muncul
+                    $transaction->status = 'Pending'; 
+                }
+            }
+            return $transaction;
+        });
         // Handle installments
         $installmentQuery = FeePayment::with(['transaction.user'])
             ->whereHas('transaction', function ($q) {

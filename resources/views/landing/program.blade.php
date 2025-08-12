@@ -1177,7 +1177,7 @@
 
 @section('content')
 
-<!-- Konten 1: Program Unggulan -->
+
 <!-- Konten 1: Program Unggulan -->
 <section id="program-unggulan" class="py-5 mb-2 mb-md-0">
   <div class="container h-100">
@@ -1270,6 +1270,7 @@
             <button type="button" data-bs-target="#carouselProgram" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
             <button type="button" data-bs-target="#carouselProgram" data-bs-slide-to="1" aria-label="Slide 2"></button>
             <button type="button" data-bs-target="#carouselProgram" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            <button type="button" data-bs-target="#carouselProgram" data-bs-slide-to="3" aria-label="Slide 4"></button>
             </div>
         </div>
     </div>
@@ -1380,21 +1381,17 @@
   </div>
 </section>
 
-
-<!-- Gallery Section -->
-<section id="gallery">
-  <div class="gallery-header">
-    <h1 class="text-white">Gallery</h1>
-  </div>
-  <h3 class="h3">
-    Kumpulan momen terbaik dari berbagai kegiatan kami
-  </h3>
-  <div class="container h-100">
-    <!-- Gallery Section dengan Coverflow 3D -->
-    <div class="swiper">
-      <div class="swiper-wrapper">
-        
-        <!-- Loop dari photo2 (42) sampai photo2 (59) -->
+  <section id="gallery">
+    <div class="gallery-header">
+      <h1 class="text-white">Gallery</h1>
+    </div>
+      <h3 class="h3">
+        Kumpulan momen terbaik dari berbagai kegiatan kami
+      </h3>
+    <div div class="container h-100">
+      <!-- Gallery Section dengan Coverflow 3D -->
+      <div class="swiper">
+        <div class="swiper-wrapper">
         <div class="swiper-slide">
           <img src="asset/img/photo2 (42).jpg" alt="Gallery 42">
         </div>
@@ -1451,91 +1448,6 @@
         </div>
 
       </div>
-    </div>
-  </div>
-</section>
-
-  <section id="gallery">
-    <div class="gallery-header">
-      <h1 class="text-white">Gallery</h1>
-    </div>
-      <h3 class="h3">
-        Kumpulan momen terbaik dari berbagai kegiatan kami
-      </h3>
-    <div div class="container h-100">
-      <!-- Gallery Section dengan Coverflow 3D -->
-      <div class="swiper">
-        <div class="swiper-wrapper">
-          <!-- Slide 1 -->
-          <div class="swiper-slide">
-            <img src="Asset/img/1.jpg"alt="Olahraga">
-            <div class="title">
-              <span>Olahraga</span>
-              <div class="subtitle">Kegiatan Fisik & Kesehatan</div>
-            </div>
-          </div>
-
-          <!-- Slide 2 -->
-          <div class="swiper-slide">
-            <img src="Asset/img/2.jpg" alt="Pendidikan">
-            <div class="title">
-              <span>Pendidikan</span>
-              <div class="subtitle">Program Belajar Mengajar</div>
-            </div>
-          </div>
-
-          <!-- Slide 3 -->
-          <div class="swiper-slide">
-            <img src="Asset/img/5.jpg" alt="Teknologi">
-            <div class="title">
-             <span>Penempatan Kerja</span>
-              <div class="subtitle">Pengurusan Kontrak Kerja/Magang Perusahaan</div>
-            </div>
-          </div>
-
-          <!-- Slide 4 -->
-          <div class="swiper-slide">
-            <img src="Asset/img/8.jpg" alt="Seni & Budaya">
-            <div class="title">
-              <span>Interview Online</span>
-              <div class="subtitle">Proses Wawancara Online dengan Perusahaan Jepang</div>
-            </div>
-          </div>
-
-          <!-- Slide 5 -->
-          <div class="swiper-slide">
-            <img src="Asset/img/7.jpg"alt="Lingkungan">
-            <div class="title">
-              <span>Interview Offline</span>
-              <div class="subtitle">Proses Wawancara Offline dengan perwakilan Perusahaan Jepang</div>
-            </div>
-          </div>
-
-          <!-- Slide 6 -->
-          <div class="swiper-slide">
-            <img src="Asset/img/4.jpg" alt="Bisnis">
-            <div class="title">
-              <span>Passport</span>
-              <div class="subtitle">Proses Pembuatan Passport</div>
-            </div>
-          </div>
-          <!-- Slide 7 -->
-          <div class="swiper-slide">
-            <img src="{{ Asset('Asset/img/9.jpg') }}" alt="Bisnis">
-            <div class="title">
-              <span>Pemberangkatan</span>
-              <div class="subtitle">Proses Akhir Pemberangkatan ke Jepang</div>
-            </div>
-          </div>
-          <!-- Slide 8 -->
-          <div class="swiper-slide">
-            <img src="{{ Asset('Asset/img/10.jpg') }}" alt="Bisnis">
-            <div class="title">
-              <span>Sudah bekerja</span>
-              <div class="subtitle">Foto siswa sudah di Jepang dan bekerja</div>
-            </div>
-          </div>
-        </div>
 
         <!-- Pagination -->
         <div class="swiper-pagination"></div>

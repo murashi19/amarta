@@ -11,12 +11,12 @@ class UserVerificationMail extends Mailable
     use Queueable, SerializesModels;
 
     public $name;
-    public $otp;
+    public $verification_code;
 
-    public function __construct($name, $otp)
+    public function __construct($name, $verification_code)
     {
         $this->name = $name;
-        $this->otp = $otp;
+        $this->verification_code = $verification_code;
     }
 
     public function build()
@@ -25,7 +25,7 @@ class UserVerificationMail extends Mailable
                     ->view('emails.verify-code')
                     ->with([
                         'name' => $this->name,
-                        'otp' => $this->otp
+                        'verification_code' => $this->verification_code
                     ]);
     }
 }

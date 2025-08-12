@@ -582,26 +582,30 @@
                                                 </a>
 
                                                 <!-- Verification Actions -->
-                                                @if($transaction->status === 'Verification')
-                                                    <div class="d-flex gap-1">
-                                                        <button class="btn btn-outline-success btn-sm flex-fill" 
-                                                                data-bs-toggle="modal" 
-                                                                data-bs-target="#approveModal" 
-                                                                data-id="{{ $transaction->id }}">
-                                                            <i class="fas fa-check me-1"></i> Terima
-                                                        </button>
+                                                @php
+                                                    $totalPaid = $transaction->feePayments->sum('amount');
+                                                    $isAmountMismatched = $totalPaid < $transaction->amount;
+                                                @endphp
+                                                @if($transaction->status === 'Verification' && !$isAmountMismatched)
+                                                <div class="d-flex gap-1">
+                                                    <button class="btn btn-outline-success btn-sm flex-fill" 
+                                                            data-bs-toggle="modal" 
+                                                            data-bs-target="#approveModal" 
+                                                            data-id="{{ $transaction->id }}">
+                                                        <i class="fas fa-check me-1"></i> Terima
+                                                    </button>
 
-                                                        <form method="POST" action="{{ route('admin.transaksi.verify', $transaction->id) }}" 
-                                                              class="flex-fill"
-                                                              onsubmit="return confirm('Yakin ingin menolak transaksi ini?')">
-                                                            @csrf
-                                                            <input type="hidden" name="action" value="reject">
-                                                            <button type="submit" class="btn btn-outline-danger btn-sm w-100">
-                                                                <i class="fas fa-times me-1"></i> Tolak
-                                                            </button>
-                                                        </form>
-                                                    </div>
-                                                @endif
+                                                    <form method="POST" action="{{ route('admin.transaksi.verify', $transaction->id) }}" 
+                                                            class="flex-fill"
+                                                            onsubmit="return confirm('Yakin ingin menolak transaksi ini?')">
+                                                        @csrf
+                                                        <input type="hidden" name="action" value="reject">
+                                                        <button type="submit" class="btn btn-outline-danger btn-sm w-100">
+                                                            <i class="fas fa-times me-1"></i> Tolak
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            @endif
 
                                                 <!-- Delete Button -->
                                                 <button type="button" class="btn btn-outline-danger btn-sm w-100" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $transaction->id }}">
@@ -931,25 +935,15 @@
                                                 <!-- Verification Actions -->
                                                 @if(in_array($installment->status, ['Verification', 'Pending']))
                                                     <div class="d-flex gap-1">
-                                                        <form method="POST" action="{{ route('admin.installments.verify', $installment->id) }}" 
-                                                              class="flex-fill"
-                                                              onsubmit="return confirm('Yakin ingin menyetujui cicilan ini?')">
-                                                            @csrf
-                                                            <input type="hidden" name="action" value="approve">
-                                                            <button type="submit" class="btn btn-outline-success btn-sm w-100">
-                                                                <i class="fas fa-check me-1"></i> Terima
-                                                            </button>
-                                                        </form>
+                                                        <button type="button" class="btn btn-outline-success btn-sm w-100" 
+                                                                onclick="confirmApprove('{{ $installment->id }}')">
+                                                            <i class="fas fa-check me-1"></i> Terima
+                                                        </button>
 
-                                                        <form method="POST" action="{{ route('admin.installments.verify', $installment->id) }}" 
-                                                              class="flex-fill"
-                                                              onsubmit="return confirm('Yakin ingin menolak cicilan ini?')">
-                                                            @csrf
-                                                            <input type="hidden" name="action" value="reject">
-                                                            <button type="submit" class="btn btn-outline-danger btn-sm w-100">
-                                                                <i class="fas fa-times me-1"></i> Tolak
-                                                            </button>
-                                                        </form>
+                                                        <button type="button" class="btn btn-outline-danger btn-sm w-100" 
+                                                                onclick="confirmReject('{{ $installment->id }}')">
+                                                            <i class="fas fa-times me-1"></i> Tolak
+                                                        </button>
                                                     </div>
                                                 @endif
 
@@ -1482,6 +1476,83 @@
             });
         });
     });
+
+    // SweetAlert Verifikasi Cicilan
+     function confirmApprove(installmentId) {
+        Swal.fire({
+            title: 'Konfirmasi Terima Cicilan',
+            text: "Apakah Anda yakin ingin menyetujui cicilan ini? Aksi ini tidak dapat dibatalkan.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#28a745',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Ya, Setujui!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Buat form dinamis untuk mengirim permintaan
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '/admin/installments/' + installmentId + '/verify';
+                form.style.display = 'none';
+                
+                // Tambahkan token CSRF
+                const csrfToken = document.createElement('input');
+                csrfToken.type = 'hidden';
+                csrfToken.name = '_token';
+                csrfToken.value = '{{ csrf_token() }}';
+                form.appendChild(csrfToken);
+
+                // Tambahkan input action
+                const actionInput = document.createElement('input');
+                actionInput.type = 'hidden';
+                actionInput.name = 'action';
+                actionInput.value = 'approve';
+                form.appendChild(actionInput);
+
+                document.body.appendChild(form);
+                form.submit();
+            }
+        });
+    }
+
+    function confirmReject(installmentId) {
+        Swal.fire({
+            title: 'Konfirmasi Tolak Cicilan',
+            text: "Apakah Anda yakin ingin menolak cicilan ini? Status akan berubah menjadi Failed.",
+            icon: 'error',
+            showCancelButton: true,
+            confirmButtonColor: '#dc3545',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Ya, Tolak!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Buat form dinamis untuk mengirim permintaan
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '/admin/installments/' + installmentId + '/verify';
+                form.style.display = 'none';
+                
+                // Tambahkan token CSRF
+                const csrfToken = document.createElement('input');
+                csrfToken.type = 'hidden';
+                csrfToken.name = '_token';
+                csrfToken.value = '{{ csrf_token() }}';
+                form.appendChild(csrfToken);
+
+                // Tambahkan input action
+                const actionInput = document.createElement('input');
+                actionInput.type = 'hidden';
+                actionInput.name = 'action';
+                actionInput.value = 'reject';
+                form.appendChild(actionInput);
+
+                document.body.appendChild(form);
+                form.submit();
+            }
+        });
+    }
 </script>
 @endpush
 @endsection

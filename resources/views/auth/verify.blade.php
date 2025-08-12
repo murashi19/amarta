@@ -316,13 +316,13 @@
                     <input type="hidden" name="email" value="{{ $email }}">
                     
                     <div class="otp-container">
-                        <label for="otp" class="form-label fw-semibold" style="color: #495057;">
+                        <label for="verification_code" class="form-label fw-semibold" style="color: #495057;">
                             <i class="fas fa-key me-2"></i>Kode Verifikasi
                         </label>
                         <input 
                             type="text" 
-                            name="otp" 
-                            id="otp" 
+                            name="verification_code" 
+                            id="verification_code" 
                             class="form-control otp-input" 
                             maxlength="6" 
                             placeholder="000000"
@@ -371,7 +371,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const otpInput = document.getElementById('otp');
+        const otpInput = document.getElementById('verification_code');
         const form = document.getElementById('otpForm');
         
         // Auto-submit saat 6 digit terisi

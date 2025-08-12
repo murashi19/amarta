@@ -960,7 +960,7 @@
             }
         });
 
-        // Payment method cards selection
+        // Click to select payment method
         document.addEventListener('click', function(e) {
             if (e.target.closest('.payment-method-card')) {
                 // Remove selection from all cards
@@ -1320,72 +1320,70 @@
             return methods[method] || method;
         }
 
-        function submitPaymentWithFile() {
-            // Create FormData for file upload
-            const formData = new FormData();
-            
-            // Add CSRF token
-            formData.append('_token', document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '{{ csrf_token() }}');
-            
-            // Add payment data
-            formData.append('amount', paymentData.amount);
-            formData.append('payment_method', paymentData.paymentMethod);
-            
-            // Add selected method if exists
-            if (paymentData.selectedMethod) {
-                formData.append('selected_method', paymentData.selectedMethod);
-            }
-            
-            // Add file
-            const fileInput = document.getElementById('paymentProof');
-            if (fileInput.files[0]) {
-                formData.append('payment_proof', fileInput.files[0]);
-            }
-            
-            // Add notes
-            const notes = document.getElementById('paymentNotes').value;
-            if (notes) {
-                formData.append('payment_notes', notes);
-            }
-            
-            // Show loading state
-            const processBtn = document.getElementById('processBtn');
-            const transactionId = {{ $trx->id }};
-            const originalText = processBtn.innerHTML;
-            processBtn.innerHTML = '<span class="loading-spinner me-2"></span>Mengirim...';
-            processBtn.disabled = true;
-            
-            // Submit using fetch
-            fetch(`/transaksi/program-kelas/{id}/cicilan`, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                    'Content-Type': 'application/json',
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Show success message
-                    showSuccessMessage(data.data);
-                    setTimeout(function() {
-                        window.location.reload();
-                    }, 2000);
-                } else {
-                    throw new Error(data.message || 'Terjadi kesalahan');
-                }
-            })
-            .catch(error => {
-                // Restore button state
-                processBtn.innerHTML = originalText;
-                processBtn.disabled = false;
-                
-                showAlert('Terjadi kesalahan: ' + error.message, 'error');
-            });
+       function submitPaymentWithFile() {
+        // Create FormData for file upload
+        const formData = new FormData();
+        
+        // Add CSRF token
+        formData.append('_token', document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '{{ csrf_token() }}');
+        
+        // Add payment data
+        formData.append('amount', paymentData.amount);
+        formData.append('payment_method', paymentData.paymentMethod);
+        
+        // Add selected method if exists
+        if (paymentData.selectedMethod) {
+            formData.append('selected_method', paymentData.selectedMethod);
         }
-
+        
+        // Add file
+        const fileInput = document.getElementById('paymentProof');
+        if (fileInput.files[0]) {
+            formData.append('payment_proof', fileInput.files[0]);
+        }
+        
+        // Add notes
+        const notes = document.getElementById('paymentNotes').value;
+        if (notes) {
+            formData.append('payment_notes', notes);
+        }
+        
+        // Show loading state
+        const processBtn = document.getElementById('processBtn');
+        const transactionId = {{ $trx->id }};
+        const originalText = processBtn.innerHTML;
+        processBtn.innerHTML = '<span class="loading-spinner me-2"></span>Mengirim...';
+        processBtn.disabled = true;
+        
+        // Submit using fetch
+        fetch(`/transaksi/program-kelas/${transactionId}/cicilan`, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Show success message
+                showSuccessMessage(data.data);
+                setTimeout(function() {
+                    window.location.reload();
+                }, 2000);
+            } else {
+                throw new Error(data.message || 'Terjadi kesalahan');
+            }
+        })
+        .catch(error => {
+            // Restore button state
+            processBtn.innerHTML = originalText;
+            processBtn.disabled = false;
+            
+            showAlert('Terjadi kesalahan: ' + error.message, 'error');
+        });
+    }
         function showSuccessMessage(data) {
             const processingStep = document.getElementById('processingStep');
             processingStep.innerHTML = `

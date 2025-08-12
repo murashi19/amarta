@@ -754,26 +754,27 @@
                         <div class="icon-circle whatsapp-green">
                             <i class="fab fa-whatsapp"></i>
                         </div>
-                        <h3 class="contact-title">+6285183123744</h3>
+                        <h3 class="contact-title">+6285283123744</h3>
                     </a>
                 </div>
 
                 {{-- Card 2: Email (Generic) --}}
                 <div class="col-md-4 mb-4">
-                    <a href="mailto:example@gmail.com" class="contact-card email-card text-decoration-none d-block">
+                    <a href="mailto:lpkamartacibitung@gmail.com" class="contact-card email-card text-decoration-none d-block">
                         <div class="icon-circle email-red">
                             <i class="fas fa-envelope"></i>
                         </div>
                         <h3 class="contact-title">lpkamartacibitung@gmail.com</h3>
-                       </div>
                     </a>
-                {{-- Card 3: Phone (Generic, bisa juga ganti ke WhatsApp atau Telegram) --}}
+                </div>
+
+                {{-- Card 3: Telepon (Generic) --}}
                 <div class="col-md-4 mb-4">
-                    <a href="tel:+6284373643434" class="contact-card phone-card text-decoration-none d-block">
+                    <a href="tel:+6282134716388" class="contact-card phone-card text-decoration-none d-block">
                         <div class="icon-circle phone-blue">
                             <i class="fas fa-phone-alt"></i>
                         </div>
-                        <h3 class="contact-title">+6285183123744</h3>
+                        <h3 class="contact-title">+6282134716388</h3>
                     </a>
                 </div>
             </div>

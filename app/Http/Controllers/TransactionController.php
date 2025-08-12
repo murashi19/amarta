@@ -192,13 +192,18 @@ class TransactionController extends Controller
      */
     public function storeInstallment(Request $request, $id)
     {
-        try {
-            DB::beginTransaction();
+        DB::beginTransaction();
+        $proofPath = null;
 
+        try {
             $trx = Transaction::findOrFail($id);
 
-            // Pastikan hanya user pemilik transaksi yang bisa bayar
+            // 1. Authorization & Transaction State Checks
             if ($trx->user_id !== Auth::id()) {
+                \Log::warning('Unauthorized access attempt to store installment.', [
+                    'transaction_id' => $id,
+                    'user_id' => Auth::id()
+                ]);
                 return response()->json([
                     'success' => false,
                     'message' => 'Akses tidak diizinkan.'
@@ -212,43 +217,45 @@ class TransactionController extends Controller
                 ], 400);
             }
 
-            // Cek expired
             if ($trx->expires_at && Carbon::parse($trx->expires_at)->isPast()) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Transaksi sudah expired.'
                 ], 400);
             }
+            
+            // Periksa apakah ini adalah transaksi yang bisa dicicil (misal: dp)
+            if ($trx->type !== 'dp') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Transaksi ini tidak dapat dibayar dengan cicilan.'
+                ], 400);
+            }
 
-            // Hitung sisa tagihan
+            // 2. Calculate Remaining Amount
             $totalPaid = FeePayment::where('transaction_id', $trx->id)
                 ->whereIn('status', ['Completed', 'Verification'])
                 ->sum('amount');
-
             $remaining = $trx->amount - $totalPaid;
 
-            // Validasi input
+            // 3. Input Validation
             $request->validate([
                 'amount' => ['required', 'numeric', 'min:100000', "max:$remaining"],
                 'payment_method' => 'required|string|in:transfer_bank,ewallet,cash',
-                'payment_proof' => 'required|file|mimes:jpg,jpeg,png,pdf|max:5120', // 5MB
+                'payment_proof' => 'required|file|mimes:jpg,jpeg,png,pdf|max:5120',
                 'selected_method' => 'nullable|string|max:50',
                 'payment_notes' => 'nullable|string|max:500',
             ], [
                 'amount.max' => 'Jumlah pembayaran melebihi sisa tagihan.',
                 'amount.min' => 'Minimal pembayaran adalah Rp 100.000.',
                 'payment_proof.required' => 'Bukti pembayaran harus diupload.',
-                'payment_proof.file' => 'Bukti pembayaran harus berupa file.',
                 'payment_proof.mimes' => 'Format file harus JPG, PNG, atau PDF.',
                 'payment_proof.max' => 'Ukuran file maksimal 5MB.',
-                'payment_method.in' => 'Metode pembayaran tidak valid.',
             ]);
 
-            // Upload bukti pembayaran
-            $proofPath = null;
+            // 4. File Upload
             if ($request->hasFile('payment_proof')) {
                 $file = $request->file('payment_proof');
-
                 $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
                 $proofPath = $file->storeAs('payment_proofs', $fileName, 'public');
 
@@ -257,40 +264,39 @@ class TransactionController extends Controller
                 }
             }
 
-            // Generate kode referensi
+            // 5. Create Installment Record
             $referenceNumber = 'INS-' . strtoupper(uniqid()) . '-' . $trx->id;
             $nextInstallmentNumber = FeePayment::where('transaction_id', $trx->id)->count() + 1;
 
-            // Simpan cicilan ke database
             $installment = FeePayment::create([
-                'transaction_id'   => $trx->id,
+                'transaction_id' => $trx->id,
                 'installment_number' => $nextInstallmentNumber,
-                'amount'           => $request->amount,
-                'payment_method'   => $request->payment_method,
-                'selected_method'  => $request->selected_method,
-                'photo'            => $proofPath, // Kolom di DB kamu
-                'notes'            => $request->payment_notes,
+                'amount' => $request->amount,
+                'payment_method' => $request->payment_method,
+                'selected_method' => $request->selected_method,
+                'photo' => $proofPath,
+                'notes' => $request->payment_notes,
                 'reference_number' => $referenceNumber,
-                'paid_at'          => now(),
-                'expires_at'       => now()->addHours(24),
-                'status'           => 'Verification',
+                'paid_at' => now(),
+                'expires_at' => now()->addHours(24),
+                'status' => 'Verification',
             ]);
 
-            // Update status transaksi
-            $trx->update(['status' => 'Verification']);
-
-            // Update status user jika diperlukan
-            $user = $trx->user;
-            if ($user && $user->status_id == 3) {
-                $user->update(['status_id' => 5]); // Active
-            }
-
-            // Hitung ulang total pembayaran
+            // 6. Update Transaction & User Status
             $newTotalPaid = FeePayment::where('transaction_id', $trx->id)
                 ->whereIn('status', ['Completed', 'Verification'])
                 ->sum('amount');
+            $isFullyPaid = ($newTotalPaid >= $trx->amount);
+            $newTrxStatus = $isFullyPaid ? 'Completed' : 'Verification';
 
-            $isFullyPaid = $newTotalPaid >= $trx->amount;
+            $trx->update(['status' => $newTrxStatus]);
+
+            $user = $trx->user;
+            // Perbarui status user jika memenuhi syarat
+            // Disesuaikan dengan alur bisnis Anda: dari 'Meeting Joined' (id 3) ke 'Active' (id 5)
+            if ($user && $user->status_id == 3) {
+                $user->update(['status_id' => 5]);
+            }
 
             DB::commit();
 
@@ -298,18 +304,27 @@ class TransactionController extends Controller
                 'success' => true,
                 'message' => 'Pembayaran cicilan berhasil dikirim dan menunggu verifikasi admin.',
                 'data' => [
-                    'installment_id'   => $installment->id,
+                    'installment_id' => $installment->id,
                     'reference_number' => $referenceNumber,
-                    'amount'           => $request->amount,
-                    'total_paid'       => $newTotalPaid,
-                    'remaining'        => $trx->amount - $newTotalPaid,
-                    'is_fully_paid'    => $isFullyPaid,
-                    'status'           => 'Verification'
+                    'amount' => $request->amount,
+                    'total_paid' => $newTotalPaid,
+                    'remaining' => $trx->amount - $newTotalPaid,
+                    'is_fully_paid' => $isFullyPaid,
+                    'status' => $newTrxStatus
                 ]
             ]);
 
-        } catch (\Illuminate\Validation\ValidationException $e) {
+        } catch (ValidationException $e) {
             DB::rollBack();
+            if (isset($proofPath)) {
+                Storage::disk('public')->delete($proofPath);
+            }
+            \Log::error('Validation error on installment payment.', [
+                'transaction_id' => $id,
+                'user_id' => Auth::id(),
+                'request_data' => $request->except(['payment_proof']),
+                'validation_errors' => $e->errors()
+            ]);
             return response()->json([
                 'success' => false,
                 'message' => 'Data tidak valid.',
@@ -318,6 +333,9 @@ class TransactionController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
+            if (isset($proofPath)) {
+                Storage::disk('public')->delete($proofPath);
+            }
             \Log::error('Payment upload error: ' . $e->getMessage(), [
                 'transaction_id' => $id,
                 'user_id' => Auth::id(),

@@ -369,7 +369,7 @@
                     <i class="fas fa-key" style="margin-right: 5px;"></i>
                     Kode Verifikasi
                 </span>
-                <div class="otp-code">{{ $otp }}</div>
+                <div class="otp-code">{{ $verification_code }}</div>
             </div>
 
             <!-- Warning Box -->

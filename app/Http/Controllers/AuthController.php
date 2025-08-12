@@ -40,14 +40,14 @@ class AuthController extends Controller
             $plainPassword = $request->password;
             $otpCode = rand(100000, 999999); // OTP 6 digit angka
 
-            $user = null;
+            // Mulai transaksi
             DB::transaction(function () use ($request, &$user, $plainPassword, $otpCode) {
                 $user = User::create([
                     'name' => $request->name,
                     'email' => $request->email,
                     'password' => Hash::make($plainPassword),
                     'phone_number' => $request->phone_number,
-                    'status_id' => 8 || Status::where('name', 'Verifikasi')->first()->id,
+                    'status_id' => 8,
                     'address' => $request->address,
                     'birth_date' => $request->birth_date,
                     'education_level' => $request->education_level,
@@ -91,36 +91,39 @@ class AuthController extends Controller
     {
         $request->validate([
             'email' => 'required|email',
-            'verification_code' => 'required|digits:6', // Pastikan kode OTP 6 digit
+            'verification_code' => 'required|digits:6',
         ]);
 
         $user = User::where('email', $request->email)
-                    ->where('status_id', 8) // Cari user yang belum aktif
+                    ->where('status_id', 8)
                     ->first();
 
         // Cek apakah user ada
         if (!$user) {
+            Log::error('Verification failed: User not found or already verified.', ['email' => $request->email]);
             return back()->withErrors(['error' => 'Akun tidak ditemukan atau sudah terverifikasi.']);
         }
 
-        // Cek apakah kode OTP yang dimasukkan sama dengan yang ada di database
+        // Cek apakah kode OTP yang dimasukkan sama
         if ($user->verification_code != $request->verification_code) {
+            Log::warning('Verification failed: Incorrect code.', ['email' => $request->email, 'input_code' => $request->verification_code]);
             return back()->withErrors(['verification_code' => 'Kode verifikasi salah.']);
         }
 
         // Cek apakah kode OTP sudah kadaluwarsa
         if (Carbon::now()->greaterThan($user->verification_expires_at)) {
+            Log::warning('Verification failed: Expired code.', ['email' => $request->email]);
             return back()->withErrors(['verification_code' => 'Kode verifikasi sudah kadaluwarsa. Silakan kirim ulang.']);
         }
 
-        // Jika semua validasi berhasil, update status user menjadi aktif
-        $user->status_id = 1; // Ubah status menjadi aktif
-        $user->email_verified_at = now(); // Beri timestamp verifikasi
-        $user->verification_code = null; // Hapus kode OTP setelah verifikasi
+        // Jika semua validasi berhasil, update status user
+        $user->status_id = 1;
+        $user->verification_code = null;
         $user->verification_expires_at = null;
         $user->save();
+        
+        Log::info('User successfully verified.', ['email' => $user->email]);
 
-        // Redirect ke halaman login dengan pesan sukses
         return redirect()->route('login')->with('success', 'Akun berhasil diverifikasi! Silakan login.');
     }
 
@@ -132,18 +135,24 @@ class AuthController extends Controller
         $user = User::where('email', $request->email)->where('status_id', 8)->first();
 
         if (!$user) {
+            Log::error('Resend OTP failed: User not found or already verified.', ['email' => $request->email]);
             return back()->withErrors(['error' => 'Akun tidak ditemukan atau sudah terverifikasi.']);
         }
 
-        $otpCode = rand(100000, 999999);
-        $user->verification_code = $otpCode;
-        $user->verification_expires_at = now()->addMinutes(15);
-        $user->save();
+        try {
+            $otpCode = rand(100000, 999999);
+            $user->verification_code = $otpCode;
+            $user->verification_expires_at = now()->addMinutes(15);
+            $user->save();
 
-        // Kirim email dengan kode OTP baru
-        Mail::to($user->email)->send(new UserVerificationMail($user->name, $otpCode));
+            Mail::to($user->email)->send(new UserVerificationMail($user->name, $otpCode));
+            Log::info('New OTP sent successfully.', ['email' => $user->email]);
 
-        return back()->with('success', 'Kode verifikasi baru telah dikirim ke email Anda.');
+            return back()->with('success', 'Kode verifikasi baru telah dikirim ke email Anda.');
+        } catch (\Exception $e) {
+            Log::error('Failed to send OTP email.', ['email' => $user->email, 'error' => $e->getMessage()]);
+            return back()->withErrors(['error' => 'Gagal mengirim email verifikasi. Silakan coba lagi.']);
+        }
     }
 
 
