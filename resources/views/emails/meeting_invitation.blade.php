@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Undangan Google Meet LPK Amarta Bangun Indonesia</title>
+    <title>Undangan Meeting LPK Amarta Bangun Indonesia Cabang Cibitung</title>
     <style>
         * {
             margin: 0;
@@ -335,11 +335,11 @@
                     </div>
                 </div>
                 
-                <!-- Google Meet Link -->
+                <!-- Link Meeting -->
                 <div class="meet-link-section">
                     <div class="meet-link-header">
                        <img src="https://cdn-icons-png.flaticon.com/512/5977/5977576.png" alt="video" style="width:24px; vertical-align:middle; margin-right:8px;">
-                        <strong>Link Google Meet</strong>
+                        <strong>Link Meeting</strong>
                     </div>
                     <a href="{{ $meetLink }}" class="meet-button" target="_blank">
                         <img src="https://cdn-icons-png.flaticon.com/512/25/25284.png" alt="video" style="width:24px;  vertical-align:middle; margin-right:8px;"> Bergabung ke Meeting

@@ -47,7 +47,8 @@ class TransactionController extends Controller
             ->first();
 
         if ($existing) {
-            return redirect()->route('transaksi.booking', ['id' => $existing->id]);
+            return redirect()->route('transaksi.booking', ['transaction' => $existing->id]);
+
         }
 
         $transaction = Transaction::create([
@@ -59,7 +60,9 @@ class TransactionController extends Controller
             'expires_at' => now()->addminutes(5), // Waktu kadaluarsa 24 jam
         ]);
 
-        return redirect()->route('transaksi.booking', ['id' => $transaction->id]);
+        return redirect()->route('transaksi.booking', ['transaction' => $transaction->id])
+            ->with('success', 'Transaksi booking berhasil dibuat.');
+
     }
 
     // Fungsi untuk upload bukti pembayaran
@@ -102,7 +105,6 @@ class TransactionController extends Controller
         // Simpan pembayaran
         FeePayment::create([
             'transaction_id' => $trx->id,
-            'user_id' => Auth::id(),
             'amount' => $trx->amount,
             'payment_method' => 'transfer',
             'paid_at' => now(),
@@ -113,10 +115,9 @@ class TransactionController extends Controller
         // Update status transaksi
         $trx->update(['status' => 'verification']);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Bukti pembayaran berhasil dikirim. Menunggu verifikasi admin.'
-        ]);
+        return redirect()->route('dashboard.users')
+    ->with('success', 'Bukti pembayaran berhasil dikirim. Menunggu verifikasi admin.');
+
     }
 
 
@@ -156,8 +157,9 @@ class TransactionController extends Controller
             'description' => 'Pembayaran Program Kelas (DP)',
             'expires_at' => now()->addDays(30),
         ]);
-
-        return redirect()->route('transaksi.programKelas', ['id' => $trx->id]);
+        // Redirect ke halaman pembayaran
+        return redirect()->route('transaksi.programKelas', ['id' => $trx->id])
+            ->with('success', 'Pembayaran Program Kelas berhasil dibuat.');
     }
 
     /**

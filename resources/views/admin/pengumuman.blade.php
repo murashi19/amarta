@@ -96,6 +96,8 @@
                             <option value="">Semua Jenis</option>
                             <option value="auto welcome">Otomatis - Welcome</option>
                             <option value="auto booking success">Otomatis - Booking Berhasil</option>
+                            <option value="auto dp request">Otomatis - DP Request</option>
+                            <option value="auto dp success">Otomatis - DP Berhasil</option>
                             <option value="manual">Manual</option>
                         </select>
                     </div>
@@ -115,12 +117,9 @@
                     <div class="col-lg-2 col-md-4">
                         <label class="form-label">&nbsp;</label>
                         <div class="d-flex gap-2">
-                            <button 
-                                class="btn btn-outline-primary flex-fill" 
-                                onclick="filterAnnouncements()"
-                                title="Cari"
-                            >
-                                <i class="fas fa-search"></i>
+                            <button type="button" class="btn btn-outline-primary flex-fill" onclick="filterAnnouncements()"> <i class="fas fa-search mr-2"></i>Cari</button>
+
+                                
                             </button>
                             <button 
                                 class="btn btn-primary flex-fill" 
@@ -216,7 +215,7 @@
                                             </li>
                                             <li><hr class="dropdown-divider"></li>
                                             <li>
-                                                <a class="dropdown-item text-danger" href="javascript:void(0);" onclick="confirmDelete({{ $announcement->id }}, '{{ $announcement->title }}')">
+                                                <a class="dropdown-item text-danger" href="javascript:void(0);" onclick="confirmDelete({{ $announcement->id }}, '{{ addslashes($announcement->title) }}')">
                                                     <i class="fas fa-trash me-2"></i> Hapus
                                                 </a>
                                             </li>
@@ -363,7 +362,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="editAnnouncementForm" action="{{ route('admin.pengumuman.update', ':id') }}" method="POST">
+                <form id="editAnnouncementForm" action="#" method="POST">
                     @csrf
                     @method('PUT')
                     
@@ -565,172 +564,84 @@
 
 @endsection
 
-@push('scripts')
+
 <script>
+    // Pastikan semua variabel global ada
     let currentEditId = null;
     let editAutoSaveInterval;
 
-    // Fungsi: Simpan pengumuman (CREATE)
-    function saveAnnouncement() {
-        const form = document.getElementById('announcementForm');
-        const formData = new FormData(form);
+    // Document Ready
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('✅ DOM loaded, initializing JavaScript...');
+        
+        // Initialize event listeners
+        initializeEventListeners();
+        
+        // Initialize modal handlers
+        initializeModalHandlers();
+        
+        console.log('✅ JavaScript initialization complete');
+    });
 
-        if (!form.checkValidity()) {
-            form.reportValidity();
-            return;
-        }
-
-        const method = document.getElementById('_method').value;
-        const url = form.action;
-
-        fetch(url, {
-            method: method === 'PUT' ? 'POST' : 'POST',
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-            },
-            body: formData
-        })
-        .then(res => {
-            if (!res.ok) throw new Error("Gagal menyimpan data");
-            return res.json();
-        })
-        .then(data => {
-            alert(method === 'PUT' ? 'Pengumuman berhasil diupdate!' : 'Pengumuman berhasil dibuat!');
-            bootstrap.Modal.getInstance(document.getElementById('announcementModal')).hide();
-            location.reload();
-        })
-        .catch(err => {
-            console.error(err);
-            alert('Terjadi kesalahan saat menyimpan data.');
-        });
+    // Initialize all event listeners
+    function initializeEventListeners() {
+        // Toggle auto fields for create form
+        const typeField = document.getElementById('type');
+        const statusField = document.getElementById('status');
+        
+        if (typeField) typeField.addEventListener('change', toggleAutoFields);
+        if (statusField) statusField.addEventListener('change', toggleAutoFields);
+        
+        // Toggle auto fields for edit form
+        const editTypeField = document.getElementById('editType');
+        const editStatusField = document.getElementById('editStatus');
+        
+        if (editTypeField) editTypeField.addEventListener('change', toggleEditAutoFields);
+        if (editStatusField) editStatusField.addEventListener('change', toggleEditAutoFields);
     }
 
-        // Fungsi: Update preview saat edit
-        function updateEditPreview() {
-            const title = document.getElementById('editTitle').value;
-            const content = document.getElementById('editContent').value;
-            const type = document.getElementById('editType').value;
-            const priority = document.getElementById('editPriority').value;
-            const status = document.getElementById('editStatus').value;
-            const hasPaymentButton = document.getElementById('editHasPaymentButton').checked;
-            const meetLink = document.getElementById('editMeetLink').value;
+    // Initialize modal handlers
+    function initializeModalHandlers() {
+        // Create modal
+        const createModal = document.getElementById('announcementModal');
+        if (createModal) {
+            createModal.addEventListener('shown.bs.modal', function () {
+                toggleAutoFields(); // Reset fields when modal opens
+                document.getElementById('title').focus();
+            });
             
-            if (!title && !content) {
-                document.getElementById('editPreviewContent').innerHTML = '<div class="text-muted">Preview akan muncul saat Anda mengetik...</div>';
-                return;
-            }
-            
-            const priorityClass = priority === 'high' ? 'bg-danger' : (priority === 'medium' ? 'bg-warning' : 'bg-success');
-            const statusClass = status === 'published' ? 'bg-success' : (status === 'scheduled' ? 'bg-info' : 'bg-warning text-dark');
-            
-            let additionalFeatures = '';
-            if (hasPaymentButton && type === 'auto welcome') {
-                additionalFeatures += '<span class="badge bg-primary mt-1 me-1"><i class="fas fa-credit-card me-1"></i> Ada Button Bayar</span>';
-            }
-            if (meetLink && type === 'auto booking success') {
-                additionalFeatures += '<span class="badge bg-success mt-1"><i class="fas fa-video me-1"></i> Ada Link Meet</span>';
-            }
-            
-            let html = `
-                <div class="border rounded p-3">
-                    <div class="d-flex justify-content-between align-items-start mb-2">
-                        <h6 class="mb-0">${title || 'Judul Pengumuman'}</h6>
-                        <div>
-                            <span class="badge ${priorityClass} me-1">${priority}</span>
-                            <span class="badge ${statusClass}">${status}</span>
-                        </div>
-                    </div>
-                    <p class="mb-2">${content || 'Isi pengumuman akan muncul di sini...'}</p>
-                    <div>
-                        <span class="badge bg-info text-white">${type}</span>
-                        ${additionalFeatures}
-                    </div>
-                </div>
-            `;
-            
-            document.getElementById('editPreviewContent').innerHTML = html;
+            createModal.addEventListener('hidden.bs.modal', function () {
+                // Reset form
+                const form = document.getElementById('announcementForm');
+                if (form) form.reset();
+                document.getElementById('_method').value = 'POST';
+            });
         }
 
-        // Event listeners untuk edit modal
-        document.addEventListener('DOMContentLoaded', function() {
-            // Event listener untuk modal show
-            const editModal = document.getElementById('editAnnouncementModal');
-            if (editModal) {
-                editModal.addEventListener('shown.bs.modal', function () {
-                    // Start auto save interval
-                    editAutoSaveInterval = setInterval(() => {
-                        const title = document.getElementById('editTitle').value;
-                        const content = document.getElementById('editContent').value;
+        // Edit modal
+        const editModal = document.getElementById('editAnnouncementModal');
+        if (editModal) {
+            editModal.addEventListener('shown.bs.modal', function () {
+                document.getElementById('editTitle').focus();
+            });
+            
+            editModal.addEventListener('hidden.bs.modal', function () {
+                // Reset form
+                const form = document.getElementById('editAnnouncementForm');
+                if (form) form.reset();
+                currentEditId = null;
+            });
+        }
 
-                        if (title || content) {
-                            console.log('Auto-saving edit draft...');
-                            // saveEditDraft(); // Uncomment jika diperlukan
-                        }
-                    }, 30000);
-                    
-                    // Focus on title field
-                    document.getElementById('editTitle').focus();
-                });
-
-                editModal.addEventListener('hidden.bs.modal', function () {
-                    // Clear auto save interval
-                    if (editAutoSaveInterval) {
-                        clearInterval(editAutoSaveInterval);
-                    }
-                    
-                    // Reset form
-                    document.getElementById('editAnnouncementForm').reset();
-                    document.getElementById('editPreviewContent').innerHTML = '<div class="text-muted">Preview akan muncul saat Anda mengetik...</div>';
-                    currentEditId = null;
-                });
-            }
-
-            // Event listeners untuk realtime preview
-            const editTitle = document.getElementById('editTitle');
-            const editContent = document.getElementById('editContent');
-            const editType = document.getElementById('editType');
-            const editStatus = document.getElementById('editStatus');
-            const editPriority = document.getElementById('editPriority');
-            const editHasPaymentButton = document.getElementById('editHasPaymentButton');
-
-            if (editTitle) editTitle.addEventListener('input', updateEditPreview);
-            if (editContent) editContent.addEventListener('input', updateEditPreview);
-            if (editType) editType.addEventListener('change', toggleEditAutoFields);
-            if (editStatus) editStatus.addEventListener('change', toggleEditAutoFields);
-            if (editPriority) editPriority.addEventListener('change', updateEditPreview);
-            if (editHasPaymentButton) editHasPaymentButton.addEventListener('change', updateEditPreview);
-        });
-    
-    // Fungsi: Filter (Simulasi)
-    function filterAnnouncements() {
-        const status = document.getElementById('filterStatus').value;
-        const type = document.getElementById('filterType').value;
-        const search = document.getElementById('searchAnnouncement').value.toLowerCase();
-        alert('Filter diterapkan! (Simulasi)');
+        // View modal
+        const viewModal = document.getElementById('viewAnnouncementModal');
+        if (viewModal) {
+            viewModal.addEventListener('hidden.bs.modal', function () {
+                window.currentViewId = null;
+                showLoadingStateView();
+            });
+        }
     }
-
-    // Auto Save Draft Tambah Pengumuman (optional)
-    // let autoSaveInterval;
-
-    // document.getElementById('announcementModal').addEventListener('shown.bs.modal', function () {
-    //     toggleAutoFields(); // trigger pertama kali saat modal dibuka
-
-    //     autoSaveInterval = setInterval(() => {
-    //         const title = document.getElementById('title').value;
-    //         const content = document.getElementById('content').value;
-
-    //         if (title || content) {
-    //             console.log('Auto-saving draft (create)...');
-    //         }
-    //     }, 30000);
-    // });
-
-    // document.getElementById('announcementModal').addEventListener('hidden.bs.modal', function () {
-    //     clearInterval(autoSaveInterval);
-    //     document.getElementById('announcementForm').reset();
-    //     document.getElementById('_method').value = 'POST';
-    //     toggleAutoFields(); // reset field state
-    // });
 
     // Fungsi: Toggle field tambahan saat tipe/status berubah (CREATE)
     function toggleAutoFields() {
@@ -740,155 +651,30 @@
         const paymentField = document.getElementById('paymentButtonField');
         const meetLinkField = document.getElementById('meetLinkField');
         const scheduledField = document.getElementById('scheduledDateField');
-        const paymentCheckbox = document.getElementById('hasPaymentButton');
+        const paymentCheckbox = document.getElementById('has_payment_button');
+
+        if (!type || !status) return;
 
         // Sembunyikan default
-        paymentField.style.display = 'none';
-        meetLinkField.style.display = 'none';
+        if (paymentField) paymentField.style.display = 'none';
+        if (meetLinkField) meetLinkField.style.display = 'none';
+        if (scheduledField) scheduledField.style.display = 'none';
 
         // Munculkan payment button untuk type yang butuh pembayaran
-        if (['auto welcome', 'auto dp request', 'auto booking success'].includes(type)) {
+        if (['auto welcome', 'auto dp request', 'auto booking success'].includes(type) && paymentField) {
             paymentField.style.display = 'block';
-            paymentCheckbox.checked = true;
+            if (paymentCheckbox) paymentCheckbox.checked = true;
         }
 
         // Munculkan meet link hanya untuk booking success
-        if (type === 'auto booking success') {
+        if (type === 'auto booking success' && meetLinkField) {
             meetLinkField.style.display = 'block';
         }
 
         // Munculkan jadwal jika status scheduled
-        scheduledField.style.display = (status === 'scheduled') ? 'block' : 'none';
-    }
-
-    // Event listeners untuk real-time toggle (CREATE)
-    document.getElementById('type').addEventListener('change', toggleAutoFields);
-    document.getElementById('status').addEventListener('change', toggleAutoFields);
-
-    // Fungsi: Edit pengumuman (Updated)
-    function editAnnouncement(id) {
-        currentEditId = id;
-        
-        // Show loading state
-        const modal = new bootstrap.Modal(document.getElementById('editAnnouncementModal'));
-        modal.show();
-        
-        // Set loading state
-        document.getElementById('editPreviewContent').innerHTML = '<div class="text-center"><i class="fas fa-spinner fa-spin"></i> Memuat data...</div>';
-        
-        fetch(`/admin/pengumuman/${id}/edit`)
-            .then(res => {
-                if (!res.ok) throw new Error('Gagal memuat data');
-                return res.json();
-            })
-            .then(data => {
-                const form = document.getElementById('editAnnouncementForm');
-                form.action = `/admin/pengumuman/${id}`;
-                
-                // Populate form fields
-                document.getElementById('editTitle').value = data.title || '';
-                document.getElementById('editPriority').value = data.priority || 'medium';
-                document.getElementById('editType').value = data.type || 'manual';
-                document.getElementById('editTargetAudience').value = data.target_audience || 'all students';
-                document.getElementById('editStatus').value = data.status || 'draft';
-                document.getElementById('editContent').value = data.content || '';
-                document.getElementById('editMeetLink').value = data.meet_link || '';
-                document.getElementById('editScheduledDate').value = data.scheduled_date || '';
-                document.getElementById('editScheduledTime').value = data.scheduled_time || '';
-                document.getElementById('editHasPaymentButton').checked = data.has_payment_button === 1;
-                
-                // Toggle conditional fields
-                toggleEditAutoFields();
-                
-                // Update preview
-                updateEditPreview();
-            })
-            .catch(error => {
-                console.error(error);
-                alert('Gagal memuat data pengumuman. Silakan coba lagi.');
-                modal.hide();
-            });
-    }
-
-    // Fungsi: Update pengumuman
-    function updateAnnouncement() {
-        const form = document.getElementById('editAnnouncementForm');
-        const formData = new FormData(form);
-
-        if (!form.checkValidity()) {
-            form.reportValidity();
-            return;
+        if (status === 'scheduled' && scheduledField) {
+            scheduledField.style.display = 'block';
         }
-
-        // Show loading state
-        const updateBtn = document.querySelector('button[onclick="updateAnnouncement()"]');
-        const originalText = updateBtn.innerHTML;
-        updateBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Menyimpan...';
-        updateBtn.disabled = true;
-
-        fetch(form.action, {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
-                'Accept': 'application/json'
-            },
-            body: formData
-        })
-        .then(res => {
-            if (!res.ok) throw new Error("Gagal memperbarui pengumuman");
-            return res.json();
-        })
-        .then(data => {
-            // Show success message
-            showNotification('Pengumuman berhasil diperbarui!', 'success');
-            
-            // Hide modal
-            bootstrap.Modal.getInstance(document.getElementById('editAnnouncementModal')).hide();
-            
-            // Reload page or update table row
-            setTimeout(() => {
-                location.reload();
-            }, 1000);
-        })
-        .catch(err => {
-            console.error(err);
-            showNotification('Terjadi kesalahan saat memperbarui pengumuman.', 'error');
-        })
-        .finally(() => {
-            // Reset button state
-            updateBtn.innerHTML = originalText;
-            updateBtn.disabled = false;
-        });
-    }
-
-    // Fungsi: Simpan draft edit
-    function saveEditDraft() {
-        const form = document.getElementById('editAnnouncementForm');
-        const formData = new FormData(form);
-        
-        // Set status to draft
-        formData.set('status', 'draft');
-        
-        fetch(form.action, {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
-                'Accept': 'application/json'
-            },
-            body: formData
-        })
-        .then(res => {
-            if (!res.ok) throw new Error("Gagal menyimpan draft");
-            return res.json();
-        })
-        .then(data => {
-            showNotification('Draft berhasil disimpan!', 'success');
-            document.getElementById('editAutoSaveStatus').innerHTML = '<i class="fas fa-check text-success me-1"></i>Draft tersimpan pada ' + new Date().toLocaleTimeString();
-        })
-        .catch(err => {
-            console.error(err);
-            showNotification('Gagal menyimpan draft.', 'error');
-        });
     }
 
     // Fungsi: Toggle field tambahan untuk edit
@@ -900,127 +686,86 @@
         const meetLinkField = document.getElementById('editMeetLinkField');
         const scheduledField = document.getElementById('editScheduledDateField');
 
+        if (!type || !status) return;
+
         // Sembunyikan default
-        paymentField.style.display = 'none';
-        meetLinkField.style.display = 'none';
+        if (paymentField) paymentField.style.display = 'none';
+        if (meetLinkField) meetLinkField.style.display = 'none';
+        if (scheduledField) scheduledField.style.display = 'none';
 
         // Munculkan payment button untuk type yang butuh pembayaran
-        if (['auto welcome', 'auto dp request', 'auto booking success'].includes(type)) {
+        if (['auto welcome', 'auto dp request', 'auto booking success'].includes(type) && paymentField) {
             paymentField.style.display = 'block';
         }
 
         // Munculkan meet link hanya untuk booking success
-        if (type === 'auto booking success') {
+        if (type === 'auto booking success' && meetLinkField) {
             meetLinkField.style.display = 'block';
         }
 
         // Munculkan jadwal jika status scheduled
-        scheduledField.style.display = (status === 'scheduled') ? 'block' : 'none';
-
-        updateEditPreview();
+        if (status === 'scheduled' && scheduledField) {
+            scheduledField.style.display = 'block';
+        }
     }
 
+    // Fungsi: Filter 
+    function filterAnnouncements() {
+        const statusFilter = document.getElementById('filterStatus').value.toLowerCase();
+        const typeFilter = document.getElementById('filterType').value.toLowerCase();
+        const searchFilter = document.getElementById('searchAnnouncement').value.toLowerCase();
 
-    // Fungsi: Show notification
-    function showNotification(message, type = 'info') {
-        const alertClass = type === 'success' ? 'alert-success' : (type === 'error' ? 'alert-danger' : 'alert-info');
-        const notification = document.createElement('div');
-        notification.className = `alert ${alertClass} alert-dismissible fade show position-fixed`;
-        notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
-        notification.innerHTML = `
-            ${message}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        `;
-        
-        document.body.appendChild(notification);
-        
-        // Auto remove after 5 seconds
-        setTimeout(() => {
-            if (notification.parentNode) {
-                notification.remove();
+        const table = document.getElementById('announcementsTable');
+        const rows = table.querySelectorAll('tbody tr');
+
+        let visibleCount = 0;
+
+        rows.forEach(row => {
+            const status = row.querySelector('td:nth-child(4)').innerText.toLowerCase(); // kolom Status
+            const type = row.querySelector('td:nth-child(3)').innerText.toLowerCase();   // kolom Jenis
+            const title = row.querySelector('td:nth-child(2)').innerText.toLowerCase();  // kolom Judul dan isi kecilnya juga ikut dicek
+
+            // Cek apakah row cocok filter
+            const matchesStatus = !statusFilter || status.includes(statusFilter);
+            const matchesType = !typeFilter || type.includes(typeFilter);
+            const matchesSearch = !searchFilter || title.includes(searchFilter);
+
+            if (matchesStatus && matchesType && matchesSearch) {
+                row.style.display = '';
+                visibleCount++;
+            } else {
+                row.style.display = 'none';
             }
-        }, 5000);
-    }
+        });
 
-    // Event listeners untuk edit modal
-    document.getElementById('editAnnouncementModal').addEventListener('shown.bs.modal', function () {
-        // Start auto save interval
-        editAutoSaveInterval = setInterval(() => {
-            const title = document.getElementById('editTitle').value;
-            const content = document.getElementById('editContent').value;
+        // Jika tidak ada hasil, tampilkan pesan "Tidak ada pengumuman"
+        const tbody = table.querySelector('tbody');
+        let noDataRow = tbody.querySelector('.no-data-row');
 
-            if (title || content) {
-                console.log('Auto-saving edit draft...');
-                saveEditDraft();
+        if (visibleCount === 0) {
+            if (!noDataRow) {
+                const tr = document.createElement('tr');
+                tr.classList.add('no-data-row');
+                tr.innerHTML = `<td colspan="9" class="text-center py-4">Tidak ada pengumuman ditemukan.</td>`;
+                tbody.appendChild(tr);
             }
-        }, 30000); // Auto save every 30 seconds
-        
-        // Focus on title field
-        document.getElementById('editTitle').focus();
-    });
-
-    document.getElementById('editAnnouncementModal').addEventListener('hidden.bs.modal', function () {
-        // Clear auto save interval
-        if (editAutoSaveInterval) {
-            clearInterval(editAutoSaveInterval);
+        } else {
+            if (noDataRow) noDataRow.remove();
         }
-        
-        // Reset form
-        document.getElementById('editAnnouncementForm').reset();
-        document.getElementById('editPreviewContent').innerHTML = '<div class="text-muted">Preview akan muncul saat Anda mengetik...</div>';
-        document.getElementById('editAutoSaveStatus').innerHTML = '<i class="fas fa-save me-1"></i>Draft disimpan otomatis setiap 30 detik';
-        currentEditId = null;
-    });
-
-    // Event listeners untuk realtime preview
-    document.getElementById('editTitle').addEventListener('input', updateEditPreview);
-    document.getElementById('editContent').addEventListener('input', updateEditPreview);
-    document.getElementById('editType').addEventListener('change', toggleEditAutoFields);
-    document.getElementById('editStatus').addEventListener('change', toggleEditAutoFields);
-    document.getElementById('editPriority').addEventListener('change', updateEditPreview);
-
-    // Keyboard shortcuts
-    document.getElementById('editAnnouncementModal').addEventListener('keydown', function(e) {
-        // Ctrl/Cmd + S to save draft
-        if ((e.ctrlKey || e.metaKey) && e.key === 's') {
-            e.preventDefault();
-            saveEditDraft();
-        }
-        
-        // Ctrl/Cmd + Enter to update
-        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-            e.preventDefault();
-            updateAnnouncement();
-        }
-    });
-
-    // Fungsi: View announcement
-    if (typeof window.currentViewId === 'undefined') {
-        window.currentViewId = null;
     }
 
-    // Function utama untuk view announcement
-    function viewAnnouncement(id) {
-        console.log('👁️ View announcement ID:', id);
-        window.currentViewId = id;
+
+    // Fungsi: Edit pengumuman
+    function editAnnouncement(id) {
+        console.log('📝 Edit announcement ID:', id);
+        currentEditId = id;
         
-        // Cek apakah modal ada
-        const modalElement = document.getElementById('viewAnnouncementModal');
-        if (!modalElement) {
-            console.error('❌ Modal viewAnnouncementModal tidak ditemukan!');
-            alert('Modal detail tidak ditemukan. Pastikan modal sudah ditambahkan ke halaman.');
-            return;
-        }
-        
-        // Show modal dengan loading state
-        const modal = new bootstrap.Modal(modalElement);
+        // Show modal first
+        const modal = new bootstrap.Modal(document.getElementById('editAnnouncementModal'));
         modal.show();
         
-        // Reset states
-        showLoadingStateView();
-        
-        // Fetch data dari server
-        fetch(`/admin/pengumuman/${id}/show`, {
+        // Fetch data from server
+        fetch(`{{ url('admin/pengumuman') }}/${id}/edit`, {
             method: 'GET',
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
@@ -1030,57 +775,100 @@
             }
         })
         .then(response => {
-            console.log('📡 Response status:', response.status);
-            
             if (!response.ok) {
                 throw new Error(`HTTP ${response.status}: ${response.statusText}`);
             }
             return response.json();
         })
         .then(data => {
-            console.log('📋 Data received:', data);
+            console.log('📋 Edit data received:', data);
             
-            if (data.error) {
-                throw new Error(data.error);
-            }
+            // Populate form fields
+            const form = document.getElementById('editAnnouncementForm');
+            form.action = `{{ url('admin/pengumuman') }}/${id}`;
             
-            // Populate modal dengan data
-            populateViewModal(data);
-            showContentStateView();
+            document.getElementById('editTitle').value = data.title || '';
+            document.getElementById('editPriority').value = data.priority || 'medium';
+            document.getElementById('editType').value = data.type || 'manual';
+            document.getElementById('editTargetAudience').value = data.target_audience || 'all students';
+            document.getElementById('editStatus').value = data.status || 'draft';
+            document.getElementById('editContent').value = data.content || '';
+            document.getElementById('editMeetLink').value = data.meet_link || '';
+            document.getElementById('editScheduledDate').value = data.scheduled_date || '';
+            document.getElementById('editScheduledTime').value = data.scheduled_time || '';
+            document.getElementById('editHasPaymentButton').checked = data.has_payment_button === 1 || data.has_payment_button === true;
+            
+            // Toggle conditional fields
+            toggleEditAutoFields();
         })
         .catch(error => {
-            console.error('❌ Error loading announcement:', error);
-            showErrorStateView();
-            
-            // Show user-friendly error
-            alert('Gagal memuat detail pengumuman: ' + error.message);
+            console.error('❌ Error loading edit data:', error);
+            alert('Gagal memuat data pengumuman: ' + error.message);
+            modal.hide();
         });
     }
 
-    // Function untuk populate data ke modal
-    function populateViewModal(data) {
-        // Basic Info
-        const titleEl = document.getElementById('viewTitle');
-        const contentEl = document.getElementById('viewContent');
-        const targetEl = document.getElementById('viewTargetAudience');
-        const dateEl = document.getElementById('viewCreatedDate');
-        
-        if (titleEl) titleEl.textContent = data.title || 'Tidak ada judul';
-        if (contentEl) contentEl.innerHTML = formatContentView(data.content || 'Tidak ada konten');
-        if (targetEl) targetEl.textContent = formatTargetAudienceView(data.target_audience);
-        if (dateEl) dateEl.textContent = formatDateView(data.created_at);
-        
-        // Status Badges
-        updateStatusBadgeView(data.status);
-        updatePriorityBadgeView(data.priority);
-        updateTypeBadgeView(data.type);
-        
-        // Additional Features
-        updateAdditionalFeaturesView(data);
-        
-        // Scheduled Info
-        updateScheduledInfoView(data);
-    }
+    // Fungsi: View announcement
+   function viewAnnouncement(id) {
+    const url = `${window.location.origin}/admin/pengumuman/${id}/show`;
+
+    // Tampilkan loading, sembunyikan konten & error
+    document.getElementById('viewAnnouncementLoading').style.display = 'block';
+    document.getElementById('viewAnnouncementContent').style.display = 'none';
+    document.getElementById('viewAnnouncementError').style.display = 'none';
+
+    fetch(url, {
+        method: 'GET',
+        headers: { 'Accept': 'application/json' }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (!data.success) {
+            throw new Error(data.message || 'Gagal memuat data pengumuman');
+        }
+
+        // Isi data ke modal sesuai ID yang ada di Blade
+        document.getElementById('viewTitle').textContent = data.title || '-';
+        document.getElementById('viewContent').innerHTML = data.content || '-';
+        document.getElementById('viewTypeBadge').textContent = data.type || '-';
+        document.getElementById('viewStatusBadge').textContent = data.status || '-';
+        document.getElementById('viewPriorityBadge').textContent = data.priority || '-';
+        document.getElementById('viewTargetAudience').textContent = data.target_audience || '-';
+        document.getElementById('viewAdditionalFeatures').innerHTML = data.additional_features || '<span class="text-muted">Tidak ada fitur tambahan</span>';
+
+        // Tanggal & waktu terjadwal
+        if (data.scheduled_date || data.scheduled_time) {
+            document.getElementById('viewScheduledInfo').style.display = 'block';
+            document.getElementById('viewScheduledDate').textContent = data.scheduled_date || '-';
+            document.getElementById('viewScheduledTime').textContent = data.scheduled_time || '-';
+        } else {
+            document.getElementById('viewScheduledInfo').style.display = 'none';
+        }
+
+        // Tampilkan konten
+        document.getElementById('viewAnnouncementLoading').style.display = 'none';
+        document.getElementById('viewAnnouncementContent').style.display = 'block';
+
+        // Tampilkan modal
+        const modal = new bootstrap.Modal(document.getElementById('viewAnnouncementModal'));
+        modal.show();
+    })
+    .catch(error => {
+        console.error('❌ Error loading view data:', error);
+
+        // Tampilkan error state
+        document.getElementById('viewAnnouncementLoading').style.display = 'none';
+        document.getElementById('viewAnnouncementContent').style.display = 'none';
+        document.getElementById('viewAnnouncementError').style.display = 'block';
+    });
+}
+
+
 
     // Helper Functions untuk View
     function showLoadingStateView() {
@@ -1111,6 +899,28 @@
         if (loadingEl) loadingEl.style.display = 'none';
         if (contentEl) contentEl.style.display = 'none';
         if (errorEl) errorEl.style.display = 'block';
+    }
+
+    function populateViewModal(data) {
+        // Basic Info
+        const titleEl = document.getElementById('viewTitle');
+        const contentEl = document.getElementById('viewContent');
+        const targetEl = document.getElementById('viewTargetAudience');
+        
+        if (titleEl) titleEl.textContent = data.title || 'Tidak ada judul';
+        if (contentEl) contentEl.innerHTML = formatContentView(data.content || 'Tidak ada konten');
+        if (targetEl) targetEl.textContent = formatTargetAudienceView(data.target_audience);
+        
+        // Status Badges
+        updateStatusBadgeView(data.status);
+        updatePriorityBadgeView(data.priority);
+        updateTypeBadgeView(data.type);
+        
+        // Additional Features
+        updateAdditionalFeaturesView(data);
+        
+        // Scheduled Info
+        updateScheduledInfoView(data);
     }
 
     function updateStatusBadgeView(status) {
@@ -1193,7 +1003,6 @@
     }
 
     function formatContentView(content) {
-        // Convert line breaks to HTML
         return content.replace(/\n/g, '<br>');
     }
 
@@ -1239,36 +1048,17 @@
                 if (viewModal) viewModal.hide();
             }
             
-            // Open edit modal (pastikan function editAnnouncement ada)
+            // Open edit modal
             setTimeout(() => {
-                if (typeof editAnnouncement === 'function') {
-                    editAnnouncement(window.currentViewId);
-                } else {
-                    console.error('Function editAnnouncement not found');
-                    alert('Fitur edit tidak tersedia');
-                }
+                editAnnouncement(window.currentViewId);
             }, 300);
         }
     }
 
-    // Event Listeners - Pastikan DOM sudah ready
-    document.addEventListener('DOMContentLoaded', function() {
-        const viewModal = document.getElementById('viewAnnouncementModal');
-        if (viewModal) {
-            viewModal.addEventListener('hidden.bs.modal', function () {
-                window.currentViewId = null;
-                showLoadingStateView();
-            });
-            console.log('✅ View modal event listener terpasang');
-        } else {
-            console.warn('⚠️ Modal viewAnnouncementModal belum ada saat DOM ready');
-        }
-    });
-
-    console.log('✅ View Announcement functions loaded');
-
-    // Fungsi konfirmasi hapus dengan SweetAlert2
-        function confirmDelete(id, title) {
+    // Fungsi konfirmasi hapus
+    function confirmDelete(id, title) {
+        if (typeof Swal !== 'undefined') {
+            // Jika SweetAlert2 tersedia
             Swal.fire({
                 title: 'Konfirmasi Hapus',
                 html: `Apakah Anda yakin ingin menghapus pengumuman:<br><strong>"${title}"</strong>?`,
@@ -1278,91 +1068,49 @@
                 cancelButtonColor: '#6c757d',
                 confirmButtonText: '<i class="fas fa-trash me-2"></i>Ya, Hapus!',
                 cancelButtonText: '<i class="fas fa-times me-2"></i>Batal',
-                customClass: {
-                    confirmButton: 'btn btn-danger me-4',
-                    cancelButton: 'btn btn-secondary'
-                },
-                buttonsStyling: false,
                 allowOutsideClick: false,
                 allowEscapeKey: false,
                 showLoaderOnConfirm: true,
                 preConfirm: () => {
-                    return new Promise((resolve) => {// Set action URL dan submit form
-                            const form = document.getElementById('deleteForm');
-                            form.action = `{{ route('admin.pengumuman.destroy', '') }}/${id}`;
-                            form.submit();
-                            resolve();
-                        });
-                    }
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        // Form sudah disubmit di preConfirm
-                        // Show loading toast
-                        Swal.fire({
-                            title: 'Menghapus...',
-                            text: 'Sedang memproses penghapusan',
-                            icon: 'info',
-                            allowOutsideClick: false,
-                            showConfirmButton: false,
-                            willOpen: () => {
-                                Swal.showLoading();
-                            }
-                        });
-                    }
-                }).catch((error) => {
-                    console.error('Error:', error);
-                    Swal.fire({
-                        title: 'Error!',
-                        text: 'Terjadi kesalahan saat menghapus pengumuman',
-                        icon: 'error',
-                        confirmButtonText: 'OK',
-                        customClass: {
-                            confirmButton: 'btn btn-primary'
-                        },
-                        buttonsStyling: false
-                    });
-                });
-        }
-
-        // Toast notification untuk success delete (jika menggunakan AJAX)
-        function showDeleteSuccessToast(title) {
-            const Toast = Swal.mixin({
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 3000,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                    toast.addEventListener('mouseenter', Swal.stopTimer)
-                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    const form = document.getElementById('deleteForm');
+                    form.action = `{{ url('admin/pengumuman') }}/${id}`;
+                    form.submit();
                 }
             });
-
-            Toast.fire({
-                icon: 'success',
-                title: 'Berhasil dihapus!',
-                text: `Pengumuman "${title}" berhasil dihapus`
-            });
+        } else {
+            // Fallback ke confirm biasa
+            if (confirm(`Apakah Anda yakin ingin menghapus pengumuman "${title}"?`)) {
+                const form = document.getElementById('deleteForm');
+                form.action = `{{ url('admin/pengumuman') }}/${id}`;
+                form.submit();
+            }
         }
+    }
 
-        // Show success alert jika ada session delete_success
-        @if(session('delete_success'))
-            document.addEventListener('DOMContentLoaded', function() {
+    // Show success alert jika ada session delete_success
+    @if(session('delete_success'))
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof Swal !== 'undefined') {
                 Swal.fire({
                     title: 'Berhasil!',
-                    text: '{{ session('delete_success') }}',
+                    text: '{{ session("delete_success") }}',
                     icon: 'success',
                     confirmButtonText: 'OK',
-                    customClass: {
-                        confirmButton: 'btn btn-primary'
-                    },
-                    buttonsStyling: false,
                     timer: 5000,
                     timerProgressBar: true
                 });
-            });
-        @endif
+            } else {
+                alert('{{ session("delete_success") }}');
+            }
+        });
+    @endif
 
+    // Initialize global variables
+    if (typeof window.currentViewId === 'undefined') {
+        window.currentViewId = null;
+    }
+
+    console.log('✅ All JavaScript functions loaded');
 </script>
 @section('scripts')
 @endsection

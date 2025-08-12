@@ -8,7 +8,7 @@
     <div class="row align-items-center">
         <div class="col-md-8">
             <h1>Welcome Back, {{ Auth::user()->name }}!</h1>
-            <p class="mb-0">Here's what's happening with your LPK Amarta platform today.</p>
+            <p class="mb-0 text-white">Here's what's happening with your LPK Amarta platform today.</p>
             <small class="text-muted">Last updated: {{ now()->format('d M Y, H:i') }}</small>
         </div>
         <div class="col-md-4 text-end">

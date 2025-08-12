@@ -253,26 +253,26 @@
 
 
  <!-- Testimonial Section -->
-<section id="testimoni">
+<!-- <section id="testimoni">
   <div class="container">
     <div class="testimonial-container">
       <div class="section-title text-center mb-12">
         <h1>Testimoni <span>User</span></h1>
         <div class="underline mx-auto mt-2"></div>
-      </div>
+      </div> -->
 
       <!-- Navigation Arrows -->
-      <div class="nav-arrow prev" onclick="changeTestimonial(-1)">
+      <!-- <div class="nav-arrow prev" onclick="changeTestimonial(-1)">
         <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
       </div>
       <div class="nav-arrow next" onclick="changeTestimonial(1)">
         <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
-      </div>
+      </div> -->
 
       <!-- Testimonials -->
-      <div class="testimonial-wrapper">
+      <!-- <div class="testimonial-wrapper"> -->
         <!-- Card 1 -->
-        <div class="testimonial-card">
+        <!-- <div class="testimonial-card">
           <div class="profile-container">
             <div class="profile-ring">
               <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face" alt="User Image" class="profile-image">
@@ -282,10 +282,10 @@
           <p class="user-title">SMAN 1 Bekasi</p>
           <div class="quote-icon fas fa-quote-right"></div>
           <p class="testimonial-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-        </div>
+        </div> -->
 
         <!-- Card 2 (Active) -->
-        <div class="testimonial-card active">
+        <!-- <div class="testimonial-card active">
           <div class="profile-container">
             <div class="profile-ring">
               <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face" alt="User Image" class="profile-image">
@@ -295,10 +295,10 @@
           <p class="user-title">SMAN 1 Bekasi</p>
           <div class="quote-icon fas fa-quote-right"></div>
           <p class="testimonial-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-        </div>
+        </div> -->
 
         <!-- Card 3 -->
-        <div class="testimonial-card">
+        <!-- <div class="testimonial-card">
           <div class="profile-container">
             <div class="profile-ring">
               <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&crop=face" alt="User Image" class="profile-image">
@@ -310,15 +310,15 @@
           <p class="testimonial-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
         </div>
       </div>
-    </div>
+    </div> -->
 
     <!-- Navigation Dots -->
-    <div class="testimonial-nav">
+    <!-- <div class="testimonial-nav">
       <div class="nav-dot" onclick="goToSlide(0)"></div>
       <div class="nav-dot active" onclick="goToSlide(1)"></div>
       <div class="nav-dot" onclick="goToSlide(2)"></div>
     </div>
   </div>
-</section>
+</section> -->
 
 @endsection

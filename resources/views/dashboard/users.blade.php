@@ -1181,7 +1181,7 @@
         }
 
        .announcement-title-section {
-            margin-left: 40px;
+            margin-left: 20px;
             justify-content: center;
             align-items: center; /* biar elemen dalam flex sejajar tengah */
             text-align: center; /* biar teks rata tengah */

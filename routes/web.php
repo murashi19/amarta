@@ -21,11 +21,18 @@ Route::get('/program', fn() => view('landing/program'));
 Route::get('/about', fn() => view('landing/about'));
 Route::get('/contact', fn() => view('landing/contact'));
 Route::get('/daftar', fn() => view('landing/daftar'));
-Route::get('/form', fn() => view('auth/form'));
+Route::get('/register', fn() => view('auth/register'));
+Route::get('/verify', fn() => view('auth/verify'));
 
 // --- Auth Routes ---
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
 Route::post('/register', [AuthController::class, 'register']);
+
+// Rute untuk halaman verifikasi OTP
+Route::get('/verify-otp', [AuthController::class, 'showVerify'])->name('verifyOtp');
+Route::post('/verify-otp', [AuthController::class, 'processVerification'])->name('verifyOtp.process');
+Route::post('/resend-otp', [AuthController::class, 'resendOtp'])->name('resendOtp');
+
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
@@ -37,11 +44,16 @@ Route::middleware(['auth', 'admin'])->group(function () {
     
     // Pengumuman khusus admin
     Route::get('/admin/pengumuman', [AnnouncementController::class, 'index'])->name('admin.pengumuman');
+    Route::get('/admin/pengumuman/filter', [AnnouncementController::class, 'filter'])->name('admin.pengumuman.filter');
     Route::post('/admin/pengumuman', [AnnouncementController::class, 'store'])->name('admin.pengumuman.store');
     Route::put('/admin/pengumuman/{id}', [AnnouncementController::class, 'update'])->name('admin.pengumuman.update');
     Route::get('/admin/pengumuman/{id}/edit', [AnnouncementController::class, 'edit'])->name('admin.pengumuman.edit');
     Route::delete('/admin/pengumuman/{id}', [AnnouncementController::class, 'destroy'])->name('admin.pengumuman.destroy');
-    Route::get('/admin/pengumuman/{id}/show', [AnnouncementController::class, 'show'])->name('admin.pengumuman.show');
+    Route::get('admin/pengumuman/{id}/show', [AnnouncementController::class, 'show'])
+    ->name('admin.pengumuman.show');
+
+
+
 
     
     // Manajemen User
@@ -108,7 +120,7 @@ Route::middleware(['auth'])->group(function () {
 
 
     Route::post('/transaksi/booking', [TransactionController::class, 'createBooking'])->name('transaksi.booking.createBooking');
-    Route::put('/transaksi/booking/{id}/upload', [TransactionController::class, 'uploadProof'])->name('transaksi.booking.upload');
+    Route::put('/transaksi/booking/{transaction}/upload', [TransactionController::class, 'uploadProof'])->name('transaksi.booking.upload');
 
     // Transaksi Program Kelas
     // Route::get('/transaksi/programKelas/{id}', [TransactionController::class, 'showProgramKelas'])->name('transaksi.programKelas');

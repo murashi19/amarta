@@ -665,7 +665,7 @@
                                     </div>
                                 </div>
                             @else
-                                <form action="{{ route('transaksi.booking.upload', $transaction->id) }}" method="POST" enctype="multipart/form-data" id="uploadForm">
+                                <form action="{{ route('transaksi.booking.upload', $transaction->id) }}" method="POST" enctype="multipart/form-data">
                                     @csrf
                                     @method('PUT')
 
@@ -978,6 +978,7 @@
                         body: formData,
                         headers: {
                             'X-Requested-With': 'XMLHttpRequest',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
                             'Accept': 'application/json', // penting supaya Laravel kirim JSON
                         }
                     })

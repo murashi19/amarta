@@ -523,7 +523,7 @@
 
         @yield('content')
     </div>
-
+@stack('scripts')
     <!-- Hidden logout form -->
     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
         @csrf
@@ -619,6 +619,5 @@
         setInterval(updateStats, 30000);
     </script>
 
-@stack('scripts')
 </body>
 </html>

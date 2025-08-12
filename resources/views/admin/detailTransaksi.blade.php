@@ -86,20 +86,12 @@
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-body d-flex align-items-center">
                     <div class="rounded-circle bg-info text-white d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px;">
-                        <i class="fas fa-credit-card"></i>
+                        <i class="fas fa-tag"></i>
                     </div>
                     <div>
-                        <div class="fw-bold text-dark">Xendit Status</div>
-                        <div>
-                            @if($transaction->xendit_status == 'Paid')
-                                <span class="badge bg-success">{{ $transaction->xendit_status_name ?? 'Paid' }}</span>
-                            @elseif($transaction->xendit_status == 'Pending')
-                                <span class="badge bg-warning text-dark">{{ $transaction->xendit_status_name ?? 'Pending' }}</span>
-                            @elseif($transaction->xendit_status == 'Expired')
-                                <span class="badge bg-secondary">{{ $transaction->xendit_status_name ?? 'Expired' }}</span>
-                            @else
-                                <span class="badge bg-danger">{{ $transaction->xendit_status_name ?? 'Failed' }}</span>
-                            @endif
+                        <div class="fw-bold text-dark">Tipe</div>
+                        <div class="text-muted">
+                            {{ $transaction->type_name ?? ucfirst($transaction->type) }}
                         </div>
                     </div>
                 </div>
@@ -145,20 +137,6 @@
                                         </span>
                                     </td>
                                 </tr>
-
-                                @if($transaction->xendit_invoice_id)
-                                <tr class="border-bottom">
-                                    <td class="py-3 px-4 fw-semibold text-muted">Invoice ID Xendit</td>
-                                    <td class="py-3 px-4">
-                                        <div class="d-flex align-items-center">
-                                            <code class="bg-light px-2 py-1 rounded me-2">{{ $transaction->xendit_invoice_id }}</code>
-                                            <button class="btn btn-sm btn-outline-secondary" onclick="navigator.clipboard.writeText('{{ $transaction->xendit_invoice_id }}')">
-                                                <i class="fas fa-copy"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                @endif
                                 <tr class="border-bottom">
                                     <td class="py-3 px-4 fw-semibold text-muted">Tanggal Dibuat</td>
                                     <td class="py-3 px-4">
@@ -200,7 +178,11 @@
             </div>
 
             <!-- Payment Proof -->
-            @if($transaction->proof_url)
+            @php
+            $proof = $transaction->feePayments->last()?->photo;
+        @endphp
+
+        @if($proof)
             <div class="card border-0 shadow-sm">
                 <div class="card-header bg-light border-0 py-3">
                     <h5 class="mb-0 text-dark fw-semibold">
@@ -211,23 +193,23 @@
                 <div class="card-body text-center py-4">
                     <div class="mb-4">
                         <img 
-                            src="{{ $transaction->proof_url }}" 
+                            src="{{ asset('storage/' . $proof) }}" 
                             alt="Bukti Pembayaran" 
                             class="proof-image rounded shadow"
-                            onclick="window.open('{{ $transaction->proof_url }}', '_blank')"
+                            onclick="window.open('{{ asset('storage/' . $proof) }}', '_blank')"
                         >
                     </div>
                     <div class="d-flex justify-content-center gap-2 flex-wrap">
-                        <a href="{{ $transaction->proof_url }}" target="_blank" class="btn btn-outline-primary">
+                        <a href="{{ asset('storage/' . $proof) }}" target="_blank" class="btn btn-outline-primary">
                             <i class="fas fa-external-link-alt me-1"></i> Buka di Tab Baru
                         </a>
-                        <a href="{{ $transaction->proof_url }}" download class="btn btn-success">
+                        <a href="{{ asset('storage/' . $proof) }}" download class="btn btn-success">
                             <i class="fas fa-download me-1"></i> Download
                         </a>
                     </div>
                 </div>
             </div>
-            @else
+        @else
             <div class="card border-0 shadow-sm">
                 <div class="card-body text-center py-5">
                     <i class="fas fa-image fa-3x text-muted mb-3"></i>
@@ -235,7 +217,7 @@
                     <p class="text-muted mb-0">Belum ada bukti pembayaran yang diupload untuk transaksi ini.</p>
                 </div>
             </div>
-            @endif
+        @endif
         </div>
 
         <!-- User Information -->
@@ -352,7 +334,7 @@
     </div>
 
     <!-- Action Buttons -->
-    @if($transaction->status == 'pending' || $transaction->xendit_invoice_id)
+    @if($transaction->status == 'pending')
     <div class="card border-0 shadow-sm mt-4">
         <div class="card-body bg-light">
             <h6 class="mb-3 text-dark fw-semibold">
@@ -360,35 +342,23 @@
                 Aksi Transaksi
             </h6>
             <div class="d-flex flex-wrap gap-2">
-                @if($transaction->status == 'pending')
-                    <form method="POST" action="{{ route('admin.transaksi.verify', $transaction->id) }}" class="d-inline"
-                          onsubmit="return confirm('Apakah Anda yakin ingin menyetujui transaksi ini?')">
-                        @csrf
-                        <input type="hidden" name="action" value="approve">
-                        <button type="submit" class="btn btn-success">
-                            <i class="fas fa-check me-1"></i> Setujui Transaksi
-                        </button>
-                    </form>
-                    
-                    <form method="POST" action="{{ route('admin.transaksi.verify', $transaction->id) }}" class="d-inline"
-                          onsubmit="return confirm('Apakah Anda yakin ingin menolak transaksi ini?')">
-                        @csrf
-                        <input type="hidden" name="action" value="reject">
-                        <button type="submit" class="btn btn-danger">
-                            <i class="fas fa-times me-1"></i> Tolak Transaksi
-                        </button>
-                    </form>
-                @endif
+                <form method="POST" action="{{ route('admin.transaksi.verify', $transaction->id) }}" class="d-inline"
+                      onsubmit="return confirm('Apakah Anda yakin ingin menyetujui transaksi ini?')">
+                    @csrf
+                    <input type="hidden" name="action" value="approve">
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-check me-1"></i> Setujui Transaksi
+                    </button>
+                </form>
                 
-                @if($transaction->xendit_invoice_id)
-                    <form method="POST" action="{{ route('admin.transaksi.check-xendit', $transaction->id) }}" class="d-inline"
-                          onsubmit="return confirm('Apakah Anda yakin ingin mengecek status di Xendit?')">
-                        @csrf
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-sync me-1"></i> Cek Status Xendit
-                        </button>
-                    </form>
-                @endif
+                <form method="POST" action="{{ route('admin.transaksi.verify', $transaction->id) }}" class="d-inline"
+                      onsubmit="return confirm('Apakah Anda yakin ingin menolak transaksi ini?')">
+                    @csrf
+                    <input type="hidden" name="action" value="reject">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-times me-1"></i> Tolak Transaksi
+                    </button>
+                </form>
             </div>
         </div>
     </div>
@@ -397,7 +367,6 @@
 
 @push('styles')
     <style>
-        /* Custom minimal styles yang tidak bisa digantikan dengan Bootstrap */
         .section-title::before {
             content: '';
             position: absolute;
@@ -411,10 +380,13 @@
         .proof-image {
             cursor: pointer;
             transition: transform 0.3s ease;
-            max-height: 500px;
+            max-height: 300px; /* batasi tinggi */
+            max-width: 100%;   /* supaya tidak melebihi lebar container */
             width: auto;
-            max-width: 100%;
+            height: auto;
+            object-fit: contain; /* jaga proporsi */
         }
+
         
         .proof-image:hover {
             transform: scale(1.02);
@@ -450,10 +422,8 @@
 @endpush
 @push('scripts')
     <script>
-    // Simple clipboard functionality
     function copyToClipboard(text) {
         navigator.clipboard.writeText(text).then(function() {
-            // You could add a toast notification here
             console.log('Copied to clipboard');
         });
     }

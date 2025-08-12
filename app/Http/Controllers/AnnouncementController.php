@@ -13,8 +13,41 @@ class AnnouncementController extends Controller
     public function index()
     {
         $announcements = Announcement::orderBy('id', 'desc')->get();
+        
         return view('admin.pengumuman', compact('announcements'));
     }
+
+    public function filter(Request $request)
+    {
+        $query = Announcement::query();
+
+        if ($request->status) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->type) {
+            $query->where('type', $request->type);
+        }
+
+        if ($request->search) {
+            $query->where('judul', 'like', '%' . $request->search . '%');
+        }
+
+        $announcements = $query->get()->map(function($item) {
+            return [
+                'id' => $item->id,
+                'judul' => $item->judul,
+                'jenis' => $item->type,
+                'status' => $item->status,
+                'prioritas' => $item->priority,
+                'audiens' => $item->target_audience,
+                'tanggal' => $item->created_at->format('Y-m-d'),
+            ];
+        });
+
+        return response()->json($announcements);
+    }
+
 
     public function store(Request $request)
     {
@@ -76,6 +109,13 @@ class AnnouncementController extends Controller
 
         return redirect()->route('admin.pengumuman')->with('success', 'Pengumuman berhasil ditambahkan!');
     }
+
+    public function edit($id)
+    {
+        $announcement = Announcement::findOrFail($id);
+        return response()->json($announcement);
+    }
+
 
     public function update(Request $request, $id)
     {
@@ -150,38 +190,62 @@ class AnnouncementController extends Controller
     {
         try {
             $announcement = Announcement::findOrFail($id);
-            
-            // If AJAX request, return JSON with formatted data
+
             if (request()->expectsJson()) {
+                // Format tanggal/jam jika ada
+                $scheduledDate = $announcement->scheduled_date
+                    ? Carbon::parse($announcement->scheduled_date)->format('Y-m-d')
+                    : null;
+                $scheduledTime = $announcement->scheduled_time
+                    ? Carbon::parse($announcement->scheduled_time)->format('H:i')
+                    : null;
+
+                // Bangun HTML fitur tambahan (dipakai di modal admin)
+                $features = [];
+                if ((bool)$announcement->has_payment_button) {
+                    $features[] = '<span class="badge bg-success">Tombol Pembayaran</span>';
+                }
+                if (!empty($announcement->meet_link)) {
+                    $features[] = '<a href="' . e($announcement->meet_link) . '" target="_blank" class="btn btn-sm btn-outline-primary">Link Meeting</a>';
+                }
+                // contoh fitur lain: tipe auto
+                if (!empty($announcement->type) && str_contains($announcement->type, 'auto')) {
+                    $features[] = '<span class="badge bg-info">'.e($announcement->type).'</span>';
+                }
+                $additionalFeaturesHtml = count($features) ? implode(' ', $features) : null;
+
                 return response()->json([
                     'success' => true,
                     'id' => $announcement->id,
                     'title' => $announcement->title,
-                    'content' => $announcement->content,
+                    'content' => $announcement->content, // mengandung HTML jika ada
                     'type' => $announcement->type,
                     'status' => $announcement->status,
                     'priority' => $announcement->priority,
                     'target_audience' => $announcement->target_audience,
                     'meet_link' => $announcement->meet_link,
-                    'has_payment_button' => $announcement->has_payment_button,
-                    'scheduled_date' => $announcement->scheduled_date,
-                    'scheduled_time' => $announcement->scheduled_time,
-                    'created_at' => $announcement->created_at,
-                    'updated_at' => $announcement->updated_at,
+                    'has_payment_button' => (bool)$announcement->has_payment_button,
+                    'scheduled_date' => $scheduledDate,
+                    'scheduled_time' => $scheduledTime,
+                    'created_at' => $announcement->created_at ? $announcement->created_at->format('Y-m-d H:i:s') : null,
+                    'updated_at' => $announcement->updated_at ? $announcement->updated_at->format('Y-m-d H:i:s') : null,
+                    'additional_features' => $additionalFeaturesHtml,
                 ]);
             }
-            
-            return view('admin.pengumuman', compact('announcement'));
+
+            return view('admin.pengumuman.show', compact('announcement'));
         } catch (\Exception $e) {
             if (request()->expectsJson()) {
                 return response()->json([
                     'success' => false,
-                    'error' => 'Pengumuman tidak ditemukan'
+                    'message' => 'Pengumuman tidak ditemukan'
                 ], 404);
             }
-            return redirect()->route('admin.pengumuman')->with('error', 'Pengumuman tidak ditemukan.');
+            return redirect()->route('admin.pengumuman')
+                            ->with('error', 'Pengumuman tidak ditemukan.');
         }
     }
+
 
     // --- Fungsi tambahan untuk view pengumuman (jika diperlukan) ---
     public function view($id)

@@ -1068,7 +1068,7 @@
 
                     <div class="mb-4" id="link-input-wrapper">
                         <label for="meet_link" class="form-label fw-semibold" id="link-label">
-                            <i class="fab fa-google text-danger me-2" id="link-icon"></i>Link Google Meet
+                            <i class="fab fa-google text-danger me-2" id="link-icon"></i>Link Meeting
                         </label>
                         <input type="url" 
                             name="meet_link" 

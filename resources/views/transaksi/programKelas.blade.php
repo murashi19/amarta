@@ -257,8 +257,8 @@
                                                 @endif
                                             </td>
                                             <td>
-                                                @if($installment->proof_url)
-                                                    <a href="{{ $installment->proof_url }}" 
+                                                @if($installment->photo)
+                                                    <a href="{{ $installment->photo }}" 
                                                     target="_blank" 
                                                     class="btn btn-sm btn-outline-info">
                                                         <i class="fas fa-eye"></i>
@@ -1356,11 +1356,13 @@
             processBtn.disabled = true;
             
             // Submit using fetch
-            fetch(`/transaksi/program-kelas/${transactionId}/cicilan`, {
+            fetch(`/transaksi/program-kelas/{id}/cicilan`, {
                 method: 'POST',
                 body: formData,
                 headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Content-Type': 'application/json',
                 }
             })
             .then(response => response.json())

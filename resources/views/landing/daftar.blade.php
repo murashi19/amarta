@@ -319,13 +319,15 @@
         }
 
         .cta-buttons .btn {
-            width: 100%;
+            width: 300px;
             height: 50px;
             margin-bottom: 1rem;
             font-size: 14px; /* atur ukuran font agar pas */
             white-space: nowrap; /* agar teks tidak wrap ke baris baru */
             overflow: hidden;   /* sembunyikan jika kelebihan */
             text-overflow: ellipsis; /* tanda ... jika teks terlalu panjang */
+            justify-content: center;
+            align-items: center;
         }
     }
 
@@ -621,12 +623,12 @@
                         
                         <div class="cta-buttons">
                             <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
-                                <a href="{{ url('form') }}" class="btn btn-lg px-5 py-3 fw-bold shadow-lg" 
+                                <a href="{{ url('/register') }}" class="btn btn-lg px-5 py-3 fw-bold shadow-lg" 
                                    style="background-color: var(--color-warning); color: var(--color-dark); border: none;">
                                     <i class="fas fa-paper-plane me-2"></i>
                                     LANJUT DAFTAR
                                 </a>
-                                <a href="https://wa.me/NOMOR_WHATSAPP_ANDA" target="_blank" 
+                                <a href="https://wa.me/6285283123744" target="_blank" 
                                    class="btn btn-outline-light btn-lg px-5 py-3 fw-bold shadow-lg">
                                     <i class="fab fa-whatsapp me-2"></i>
                                     Konsultasi via WhatsApp
