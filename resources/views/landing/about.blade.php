@@ -440,7 +440,172 @@
 .card-hover {
     transition: all 0.3s ease;
 }
+/* --- Responsif untuk Ukuran Layar Kecil (<= 768px) --- */
+@media (max-width: 768px) {
+  /* ========================================
+    ABOUT KONTEN 1
+  ======================================== */
+  #about {
+    height: auto;
+  }
 
+  .about-section {
+    padding: 3rem 0;
+  }
+
+  .section-title {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .decorative-line {
+    margin: 0 auto 1.5rem;
+    width: 60px; /* Lebar garis disesuaikan */
+    height: 3px;
+  }
+
+  .floating-elements {
+    display: none; /* Menyembunyikan elemen animasi untuk performa lebih baik */
+  }
+
+  /* ========================================
+    ABOUT KONTEN 2
+  ======================================== */
+  #company {
+    padding-top: 40px;
+  }
+
+  .company-title,
+  .company-subtitle {
+    text-align: left;
+  }
+  
+  .company-image {
+    order: -1; /* Pindahkan gambar ke atas konten di mobile */
+    margin-bottom: 2rem;
+  }
+  
+  .company-image img {
+    width: 100%;
+    height: auto;
+  }
+  
+  .vision-mission-card {
+    margin-bottom: 1.5rem;
+  }
+
+  /* ========================================
+    ABOUT KONTEN 3 (Pendiri)
+  ======================================== */
+  #pendiri {
+    padding-top: 40px;
+    padding-bottom: 40px;
+  }
+
+  .pendiri-image2 {
+    margin-bottom: 2rem;
+  }
+
+  .pendiri-content {
+    text-align: left;
+  }
+
+  .judul-h3,
+  .judul-h1 {
+    font-size: 2rem;
+    text-align: left;
+  }
+  
+  .judul-h1 {
+    font-size: 2.5rem;
+  }
+  
+  .judul-h3::after {
+    left: 0;
+    transform: translateX(0) scaleX(1);
+    width: 60px;
+  }
+
+  .text-body {
+    font-size: 1rem;
+    text-align: left;
+  }
+
+  .bg-circle {
+    display: none;
+  }
+  
+  /* ========================================
+    KONTEN 4 (Legalitas)
+  ======================================== */
+  #legalitas {
+    padding: 40px 0;
+    height: auto;
+  }
+
+  .legal-hero {
+    width: 100%;
+    height: auto;
+    border-radius: 0;
+    padding: 2rem 1rem;
+  }
+
+  .legal-hero-content-text {
+    padding: 0;
+    text-align: center;
+  }
+  
+  .legal-hero-content-text h3 {
+    font-size: 1.5rem;
+  }
+  
+  .legal-hero-content-text h1 {
+    font-size: 2.5rem;
+  }
+  
+  .content-wrapper {
+    margin-top: 2rem;
+    margin-left: 0;
+  }
+
+  .slider-container2 {
+    width: 100%;
+  }
+
+  .slider-wrapper {
+    overflow-x: scroll; /* Mengaktifkan horizontal scroll untuk card */
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 15px; /* Memberi ruang di bawah scrollbar */
+    justify-content: flex-start;
+  }
+  
+  .certificate-card {
+    min-width: 85%; /* Menyesuaikan lebar card agar tidak terlalu besar */
+    height: auto;
+    min-height: 500px;
+    margin-right: 15px;
+    scroll-snap-align: center;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  }
+
+  .certificate-image {
+    height: 500px;
+  }
+
+  .certificate-info-overlay {
+    padding: 20px;
+    text-align: center;
+  }
+
+  .slider-next {
+    display: none; /* Menyembunyikan tombol next karena ada scrolling */
+  }
+
+  .slider-indicators {
+    display: none; /* Menyembunyikan indikator karena ada scrolling */
+  }
+}
 /* Image hover */
 .img-fluid:hover {
     transform: scale(1.02);
@@ -987,7 +1152,7 @@
             <div class="row align-items-center">
                 <div class="col-lg-6 company-content">
                     <h3 class="fw-semibold txt-dark text-center company-title">Lembaga Pelatihan Kerja</h3>
-                    <h1 class="fw-bold txt-primary text-center company-subtitle">PT. Amarta Indonesia</h1>
+                    <h1 class="fw-bold txt-primary text-center company-subtitle">Amarta Cabang Bekasi</h1>
                     <p class="text-body mt-3 company-description">
                         PT. Amarta Bangun Indonesia (PT. ABI), berdiri tahun 2020 dikarawang. PT. ABI bergerak di bidang recruitment consulting dalam negri, seiiring waktu PT. ABI mendirikan sebuah LPK dengan nama LPK Amarta Kazoku. 
                         PT. ABI mempunyai klien di dalam negri terutama area karawang dan bekasi, kebanyaka klien PT. ABI berasal dari pma Jepang. PT. ABI mengembangkan bisnis dengan membuka pelatian bahasa Jepang dan juga pelatihan keperawatan yang di suport oleh perusahaan besar di Jepang yaitu Iincollex. <br>
@@ -1038,7 +1203,7 @@
         <div class="container py-5">
             <div class="row align-items-center">
                 <div class="col-lg-6 position-relative pendiri-image2">
-                    <img src="asset/img/pendiri.png" alt="Profile Pendiri" class="img-fluid rounded-5">
+                    <img src="asset/img/photo2 (60).jpg" alt="Profile Pendiri" class="img-fluid rounded-5">
                 </div>
                 <div class="col-lg-6 pendiri-content">
                     <h3 class="judul-h3 text-reveal">
@@ -1081,7 +1246,7 @@
                         <!-- Slide 1 -->
                         <div class="certificate-card">
                             <div class="certificate-image">
-                                <img src="asset/img/legal1.png"  alt="">
+                                <img src="asset/img/photo2 (42).jpg"  alt="">
                             </div>
                             <div class="certificate-info-overlay">
                                 <h3 class="certificate-title">Surat Dinas Tenaga Kerja</h3>
@@ -1095,7 +1260,7 @@
                         <!-- Slide 2 -->
                         <div class="certificate-card">
                             <div class="certificate-image">
-                                    <img src="asset/img/legal2.png"  alt="">
+                                    <img src="asset/img/photo2 (42).jpg"  alt="">
                             </div>
                             <div class="certificate-info-overlay">
                                 <h3 class="certificate-title">Sertifikat Perizinan LPK</h3>
@@ -1110,7 +1275,7 @@
                         <div class="certificate-card">
                             <div class="certificate-image">
                                 
-                                    <img src="asset/img/legal3.png"  alt="">
+                                    <img src="asset/img/photo2 (41).jpg"  alt="">
                             
                             </div>
                             <div class="certificate-info-overlay">
@@ -1127,7 +1292,7 @@
                         <div class="certificate-card">
                             <div class="certificate-image">
                                 
-                                    <img src="asset/img/legal2.png"  alt="">
+                                    <img src="asset/img/photo2 (42).jpg"  alt="">
                                 
                             </div>
                             <div class="certificate-info-overlay">

@@ -600,68 +600,17 @@
         </div>
     </section>
 
-    <!-- CTA Section -->
-    <section id="marketing-cta" class="cta-gradient py-5 text-white position-relative overflow-hidden">
-        <div class="cta-pattern"></div>
-        <div class="container position-relative">
-            <div class="row justify-content-center">
-                <div class="col-lg-8 text-center">
-                    <div class="cta-content">
-                        <div class="cta-icon mb-4">
-                            <i class="fas fa-rocket" style="font-size: 4rem; color: var(--color-warning);"></i>
-                        </div>
-                        <h2 class="display-5 fw-bold mb-4">
-                            Siap Mewujudkan Impian Berkarir di <span style="color: var(--color-warning);">Jepang?</span>
-                        </h2>
-                        <p class="lead mb-4">
-                            Jangan tunda lagi kesempatan emas ini! Dengan pendaftaran awal hanya
-                            <span class="badge text-dark fs-5 mx-2" style="background-color: var(--color-warning);">Rp 500.000,-</span>
-                            Anda sudah bisa memulai langkah pertama menuju masa depan cerah di Negeri Sakura!
-                        </p>
-                        
-                        <div class="cta-buttons">
-                            <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
-                                <a href="{{ url('form') }}" class="btn btn-lg px-5 py-3 fw-bold shadow-lg" 
-                                   style="background-color: var(--color-warning); color: var(--color-dark); border: none;">
-                                    <i class="fas fa-paper-plane me-2"></i>
-                                    LANJUT DAFTAR
-                                </a>
-                                <a href="https://wa.me/NOMOR_WHATSAPP_ANDA" target="_blank" 
-                                   class="btn btn-outline-light btn-lg px-5 py-3 fw-bold shadow-lg">
-                                    <i class="fab fa-whatsapp me-2"></i>
-                                    Konsultasi via WhatsApp
-                                </a>
-                            </div>
-                        </div>
-
-                        <!-- Trust Indicators -->
-                        <div class="trust-indicators mt-5">
-                            <div class="row justify-content-center">
-                                <div class="col-md-4 mb-3">
-                                    <div class="trust-item">
-                                        <i class="fas fa-users mb-2" style="font-size: 2rem; color: var(--color-warning);"></i>
-                                        <div class="fw-bold">1000+</div>
-                                        <small>Peserta Terlatih</small>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 mb-3">
-                                    <div class="trust-item">
-                                        <i class="fas fa-building mb-2" style="font-size: 2rem; color: var(--color-warning);"></i>
-                                        <div class="fw-bold">50+</div>
-                                        <small>Perusahaan Mitra</small>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 mb-3">
-                                    <div class="trust-item">
-                                        <i class="fas fa-award mb-2" style="font-size: 2rem; color: var(--color-warning);"></i>
-                                        <div class="fw-bold">95%</div>
-                                        <small>Tingkat Keberhasilan</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    <section id="marketing-cta" class="py-5 bg-primary text-white text-center">
+        <div class="container">
+            <h2 class="mb-4 text-white">Siap Mewujudkan Impian Berkarir di Jepang?</h2>
+            <p class="lead mb-5">
+                Jangan tunda lagi kesempatan emas ini! Dengan pendaftaran awal hanya
+                <strong class="text-warning">Rp 500.000,-</strong>
+                Anda sudah bisa memulai langkah pertama menuju masa depan cerah di Negeri Sakura!
+            </p>
+            <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
+                <a href="{{ url('form') }}" class="btn btn-warning btn-lg px-4 me-sm-3">LANJUT DAFTAR</a>
+                <a href="https://wa.me/6285183123744" target="_blank" class="btn btn-outline-light btn-lg px-4">Konsultasi via WhatsApp <i class="fab fa-whatsapp ms-2"></i></a>
             </div>
         </div>
     </section>

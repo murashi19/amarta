@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\AuthController;
 use App\Http\Middleware\AdminOnly;
 use App\Http\Middleware\OwnsTransaction;
@@ -126,7 +128,29 @@ Route::middleware(['auth'])->group(function () {
         ->name('transaksi.programKelas.storeInstallment');
 
 
-    
+    Route::post('/translate', function (Request $request) {
+    $texts = $request->input('texts', []);
+    $target = $request->input('target', 'ja');
+
+    $results = [];
+
+    foreach ($texts as $text) {
+        $response = Http::post('https://libretranslate.com/translate', [
+            'q' => $text,
+            'source' => 'auto',
+            'target' => $target,
+            'format' => 'text'
+        ]);
+
+        if ($response->successful()) {
+            $results[] = $response->json()['translatedText'] ?? $text;
+        } else {
+            $results[] = $text;
+        }
+    }
+
+    return response()->json($results);
+});
 
 });
 
