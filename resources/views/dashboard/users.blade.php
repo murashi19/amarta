@@ -1,434 +1,6 @@
 @extends('layouts.dashboard')
 @section('title', 'Dashboard')
 
-@section('content')
-
-
-{{-- Toast Container untuk Flash Messages dari Middleware --}}
-@if(session('success') || session('error') || session('warning') || session('info'))
-<div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999;">
-    @if(session('success'))
-        <div class="toast show align-items-center text-bg-success border-0 shadow-lg" role="alert" data-bs-delay="5000">
-            <div class="d-flex">
-                <div class="toast-body">
-                    <i class="fas fa-check-circle me-2"></i>
-                    <strong>Berhasil!</strong><br>
-                    {{ session('success') }}
-                </div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-            </div>
-        </div>
-    @endif
-
-    @if(session('error'))
-        <div class="toast show align-items-center text-bg-danger border-0 shadow-lg" role="alert" data-bs-delay="8000">
-            <div class="d-flex">
-                <div class="toast-body">
-                    <i class="fas fa-exclamation-triangle me-2"></i>
-                    <strong>Perhatian!</strong><br>
-                    {{ session('error') }}
-                </div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-            </div>
-        </div>
-    @endif
-
-    @if(session('warning'))
-        <div class="toast show align-items-center text-bg-warning border-0 shadow-lg" role="alert" data-bs-delay="6000">
-            <div class="d-flex">
-                <div class="toast-body">
-                    <i class="fas fa-exclamation-circle me-2"></i>
-                    <strong>Peringatan!</strong><br>
-                    {{ session('warning') }}
-                </div>
-                <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast"></button>
-            </div>
-        </div>
-    @endif
-
-    @if(session('info'))
-        <div class="toast show align-items-center text-bg-info border-0 shadow-lg" role="alert" data-bs-delay="5000">
-            <div class="d-flex">
-                <div class="toast-body">
-                    <i class="fas fa-info-circle me-2"></i>
-                    <strong>Informasi</strong><br>
-                    {{ session('info') }}
-                </div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-            </div>
-        </div>
-    @endif
-</div>
-@endif
-
-<div class="dashboard-container">
-    <!-- Error Display -->
-    @if(isset($error))
-        <div class="alert-modern alert-danger">
-            <div class="alert-icon">
-                <i class="fas fa-exclamation-triangle"></i>
-            </div>
-            <div class="alert-content">
-                <strong>Error:</strong> {{ $error }}
-            </div>
-        </div>
-    @endif
-
-    <!-- Welcome Hero Section -->
-    <div class="hero-card">
-        <div class="hero-background"></div>
-        <div class="hero-content">
-            <div class="row align-items-center">
-                <div class="col-lg-8">
-                    <div class="hero-text">
-                        <h1 class="hero-title">
-                            Selamat Datang, 
-                            <span class="hero-name">{{ Auth::user()->name ?? 'User' }}!</span>
-                        </h1>
-                        <p class="hero-subtitle">
-                            Tetap terhubung dengan informasi terbaru seputar pelatihan dan proses belajar Anda di 
-                            <strong>LPK Amarta Bangun Indonesia</strong>.
-                        </p>
-                        <div class="hero-stats">
-                            <div class="stat-item">
-                                <i class="fas fa-clock"></i>
-                                <span>{{ now()->format('H:i') }} WIB</span>
-                            </div>
-                            <div class="stat-divider">•</div>
-                            <div class="stat-item">
-                                <i class="fas fa-calendar"></i>
-                                <span>{{ now()->format('d F Y') }}</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 text-end d-none d-lg-block">
-                    <div class="hero-illustration">
-                        <div class="illustration-circle">
-                            <i class="fas fa-graduation-cap"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Status Card -->
-    <div class="status-card">
-        <div class="status-header">
-            <div class="status-icon">
-                <i class="fas fa-user-circle"></i>
-            </div>
-            <div class="status-content">
-                <h3 class="status-title">Status Pembelajaran Anda</h3>
-                @if(isset($userStatusId))
-                    <div class="status-badge status-level-{{ $userStatusId }}">
-                        <div class="status-indicator"></div>
-                        <div class="status-text">
-                            @switch($userStatusId)
-                                @case(1) 
-                                    <strong>New Registrant</strong>
-                                    <span>Silakan lakukan pembayaran booking untuk melanjutkan</span>
-                                    @break
-                                @case(2) 
-                                    <strong>Paid Student</strong>
-                                    <span>Silakan gabung ke jadwal meeting yang telah ditentukan</span>
-                                    @break
-                                @case(3) 
-                                    <strong>Meeting Joined</strong>
-                                    <span>Silakan lanjutkan dengan pembayaran DP</span>
-                                    @break
-                                @case(4) 
-                                    <strong>DP Paid</strong>
-                                    <span>Kelas Anda akan segera diaktifkan</span>
-                                    @break
-                                @case(5) 
-                                    <strong>Active Student</strong>
-                                    <span>Selamat belajar dan semangat!</span>
-                                    @break
-                                @default 
-                                    <strong>Unknown Status</strong>
-                                    <span>Hubungi administrator untuk informasi lebih lanjut</span>
-                            @endswitch
-                        </div>
-                    </div>
-                @else
-                    <div class="status-badge status-unknown">
-                        <div class="status-indicator"></div>
-                        <div class="status-text">
-                            <strong>Status Tidak Tersedia</strong>
-                            <span>Hubungi administrator untuk informasi status</span>
-                        </div>
-                    </div>
-                @endif
-            </div>
-        </div>
-        
-        <!-- Progress Bar -->
-        @if(isset($userStatusId))
-        <div class="progress-section">
-            <div class="progress-track">
-                <div class="progress-fill" style="width: {{ ($userStatusId / 5) * 100 }}%"></div>
-            </div>
-            <div class="progress-steps">
-                @for($i = 1; $i <= 5; $i++)
-                    <div class="progress-step {{ $i <= $userStatusId ? 'active' : '' }}">
-                        <div class="step-circle">{{ $i }}</div>
-                    </div>
-                @endfor
-            </div>
-        </div>
-        @endif
-    </div>
-
-    <!-- Announcements Section -->
-    <div class="announcements-section">
-        <div class="section-header">
-            <div class="header-content">
-                <h2 class="section-title">
-                    <i class="fas fa-bullhorn"></i>
-                    Pengumuman
-                </h2>
-                <p class="section-subtitle">Informasi terbaru untuk Anda</p>
-            </div>
-            <div class="header-badge">
-                <span class="count-badge">{{ $announcements->count() ?? 0 }}</span>
-            </div>
-        </div>
-
-        <div class="announcements-content">
-            @if($announcements->count())
-                <div class="announcements-list">
-                    @foreach($announcements as $index => $announcement)
-                        <div class="announcement-card 
-                                target_audience-{{ str_replace(' ', '_', strtolower($announcement->target_audience)) }} 
-                                priority-{{ strtolower($announcement->priority) }}" 
-                        style="animation-delay: {{ $index * 0.1 }}s">
-
-                            
-                            <!-- Priority Indicator -->
-                            <div class="priority-bar"></div>
-                            
-                            <div class="announcement-header">
-                                <div class="announcement-icon">
-                                    @if($announcement->target_audience == 'new registrants')
-                                        <i class="fas fa-exclamation-triangle"></i>
-                                    @elseif($announcement->target_audience == 'paid students' || $announcement->target_audience == 'active students')
-                                        <i class="fas fa-check"></i>
-                                    @elseif($announcement->target_audience == 'all students')
-                                        <i class="fas fa-info-circle"></i>
-                                    @else
-                                        <i class="fas fa-info-circle"></i>
-                                    @endif
-                                </div>
-
-                                
-                                <div class="announcement-title-section">
-                                    <h4 class="announcement-title">{{ $announcement->title }}</h4>
-                                    <div class="announcement-meta">
-                                        <span class="target-audience">
-                                            <i class="fas fa-users"></i>
-                                            {{ ucfirst($announcement->target_audience) }}
-                                        </span>
-                                        <span class="announcement-time">
-                                            <i class="fas fa-clock"></i>
-                                            {{ $announcement->created_at->diffForHumans() }}
-                                        </span>
-                                    </div>
-                                </div>
-                                
-                                <div class="priority-badge">
-                                    <span class="badge-text">{{ ucfirst($announcement->priority) }}</span>
-                                </div>
-                            </div>
-
-                            <div class="announcement-body">
-                                <p class="announcement-content">{{ $announcement->content }}</p>
-                            </div>
-
-                            <!-- Action Section -->
-                           @php
-                                $pendingBooking = \App\Models\Transaction::where('user_id', Auth::id())
-                                    ->where('type', 'booking')
-                                    ->whereIn('status', ['Pending', 'Verification']) // Perbaikan disini
-                                    ->latest()
-                                    ->first();
-
-                                $userStatus = $userStatusId ?? 1;
-                            @endphp
-
-                            @if(session('success'))
-                                <div class="alert alert-success">{{ session('success') }}</div>
-                            @endif
-
-                            <!-- Kondisi berdasarkan status user -->
-                            @if($userStatus == 1)
-                                {{-- Status: New Registrant - Tampilkan form booking --}}
-                                <div class="card mb-3">
-                                    <div class="card-body">
-                                        <h5 class="text-warning">
-                                            <i class="fas fa-credit-card me-2"></i>
-                                            Booking Kelas
-                                        </h5>
-
-                                        @if($pendingBooking)
-                                            @if($pendingBooking->status === 'Pending')
-                                                <p class="text-muted">Kamu sudah membuat transaksi booking yang belum dibayar.</p>
-                                                <a href="{{ route('transaksi.booking', $pendingBooking) }}" class="btn btn-warning">
-                                                    <i class="fas fa-clock me-2"></i>
-                                                    Lanjutkan Pembayaran Booking
-                                                </a>
-                                            @elseif($pendingBooking->status === 'Verification')
-                                                <p class="text-muted">Pembayaran booking Anda sedang diverifikasi.</p>
-                                                <a href="{{ route('transaksi.booking', $pendingBooking) }}" class="btn btn-warning">
-                                                    <i class="fas fa-spinner fa-spin me-2"></i>
-                                                    Lihat Status Pembayaran
-                                                </a>
-                                            @endif
-                                        @else
-                                            <p class="text-muted mb-3">Silakan lakukan pembayaran booking untuk melanjutkan proses pendaftaran.</p>
-                                            <form method="POST" action="{{ route('transaksi.booking.createBooking') }}">
-                                                @csrf
-                                                <button type="submit" class="btn btn-primary">
-                                                    <i class="fas fa-money-bill-wave me-2"></i>
-                                                    Bayar Booking Rp500.000
-                                                </button>
-                                            </form>
-                                        @endif
-                                    </div>
-                                </div>
-
-                            @elseif($userStatus == 2)
-                                {{-- Status: Paid Student - Tampilkan link Google Meet --}}
-                                <div class="card mb-3 border-info">
-                                    <div class="card-body">
-                                        <h5 class="text-info">
-                                            <i class="fas fa-video me-2"></i>
-                                            Link Meeting Kelas
-                                        </h5>
-                                            @if(isset($announcement) && !empty($announcement->meet_link))
-                                                <p class="text-muted mb-3">
-                                                    Pembayaran booking Anda sudah berhasil. Silakan bergabung dengan meeting kelas sesuai jadwal berikut:
-                                                </p>
-
-                                                @if(!empty($announcement->scheduled_at))
-                                                    <p>
-                                                        <i class="fas fa-calendar-alt me-2"></i>
-                                                        {{ \Carbon\Carbon::parse($announcement->scheduled_at)->translatedFormat('l, d F Y') }}
-                                                        <br>
-                                                        <i class="fas fa-clock me-2"></i>
-                                                        {{ \Carbon\Carbon::parse($announcement->scheduled_at)->format('H:i') }} WIB
-                                                    </p>
-                                                @endif
-
-                                                <div class="d-grid gap-2">
-                                                    <a href="{{ $announcement->meet_link }}" target="_blank" class="btn btn-info">
-                                                        <i class="fas fa-external-link-alt me-2"></i>
-                                                        Gabung Google Meet
-                                                    </a>
-                                                </div>
-                                                <small class="text-muted d-block mt-2">
-                                                    <i class="fas fa-info-circle me-1"></i>
-                                                    Link akan membuka di tab baru. Pastikan Anda sudah menginstall Google Meet atau menggunakan browser yang mendukung.
-                                                </small>
-                                            @else
-                                                <div class="alert alert-warning" role="alert">
-                                                    <i class="fas fa-clock me-2"></i>
-                                                    Link Google Meet belum tersedia. Admin akan segera memberikan link meeting.
-                                                </div>
-                                            @endif
-
-                                    </div>
-                                </div>
-
-                            @elseif($userStatus >= 3 && $userStatus <= 5)
-                                {{-- Status: Meeting Joined sampai Ready to Depart - Tampilkan tombol ke halaman keuangan --}}
-                                <div class="card mb-3 border-success">
-                                    <div class="card-body">
-                                        <h5 class="text-success">
-                                            <i class="fas fa-calculator me-2"></i>
-                                            Pembayaran Keuangan
-                                        </h5>
-
-                                        @if($userStatus == 3)
-                                            <p class="text-muted mb-3">
-                                                Anda sudah bergabung dalam meeting. Silakan lanjutkan dengan pembayaran DP (Down Payment) melalui halaman keuangan.
-                                            </p>
-                                        @elseif($userStatus == 4)
-                                            <p class="text-muted mb-3">
-                                                DP Anda sudah dibayar. Silakan lengkapi pembayaran sisanya melalui halaman keuangan.
-                                            </p>
-                                        @elseif($userStatus == 5)
-                                            <p class="text-muted mb-3">
-                                                Status Anda sudah aktif. Anda dapat melihat riwayat pembayaran dan informasi keuangan lainnya.
-                                            </p>
-                                        @endif
-
-                                        <div class="d-grid gap-2">
-                                            <a href="{{ route('users.keuangan') }}" class="btn btn-success">
-                                                <i class="fas fa-money-check-alt me-2"></i>
-                                                Buka Halaman Keuangan
-                                            </a>
-                                        </div>
-
-                                        <small class="text-muted d-block mt-2">
-                                            <i class="fas fa-shield-alt me-1"></i>
-                                            Semua transaksi pembayaran dilakukan melalui halaman keuangan untuk keamanan dan kemudahan tracking.
-                                        </small>
-                                    </div>
-                                </div>
-
-                            @else
-                                {{-- Status tidak dikenali --}}
-                                <div class="card mb-3 border-secondary">
-                                    <div class="card-body">
-                                        <h5 class="text-secondary">
-                                            <i class="fas fa-question-circle me-2"></i>
-                                            Status Tidak Dikenali
-                                        </h5>
-                                        <p class="text-muted mb-3">
-                                            Status Anda tidak dapat diidentifikasi. Silakan hubungi administrator untuk mendapatkan bantuan.
-                                        </p>
-                                        <div class="d-grid gap-2">
-                                            <a href="{{ route('contact.admin') }}" class="btn btn-secondary">
-                                                <i class="fas fa-headset me-2"></i>
-                                                Hubungi Administrator
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endif
-
-
-                            <!-- Footer -->
-                            <div class="announcement-footer">
-                                <div class="footer-info">
-                                    <span class="created-date">{{ $announcement->created_at->format('d M Y, H:i') }}</span>
-                                    @if($announcement->type != 'manual')
-                                        <span class="auto-type">
-                                            <i class="fas fa-robot"></i>
-                                            Auto: {{ ucfirst(str_replace('auto ', '', $announcement->type)) }}
-                                        </span>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-            @else
-                <div class="empty-state">
-                    <div class="empty-illustration">
-                        <i class="fas fa-inbox"></i>
-                    </div>
-                    <div class="empty-content">
-                        <h3 class="empty-title">Belum Ada Pengumuman</h3>
-                        <p class="empty-subtitle">Pengumuman dan informasi terbaru akan muncul di sini</p>
-                    </div>
-                </div>
-            @endif
-        </div>
-    </div>
-</div>
 
 
 @push('styles')
@@ -627,6 +199,8 @@
     .status-badge.status-level-3 { border-left: 4px solid var(--primary); }
     .status-badge.status-level-4 { border-left: 4px solid var(--primary-dark); }
     .status-badge.status-level-5 { border-left: 4px solid var(--success); }
+    .status-badge.status-level-6 { border-left: 4px solid var(--success); }
+    .status-badge.status-level-7 { border-left: 4px solid var(--success); }
 
     .status-indicator {
         width: 12px;
@@ -640,6 +214,8 @@
     .status-level-3 .status-indicator { background: var(--primary); }
     .status-level-4 .status-indicator { background: var(--primary-dark); }
     .status-level-5 .status-indicator { background: var(--success); }
+    .status-level-6 .status-indicator { background: var(--success); }
+    .status-level-7 .status-indicator { background: var(--success); }
 
     .status-text strong {
         color: var(--gray-800);
@@ -821,15 +397,15 @@
 
    .announcement-card.target_audience-new_registrants .priority-bar {
     background: linear-gradient(90deg, var(--danger), #dc2626);
-}
+    }
 
-   .announcement-card.target_audience-paid_students .priority-bar,
-.announcement-card.target_audience-active_students .priority-bar {
-    background: linear-gradient(90deg, var(--success), #16a34a);
-}
-    .announcement-card.target_audience-all_students .priority-bar {
-    background: linear-gradient(90deg, var(--warning), #d97706);
-}
+    .announcement-card.target_audience-paid_students .priority-bar,
+    .announcement-card.target_audience-active_students .priority-bar {
+        background: linear-gradient(90deg, var(--success), #16a34a);
+    }
+        .announcement-card.target_audience-all_students .priority-bar {
+        background: linear-gradient(90deg, var(--warning), #d97706);
+    }
 
     .announcement-header {
         padding: 1.5rem 2rem 0;
@@ -852,17 +428,17 @@
    .announcement-card.target_audience-new_registrants .announcement-icon {
     background: #fee2e2;
     color: var(--danger);
-}
+    }
 
-   .announcement-card.target_audience-paid_students .announcement-icon,
-.announcement-card.target_audience-active_students .announcement-icon {
-    background: #dcfce7;
-    color: var(--success);
-}
-  .announcement-card.target_audience-all_students .announcement-icon {
-    background: #fef3c7;
-    color: var(--warning);
-}
+    .announcement-card.target_audience-paid_students .announcement-icon,
+    .announcement-card.target_audience-active_students .announcement-icon {
+        background: #dcfce7;
+        color: var(--success);
+    }
+    .announcement-card.target_audience-all_students .announcement-icon {
+        background: #fef3c7;
+        color: var(--warning);
+    }
 
     .announcement-title-section {
         flex: 1;
@@ -1043,6 +619,11 @@
             line-height: 1.3;
             margin-bottom: 0.75rem;
         }
+        .hero-name {
+            font-size: 2rem;
+            line-height: 1.3;
+            margin-bottom: 0.75rem;
+        }
 
         .hero-subtitle {
             font-size: 1rem;
@@ -1077,6 +658,13 @@
             gap: 1rem;
             margin-bottom: 1.5rem;
             text-align: center;
+            justify-content: center;
+            align-items: center;
+        }
+        .status-content {
+            justify-content: center;
+            align-items: center;
+            text-align: center;
         }
 
         .status-icon {
@@ -1086,6 +674,7 @@
         .status-title {
             font-size: 1.25rem;
             margin-bottom: 0.5rem;
+            text-align: center;
         }
 
         .status-badge {
@@ -1123,6 +712,7 @@
         .announcements-section {
             height: 100%;
             border-radius: 12px;
+            justify-content: center;
         }
 
         .section-header {
@@ -1171,6 +761,8 @@
             flex-direction: column;
             gap: 0.75rem;
             text-align: center;
+            justify-content: center;
+            align-items: center;
         }
 
         .announcement-icon {
@@ -1181,22 +773,33 @@
         }
 
        .announcement-title-section {
-            margin-left: 20px;
             justify-content: center;
-            align-items: center; /* biar elemen dalam flex sejajar tengah */
-            text-align: center; /* biar teks rata tengah */
+            align-items: center; 
+            text-align: center; 
         }
 
         .announcement-title {
             font-size: 1.1rem;
             margin-bottom: 0.75rem;
+            text-align: center;
+            justify-content: center;
+            align-items: center;
         }
 
         .announcement-meta {
-            justify-content: center;
             flex-direction: column;
-            gap: 0.5rem;
+            justify-content: center;
+            gap: 1rem;
             font-size: 0.8rem;
+            align-items: center;
+        }
+
+        .target-audience,
+        .announcement-time {
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+            justify-content: center;
             text-align: center;
         }
 
@@ -1483,6 +1086,443 @@
     }
 </style>
 @endpush
+@section('content')
+{{-- Toast Container untuk Flash Messages dari Middleware --}}
+@if(session('success') || session('error') || session('warning') || session('info'))
+<div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999;">
+    @if(session('success'))
+        <div class="toast show align-items-center text-bg-success border-0 shadow-lg" role="alert" data-bs-delay="5000">
+            <div class="d-flex">
+                <div class="toast-body">
+                    <i class="fas fa-check-circle me-2"></i>
+                    <strong>Berhasil!</strong><br>
+                    {{ session('success') }}
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div class="toast show align-items-center text-bg-danger border-0 shadow-lg" role="alert" data-bs-delay="8000">
+            <div class="d-flex">
+                <div class="toast-body">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <strong>Perhatian!</strong><br>
+                    {{ session('error') }}
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+    @endif
+
+    @if(session('warning'))
+        <div class="toast show align-items-center text-bg-warning border-0 shadow-lg" role="alert" data-bs-delay="6000">
+            <div class="d-flex">
+                <div class="toast-body">
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                    <strong>Peringatan!</strong><br>
+                    {{ session('warning') }}
+                </div>
+                <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+    @endif
+
+    @if(session('info'))
+        <div class="toast show align-items-center text-bg-info border-0 shadow-lg" role="alert" data-bs-delay="5000">
+            <div class="d-flex">
+                <div class="toast-body">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <strong>Informasi</strong><br>
+                    {{ session('info') }}
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+    @endif
+</div>
+@endif
+
+<div class="dashboard-container">
+    <!-- Error Display -->
+    @if(isset($error))
+        <div class="alert-modern alert-danger">
+            <div class="alert-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <div class="alert-content">
+                <strong>Error:</strong> {{ $error }}
+            </div>
+        </div>
+    @endif
+
+    <!-- Welcome Hero Section -->
+    <div class="hero-card">
+        <div class="hero-background"></div>
+        <div class="hero-content">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <div class="hero-text">
+                        <h1 class="hero-title">
+                            Selamat Datang, 
+                            <span class="hero-name">{{ Auth::user()->name ?? 'User' }}!</span>
+                        </h1>
+                        <p class="hero-subtitle">
+                            Tetap terhubung dengan informasi terbaru seputar pelatihan dan proses belajar Anda di 
+                            <strong>LPK Amarta Bangun Indonesia</strong>.
+                        </p>
+                        <div class="hero-stats">
+                            <div class="stat-item">
+                                <i class="fas fa-clock"></i>
+                                <span>{{ now()->format('H:i') }} WIB</span>
+                            </div>
+                            <div class="stat-divider">•</div>
+                            <div class="stat-item">
+                                <i class="fas fa-calendar"></i>
+                                <span>{{ now()->format('d F Y') }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 text-end d-none d-lg-block">
+                    <div class="hero-illustration">
+                        <div class="illustration-circle">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Status Card -->
+    <div class="status-card">
+        <div class="status-header">
+            <div class="status-icon">
+                <i class="fas fa-user-circle"></i>
+            </div>
+            <div class="status-content">
+                <h3 class="status-title">Status Pembelajaran Anda</h3>
+                @if(isset($userStatusId))
+                    <div class="status-badge status-level-{{ $userStatusId }}">
+                        <div class="status-indicator"></div>
+                        <div class="status-text">
+                            @switch($userStatusId)
+                                @case(1) 
+                                    <strong>New Registrant</strong>
+                                    <span>Silakan lakukan pembayaran booking untuk melanjutkan</span>
+                                    @break
+                                @case(2) 
+                                    <strong>Paid Student</strong>
+                                    <span>Silakan gabung ke jadwal meeting yang telah ditentukan</span>
+                                    @break
+                                @case(3) 
+                                    <strong>Meeting Joined</strong>
+                                    <span>Silakan lanjutkan dengan pembayaran DP</span>
+                                    @break
+                                @case(4) 
+                                    <strong>DP Paid</strong>
+                                    <span>Kelas Anda akan segera diaktifkan</span>
+                                    @break
+                                @case(5 <= 7) 
+                                    <strong>Active Student</strong>
+                                    <span>Selamat belajar dan semangat!</span>
+                                    @break
+                                @default 
+                                    <strong>Unknown Status</strong>
+                                    <span>Hubungi administrator untuk informasi lebih lanjut</span>
+                            @endswitch
+                        </div>
+                    </div>
+                @else
+                    <div class="status-badge status-unknown">
+                        <div class="status-indicator"></div>
+                        <div class="status-text">
+                            <strong>Status Tidak Tersedia</strong>
+                            <span>Hubungi administrator untuk informasi status</span>
+                        </div>
+                    </div>
+                @endif
+            </div>
+        </div>
+        
+        <!-- Progress Bar -->
+        @if(isset($userStatusId))
+        <div class="progress-section">
+            <div class="progress-track">
+                <div class="progress-fill" style="width: {{ ($userStatusId / 5) * 100 }}%"></div>
+            </div>
+            <div class="progress-steps">
+                @for($i = 1; $i <= 5; $i++)
+                    <div class="progress-step {{ $i <= $userStatusId ? 'active' : '' }}">
+                        <div class="step-circle">{{ $i }}</div>
+                    </div>
+                @endfor
+            </div>
+    </div>
+    @endif
+</div>
+
+    
+
+<!-- Announcements Section -->
+<div class="announcements-section">
+    <div class="section-header">
+        <div class="header-content">
+            <h2 class="section-title">
+                <i class="fas fa-bullhorn"></i>
+                Pengumuman
+            </h2>
+            <p class="section-subtitle">Informasi terbaru untuk Anda</p>
+        </div>
+        <div class="header-badge">
+            <span class="count-badge">{{ $announcements->count() ?? 0 }}</span>
+        </div>
+    </div>
+
+    <!-- Announcements Content -->
+    <div class="announcements-content">
+        @if($announcements->count())
+        <div class="announcements-list">
+        @foreach($announcements as $index => $announcement)
+            <!-- Konten 1 -->
+            <div class="announcement-card 
+                    target_audience-{{ str_replace(' ', '_', strtolower($announcement->target_audience)) }} 
+                    priority-{{ strtolower($announcement->priority) }}" 
+                style="animation-delay: {{ $index * 0.1 }}s">                            
+                <!-- Priority Indicator -->
+                <div class="priority-bar"></div>
+
+                <!-- Announcement Header -->
+                <div class="announcement-header">
+                    <div class="announcement-icon">
+                        @if($announcement->target_audience == 'new registrants')
+                            <i class="fas fa-exclamation-triangle"></i>
+                        @elseif($announcement->target_audience == 'paid students' && $announcement->target_audience == 'active students')
+                            <i class="fas fa-check"></i>
+                        @elseif($announcement->target_audience == 'all students')
+                            <i class="fas fa-info-circle"></i>
+                        @else
+                            <i class="fas fa-info-circle"></i>
+                        @endif
+                    </div>
+
+                    <!-- Announcement Title -->
+                    <div class="announcement-title-section">
+                        <h4 class="announcement-title">{{ $announcement->title }}</h4>
+                        <div class="announcement-meta">
+                            <span class="target-audience">
+                                <i class="fas fa-users"></i>
+                                {{ ucfirst($announcement->target_audience) }}
+                            </span>
+                            <span class="announcement-time">
+                                <i class="fas fa-clock"></i>
+                                {{ $announcement->created_at->diffForHumans() }}
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="priority-badge">
+                        <span class="badge-text">{{ ucfirst($announcement->priority) }}</span>
+                    </div>
+                </div>
+
+                <div class="announcement-body">
+                    <p class="announcement-content">{{ $announcement->content }}</p>
+                </div>
+
+                <!-- Action Section -->
+                @php
+                    $pendingBooking = \App\Models\Transaction::where('user_id', Auth::id())
+                        ->where('type', 'booking')
+                        ->whereIn('status', ['Pending', 'Verification'])
+                        ->latest()
+                        ->first();
+
+                    $userStatus = $userStatusId ?? 1;
+                @endphp
+
+                @if(session('success'))
+                    <div class="alert alert-success">{{ session('success') }}</div>
+                @endif
+
+                <!-- Kondisi berdasarkan status user -->
+                @if($userStatus == 1)
+                    {{-- Status: New Registrant - Tampilkan form booking --}}
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h5 class="text-warning">
+                                <i class="fas fa-credit-card me-2"></i>
+                                Booking Kelas
+                            </h5>
+
+                            @if($pendingBooking)
+                                @if($pendingBooking->status === 'Pending')
+                                    <p class="text-muted">Kamu sudah membuat transaksi booking yang belum dibayar.</p>
+                                    <a href="{{ route('transaksi.booking', $pendingBooking) }}" class="btn btn-warning">
+                                        <i class="fas fa-clock me-2"></i>
+                                        Lanjutkan Pembayaran Booking
+                                    </a>
+                                @elseif($pendingBooking->status === 'Verification')
+                                    <p class="text-muted">Pembayaran booking Anda sedang diverifikasi.</p>
+                                    <a href="{{ route('transaksi.booking', $pendingBooking) }}" class="btn btn-warning">
+                                        <i class="fas fa-spinner fa-spin me-2"></i>
+                                        Lihat Status Pembayaran
+                                    </a>
+                                @endif
+                            @else
+                                <p class="text-muted mb-3">Silakan lakukan pembayaran booking untuk melanjutkan proses pendaftaran.</p>
+                                <form method="POST" action="{{ route('transaksi.booking.createBooking') }}">
+                                    @csrf
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-money-bill-wave me-2"></i>
+                                        Bayar Booking Rp500.000
+                                    </button>
+                                </form>
+                            @endif
+                        </div>
+                    </div>
+
+                @elseif($userStatus == 2)
+                    {{-- Status: Paid Student - Tampilkan link Meeting --}}
+                    <div class="card mb-3 border-info">
+                        <div class="card-body">
+                            <h5 class="text-info">
+                                <i class="fas fa-video me-2"></i>
+                                Link Meeting Kelas
+                            </h5>
+                                @if(isset($announcement) && !empty($announcement->meet_link))
+                                    <p class="text-muted mb-3">
+                                        Pembayaran booking Anda sudah berhasil. Silakan bergabung dengan meeting kelas sesuai jadwal berikut:
+                                    </p>
+
+                                    @if(!empty($announcement->scheduled_at))
+                                        <p>
+                                            <i class="fas fa-calendar-alt me-2"></i>
+                                            {{ \Carbon\Carbon::parse($announcement->scheduled_at)->translatedFormat('l, d F Y') }}
+                                            <br>
+                                            <i class="fas fa-clock me-2"></i>
+                                            {{ \Carbon\Carbon::parse($announcement->scheduled_at)->format('H:i') }} WIB
+                                        </p>
+                                    @endif
+
+                                    <div class="d-grid gap-2">
+                                        <a href="{{ $announcement->meet_link }}" target="_blank" class="btn btn-info">
+                                            <i class="fas fa-external-link-alt me-2"></i>
+                                            Gabung Meeting
+                                        </a>
+                                    </div>
+                                    <small class="text-muted d-block mt-2">
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        Link akan membuka di tab baru. Pastikan Anda sudah menginstall Google Meet atau menggunakan browser yang mendukung.
+                                    </small>
+                                @else
+                                    <div class="alert alert-warning" role="alert">
+                                        <i class="fas fa-clock me-2"></i>
+                                        Link Google Meet belum tersedia. Admin akan segera memberikan link meeting.
+                                    </div>
+                                @endif
+
+                        </div>
+                    </div>
+
+                {{-- Status: Meeting Joined sampai Ready to Depart --}}
+                @elseif($userStatus >= 3 && $userStatus <= 7)
+                    @if(isset($announcement) && in_array($announcement->type, ['auto dp request','auto installment','auto success']))
+                        <div class="card mb-3 border-success">
+                            <div class="card-body">
+                                <h5 class="text-success">
+                                    <i class="fas fa-calculator me-2"></i>
+                                    Pembayaran Keuangan
+                                </h5>
+
+                                @if($userStatus == 3 && $announcement->type === 'auto dp request')
+                                    <p class="text-muted mb-3">
+                                        Anda sudah bergabung dalam meeting. Silakan lanjutkan dengan pembayaran DP melalui halaman keuangan.
+                                    </p>
+
+                                    <div class="d-grid gap-2">
+                                        <a href="{{ route('users.keuangan') }}" class="btn btn-success">
+                                            <i class="fas fa-money-check-alt me-2"></i>
+                                            Buka Halaman Keuangan
+                                        </a>
+                                    </div>
+
+                                @elseif($userStatus == 5 && $announcement->type === 'auto installment')
+                                    <p class="text-muted mb-3">
+                                        DP Anda sudah dibayar. Silakan lengkapi pembayaran sisanya melalui halaman keuangan.
+                                    </p>
+
+                                    <div class="d-grid gap-2">
+                                        <a href="{{ route('users.keuangan') }}" class="btn btn-success">
+                                            <i class="fas fa-money-check-alt me-2"></i>
+                                            Buka Halaman Keuangan
+                                        </a>
+                                    </div>
+
+                                @elseif($userStatus == 5 && $announcement->type === 'auto success')
+                                    <p class="text-muted mb-3">
+                                        Selamat! Anda sudah melunasi biaya program. Status kelas Anda aktif dan semua pembayaran telah selesai.
+                                    </p>
+                                    <small class="text-muted d-block mt-2">
+                                        <i class="fas fa-check-circle me-1"></i>
+                                        Tidak ada tagihan yang tersisa.
+                                    </small>
+                                @endif
+
+                            </div>
+                        </div>
+                    @endif
+
+                    @else
+                    {{-- Status tidak dikenali --}}
+                    <div class="card mb-3 border-secondary">
+                        <div class="card-body">
+                            <h5 class="text-secondary">
+                                <i class="fas fa-question-circle me-2"></i>
+                                Status Tidak Dikenali
+                            </h5>
+                            <p class="text-muted mb-3">
+                                Status Anda tidak dapat diidentifikasi. Silakan hubungi administrator untuk mendapatkan bantuan.
+                            </p>
+                            <div class="d-grid gap-2">
+                                <a href="{{ route('contact.admin') }}" class="btn btn-secondary">
+                                    <i class="fas fa-headset me-2"></i>
+                                    Hubungi Administrator
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
+                <!-- Footer -->
+                <div class="announcement-footer">
+                    <div class="footer-info">
+                        <span class="created-date">{{ $announcement->created_at->format('d M Y, H:i') }}</span>
+                        @if($announcement->type != 'umum')
+                            <span class="auto-type">
+                                <i class="fas fa-robot"></i>
+                                Auto: {{ ucfirst(str_replace('auto ', '', $announcement->type)) }}
+                            </span>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        @endforeach
+    </div>
+    @else
+        <div class="empty-state">
+            <div class="empty-illustration">
+                <i class="fas fa-inbox"></i>
+            </div>
+            <div class="empty-content">
+                <h3 class="empty-title">Belum Ada Pengumuman</h3>
+                <p class="empty-subtitle">Pengumuman dan informasi terbaru akan muncul di sini</p>
+            </div>
+        </div>
+    @endif
+</div>
 
 @push('scripts')
 <script>

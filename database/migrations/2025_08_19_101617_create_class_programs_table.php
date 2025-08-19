@@ -6,27 +6,23 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('class_programs', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->enum('type', ['kelas_bahasa','magang','kerja','']);
             $table->text('description')->nullable();
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();
             $table->timestamps();
-        });
 
+            $table->index('type');
+        });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::dropIfExists('programs');
+        Schema::dropIfExists('class_programs');
     }
 };

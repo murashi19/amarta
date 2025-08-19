@@ -70,7 +70,7 @@
                                                 <span class="badge bg-success fs-6">
                                                     <i class="fas fa-check-circle me-1"></i>Lunas
                                                 </span>
-                                            @elseif($trx->status === 'Pending')
+                                            @elseif($trx->status === 'Pending' || $trx->status === 'Verification' || $trx->status === 'Failed')
                                                 <span class="badge bg-warning fs-6">
                                                     <i class="fas fa-clock me-1"></i>Belum Lunas
                                                 </span>
@@ -84,18 +84,21 @@
                             <div class="mt-4">
                                 <div class="d-flex justify-content-between align-items-center mb-2">
                                     <span class="text-muted">Progres Pembayaran</span>
-                                    <span class="fw-bold">{{ round(($totalPaid / $trx->amount) * 100, 1) }}%</span>
+                                    <span class="fw-bold" id="progress-text">
+                                        {{ round(($totalPaid / $trx->amount) * 100, 1) }}%
+                                    </span>
                                 </div>
                                 <div class="progress" style="height: 10px;">
-                                    <div class="progress-bar bg-gradient"
-                                        role="progressbar" 
-                                        style="width: 0%" 
-                                        aria-valuenow="0" 
-                                        aria-valuemin="0" 
+                                    <div class="progress-bar bg-success"
+                                        role="progressbar"
+                                        style="width: {{ round(($totalPaid / $trx->amount) * 100, 1) }}%"
+                                        aria-valuenow="{{ round(($totalPaid / $trx->amount) * 100, 1) }}"
+                                        aria-valuemin="0"
                                         aria-valuemax="100">
                                     </div>
                                 </div>
                             </div>
+
 
                             @if($trx->expires_at && $trx->status !== 'Completed')
                                 <div class="alert alert-info mt-3">
@@ -107,97 +110,115 @@
                     </div>
                 </div>
 
-                <!-- Form Pembayaran Cicilan -->
-                <div class="col-lg-4 mb-4">
-                    @if($trx->status !== 'Completed')
-                        <div class="card shadow-sm">
-                            <div class="card-header bg-success text-white">
-                                <h5 class="mb-0"><i class="fas fa-plus me-2"></i>Bayar Cicilan</h5>
+            <!-- Form Pembayaran Cicilan -->
+            <div class="col-lg-4 mb-4">
+                @if($trx->status === 'Completed')
+                    <!-- Jika sudah lunas -->
+                    <div class="card shadow-sm border-success">
+                        <div class="card-body text-center">
+                            <div class="text-success mb-3">
+                                <i class="fas fa-check-circle fa-4x"></i>
                             </div>
-                            <div class="card-body">
-                                <form id="cicilanForm">
-                                    @csrf
-                                    <div class="mb-3">
-                                        <label for="amount" class="form-label">Jumlah Pembayaran <span class="text-danger">*</span></label>
-                                        <div class="input-group">
-                                            <span class="input-group-text">Rp</span>
-                                            <input type="number" 
-                                                class="form-control @error('amount') is-invalid @enderror" 
-                                                id="amount" 
-                                                name="amount" 
-                                                min="100000"
-                                                max="{{ $trx->amount - $totalPaid }}"
-                                                value="{{ old('amount') }}"
-                                                placeholder="Minimal 400.000">
-                                            @error('amount')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                        <small class="text-muted">Minimal pembayaran Rp 400.000</small>
-                                    </div>
+                            <h4 class="text-success">Pembayaran Lunas!</h4>
+                            <p class="text-muted">Terima kasih! Program kelas Anda sudah Lunas.</p>
+                        </div>
+                    </div>
+                @else
+                    <div class="card shadow-sm {{ $isDisabled ? 'border-warning' : '' }}">
+                        <div class="card-header {{ $isDisabled ? 'bg-warning text-dark' : 'bg-success text-white' }}">
+                            <h5 class="mb-0">
+                                <i class="fas fa-plus me-2"></i>
+                                @if($hasPending)
+                                    Menunggu Verifikasi Admin
+                                @else
+                                    Bayar Cicilan
+                                @endif
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            @if($hasPending)
+                                <div class="alert alert-warning small">
+                                    Anda memiliki cicilan yang sedang diverifikasi. 
+                                    Silakan tunggu hingga proses selesai sebelum melakukan pembayaran berikutnya.
+                                </div>
+                            @endif
 
-                                    <div class="mb-3">
-                                        <label for="payment_method" class="form-label">Metode Pembayaran <span class="text-danger">*</span></label>
-                                        <select class="form-select @error('payment_method') is-invalid @enderror" 
-                                                id="payment_method" 
-                                                name="payment_method">
-                                            <option value="">Pilih metode pembayaran</option>
-                                            <option value="transfer_bank" {{ old('payment_method') === 'transfer_bank' ? 'selected' : '' }}>Transfer Bank</option>
-                                            <option value="ewallet" {{ old('payment_method') === 'ewallet' ? 'selected' : '' }}>E-Wallet</option>
-                                            <option value="cash" {{ old('payment_method') === 'cash' ? 'selected' : '' }}>Tunai</option>
-                                        </select>
-                                        @error('payment_method')
+                            <form id="cicilanForm">
+                                @csrf
+                                <div class="mb-3">
+                                    <label for="amount" class="form-label">Jumlah Pembayaran <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">Rp</span>
+                                        <input type="number" 
+                                            class="form-control @error('amount') is-invalid @enderror" 
+                                            id="amount" 
+                                            name="amount" 
+                                            min="400000"
+                                            max="{{ $trx->amount - $totalPaid }}"
+                                            value="{{ old('amount') }}"
+                                            placeholder="Minimal 400.000"
+                                            {{ $isDisabled ? 'disabled' : '' }}>
+                                        @error('amount')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
+                                    <small class="text-muted">Minimal pembayaran Rp 400.000</small>
+                                </div>
 
-                                    <!-- Quick Payment -->
-                                    <div class="mb-3">
-                                        <small class="text-muted d-block mb-2">Pilih Cepat:</small>
-                                        <div class="d-grid gap-2">
-                                            @php
-                                                $remaining = $trx->amount - $totalPaid;
-                                                $quickAmounts = [500000, 1000000, 2000000];
-                                            @endphp
-                                            @foreach($quickAmounts as $amount)
-                                                @if($amount <= $remaining)
-                                                    <button type="button" 
-                                                            class="btn btn-outline-primary btn-sm quick-amount" 
-                                                            data-amount="{{ $amount }}">
-                                                        Rp {{ number_format($amount, 0, ',', '.') }}
-                                                    </button>
-                                                @endif
-                                            @endforeach
-                                            @if($remaining > 0)
+                                <div class="mb-3">
+                                    <label for="payment_method" class="form-label">Metode Pembayaran <span class="text-danger">*</span></label>
+                                    <select class="form-select @error('payment_method') is-invalid @enderror" 
+                                            id="payment_method" 
+                                            name="payment_method"
+                                            {{ $isDisabled ? 'disabled' : '' }}>
+                                        <option value="">Pilih metode pembayaran</option>
+                                        <option value="transfer_bank" {{ old('payment_method') === 'transfer_bank' ? 'selected' : '' }}>Transfer Bank</option>
+                                        <option value="ewallet" {{ old('payment_method') === 'ewallet' ? 'selected' : '' }}>E-Wallet</option>
+                                        <option value="cash" {{ old('payment_method') === 'cash' ? 'selected' : '' }}>Tunai</option>
+                                    </select>
+                                    @error('payment_method')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <!-- Quick Payment -->
+                                <div class="mb-3">
+                                    <small class="text-muted d-block mb-2">Pilih Cepat:</small>
+                                    <div class="d-grid gap-2">
+                                        @php
+                                            $remaining = $trx->amount - $totalPaid;
+                                            $quickAmounts = [500000, 1000000, 2000000];
+                                        @endphp
+                                        @foreach($quickAmounts as $amount)
+                                            @if($amount <= $remaining)
                                                 <button type="button" 
-                                                        class="btn btn-outline-success btn-sm quick-amount" 
-                                                        data-amount="{{ $remaining }}">
-                                                    Lunas (Rp {{ number_format($remaining, 0, ',', '.') }})
+                                                        class="btn btn-outline-primary btn-sm quick-amount" 
+                                                        data-amount="{{ $amount }}"
+                                                        {{ $isDisabled ? 'disabled' : '' }}>
+                                                    Rp {{ number_format($amount, 0, ',', '.') }}
                                                 </button>
                                             @endif
-                                        </div>
+                                        @endforeach
+                                        @if($remaining > 0)
+                                            <button type="button" 
+                                                    class="btn btn-outline-success btn-sm quick-amount" 
+                                                    data-amount="{{ $remaining }}"
+                                                    {{ $isDisabled ? 'disabled' : '' }}>
+                                                Lunas (Rp {{ number_format($remaining, 0, ',', '.') }})
+                                            </button>
+                                        @endif
                                     </div>
-
-                                    <div class="d-grid">
-                                        <button type="button" class="btn btn-success" id="processPaymentBtn">
-                                            <i class="fas fa-paper-plane me-2"></i>Bayar Sekarang
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    @else
-                        <div class="card shadow-sm border-success">
-                            <div class="card-body text-center">
-                                <div class="text-success mb-3">
-                                    <i class="fas fa-check-circle fa-4x"></i>
                                 </div>
-                                <h4 class="text-success">Pembayaran Lunas!</h4>
-                                <p class="text-muted">Program kelas Anda sudah aktif dan siap digunakan.</p>
-                            </div>
+
+                                <div class="d-grid">
+                                    <button type="button" class="btn btn-success" id="processPaymentBtn" {{ $isDisabled ? 'disabled' : '' }}>
+                                        <i class="fas fa-paper-plane me-2"></i>Bayar Sekarang
+                                    </button>
+                                </div>
+                            </form>
                         </div>
-                    @endif
-                </div>
+                    </div>
+                @endif
             </div>
 
             <!-- Riwayat Pembayaran -->
@@ -216,6 +237,7 @@
                                         <th>Jumlah</th>
                                         <th>Metode</th>
                                         <th>Status</th>
+                                        <th>Bukti</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -258,7 +280,7 @@
                                             </td>
                                             <td>
                                                 @if($installment->photo)
-                                                    <a href="{{ $installment->photo }}" 
+                                                    <a href="{{ asset('storage/' . $installment->photo) }}" 
                                                     target="_blank" 
                                                     class="btn btn-sm btn-outline-info">
                                                         <i class="fas fa-eye"></i>
@@ -1276,7 +1298,7 @@
                 }
             };
 
-            return fetch('/api/payment-method-details?type=transfer_bank&method=' + bankCode)
+            return fetch(`/payment-method-details` + bankCode)
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
@@ -1527,8 +1549,13 @@
         }
 
         // Progress bar animation
-        let targetValue = {{ ($totalPaid / $trx->amount) * 100 }};
+        let targetValue = Math.min(
+            {{ round(($totalPaid / $trx->amount) * 100, 1) }},
+            100
+        ); // maksimal 100%
+        
         let progressBar = document.querySelector(".progress-bar");
+        let progressText = document.getElementById("progress-text");
         let currentValue = 0;
 
         if (progressBar) {
@@ -1536,11 +1563,12 @@
                 if (currentValue >= targetValue) {
                     clearInterval(animation);
                 } else {
-                    currentValue += 0.5; // lebih smooth
+                    currentValue += 0.5; // kecepatan animasi
                     progressBar.style.width = currentValue + "%";
                     progressBar.setAttribute("aria-valuenow", currentValue.toFixed(1));
+                    progressText.textContent = currentValue.toFixed(1) + "%";
                 }
-            }, 10);
+            }, 15); // semakin kecil semakin cepat
         }
     });
 

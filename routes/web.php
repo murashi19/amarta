@@ -46,7 +46,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     
     // Pengumuman khusus admin
     Route::get('/admin/pengumuman', [AnnouncementController::class, 'index'])->name('admin.pengumuman');
-    Route::get('/admin/pengumuman/filter', [AnnouncementController::class, 'filter'])->name('admin.pengumuman.filter');
+    Route::post('/admin/pengumuman/filter', [AnnouncementController::class, 'filter'])->name('admin.pengumuman.filter');
     Route::post('/admin/pengumuman', [AnnouncementController::class, 'store'])->name('admin.pengumuman.store');
     Route::put('/admin/pengumuman/{id}', [AnnouncementController::class, 'update'])->name('admin.pengumuman.update');
     Route::get('/admin/pengumuman/{id}/edit', [AnnouncementController::class, 'edit'])->name('admin.pengumuman.edit');
@@ -54,12 +54,9 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('admin/pengumuman/{id}/show', [AnnouncementController::class, 'show'])
     ->name('admin.pengumuman.show');
 
-
-
-
-    
     // Manajemen User
     Route::get('/admin/usersManage', [UsersController::class, 'index'])->name('admin.usersManage');
+    Route::post('/admin/usersManage/filter', [UserController::class, 'filter'])->name('admin.usersManage.filter');
     Route::get('/admin/createUser', [UsersController::class, 'create'])->name('admin.createUser');  // Tampilan tambah
     Route::post('/admin/createUser', [UsersController::class, 'store'])->name('admin.createUser.store'); // Proses tambah
     Route::get('/admin/{user}/editUser', [UsersController::class, 'edit'])->name('admin.editUser'); // Tampilan edit
@@ -93,6 +90,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     // === CICILAN ===
     Route::get('/cicilan', [ManageTransactionController::class, 'listInstallments'])->name('cicilan');
     Route::post('/installments/{id}/verify', [ManageTransactionController::class, 'verifyInstallment'])->name('admin.installments.verify');
+    Route::get('/installments/{id}', [ManageTransactionController::class, 'detailInstallment'])->name('admin.installments.detail');
     Route::get('/installments/export', [ManageTransactionController::class, 'exportInstallments'])->name('admin.transaksi.installments.export');
 
     // API routes untuk AJAX
@@ -135,34 +133,15 @@ Route::middleware(['auth'])->group(function () {
     
     Route::get('/transaksi/program-kelas/{id}', [TransactionController::class, 'showProgramKelas'])
         ->name('transaksi.programKelas');
+    Route::get('/payment-method-details', [TransactionController::class, 'getPaymentMethodDetails']);
+
     
     Route::post('/transaksi/program-kelas/{id}/cicilan', [TransactionController::class, 'storeInstallment'])
         ->name('transaksi.programKelas.storeInstallment');
 
 
-    Route::post('/translate', function (Request $request) {
-    $texts = $request->input('texts', []);
-    $target = $request->input('target', 'ja');
-
-    $results = [];
-
-    foreach ($texts as $text) {
-        $response = Http::post('https://libretranslate.com/translate', [
-            'q' => $text,
-            'source' => 'auto',
-            'target' => $target,
-            'format' => 'text'
-        ]);
-
-        if ($response->successful()) {
-            $results[] = $response->json()['translatedText'] ?? $text;
-        } else {
-            $results[] = $text;
-        }
-    }
-
-    return response()->json($results);
-});
-
+    Route::get('/transaksi/payment/type/{type}', [TransactionController::class, 'showSinglePayment'])
+        ->name('transaksi.showSinglePayment');
+    Route::post('/transaksi/payment/{id}/upload', [TransactionController::class, 'uploadSinglePaymentProof'])->name('transaksi.uploadSinglePaymentProof');
 });
 

@@ -4,34 +4,31 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
+
+
 return new class extends Migration
 {
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-
             $table->string('name');
             $table->string('email')->unique();
-            $table->string('phone_number')->nullable()->unique();
-
+            $table->string('phone_number')->unique()->nullable();
             $table->string('password');
-
-            $table->enum('gender', ['male', 'female'])->nullable();
+            $table->string('verification_code')->nullable();
+            $table->timestamp('verification_expires_at')->nullable();
+            $table->enum('gender', ['Laki-laki','Perempuan'])->nullable();
             $table->string('birth_place')->nullable();
             $table->date('birth_date')->nullable();
             $table->text('address')->nullable();
-
-            $table->string('education_level')->nullable();
-            $table->string('photo_url')->nullable();
-
-            $table->boolean('is_verified')->default(false);
-            $table->text('notes')->nullable();
-
-            $table->foreignId('status_id')->nullable()->constrained()->nullOnDelete();
-
+            $table->enum('education_level', ['SMP/Sederajat','SMA/SMK/Sederajat','Diploma 3 (D3)','Sarjana (S1)','Lainnya'])->nullable();
+            $table->text('photo')->nullable();
+            $table->unsignedBigInteger('status_id')->nullable();
             $table->rememberToken();
             $table->timestamps();
+
+            $table->foreign('status_id')->references('id')->on('statuses')->onDelete('set null');
         });
     }
 
@@ -40,3 +37,7 @@ return new class extends Migration
         Schema::dropIfExists('users');
     }
 };
+
+
+
+

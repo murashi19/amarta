@@ -11,10 +11,10 @@ class AnnouncementHelper
                 return ($userStatusId == 1) ? 'payment_booking' : null;
             case 'auto booking success':
                 return ($userStatusId == 2) ? 'show_meet_link' : null;
-            case 'auto dp request':
+            case 'auto dp request' && 'auto installment':
                 return ($userStatusId == 3) ? 'payment_dp' : null;
-            case 'auto dp success':
-                return ($userStatusId == 4) ? 'info_class_active' : null;
+            case 'auto success':
+                return ($userStatusId == 5) ? 'info_class_active' : null;
             default:
                 return null;
         }
@@ -55,25 +55,20 @@ class AnnouncementHelper
             'joined' => [3],
             'joined meeting' => [3],
             
-            // Variasi untuk dp paid
-            'dp paid' => [4],
-            'dp_paid' => [4],
-            'down payment paid' => [4],
-            'down_payment_paid' => [4],
             
             // Variasi untuk active students
-            'active students' => [5],
-            'active student' => [5],
-            'active_students' => [5],
-            'active_student' => [5],
-            'active' => [5],
+            'active students' => [5, 6, 7],
+            'active student' => [5, 6, 7],
+            'active_students' => [5, 6, 7],
+            'active_student' => [5, 6, 7],
+            'active' => [5, 6, 7],
             
             // Variasi untuk all students
-            'all students' => [1, 2, 3, 4, 5],
-            'all student' => [1, 2, 3, 4, 5],
-            'all_students' => [1, 2, 3, 4, 5],
-            'all_student' => [1, 2, 3, 4, 5],
-            'all' => [1, 2, 3, 4, 5],
+            'all student' => [1, 2, 3, 5, 6, 7],
+            'all students' => [1, 2, 3, 5, 6, 7],
+            'all_students' => [1, 2, 3, 5, 6, 7],
+            'all_student' => [1, 2, 3, 5, 6, 7],
+            'all' => [1, 2, 3, 5, 6, 7],
         ];
 
         // Cek apakah target audience ada dalam mapping
@@ -96,6 +91,7 @@ class AnnouncementHelper
             'payment_booking' => 'Bayar Booking Kelas',
             'show_meet_link' => 'Gabung Google Meet',
             'payment_dp' => 'Bayar DP',
+            'installment' => 'Bayar Cicilan',
             'info_class_active' => 'Kelas Aktif 🎉',
             default => null,
         };
@@ -124,7 +120,6 @@ class AnnouncementHelper
             'new registrants' => 'New Registrants (Status 1)',
             'paid students' => 'Paid Students (Status 2)', 
             'meeting joined' => 'Meeting Joined (Status 3)',
-            'dp paid' => 'DP Paid (Status 4)',
             'active students' => 'Active Students (Status 5)',
             'all students' => 'All Students (Status 1-5)',
         ];
@@ -139,7 +134,6 @@ class AnnouncementHelper
             1 => 'New Registrant',
             2 => 'Paid Student',
             3 => 'Meeting Joined',
-            4 => 'DP Paid', 
             5 => 'Active Student'
         ];
 

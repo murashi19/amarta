@@ -376,80 +376,66 @@
                     </h6>
                 </div>
                 <div class="card-body filter-card">
-                    <form method="GET" action="{{ route('admin.transaksi') }}" id="filterForm" class="auto-submit">
-                        <div class="row g-3">
-                            <!-- Search Input -->
-                            <div class="col-12 col-md-6 col-lg-4">
-                                <label for="searchTransaction" class="form-label fw-semibold">Pencarian</label>
-                                <div class="input-group">
-                                    <input 
-                                        type="text" 
-                                        class="form-control" 
-                                        name="search"
-                                        value="{{ request('search') }}"
-                                        placeholder="Nama, email, ID transaksi..." 
-                                        id="searchTransaction"
-                                    >
-                                    <button type="submit" class="btn btn-primary">
-                                        <i class="fas fa-search"></i>
-                                    </button>
-                                </div>
-                            </div>
-
-                            <!-- Filter Type -->
-                            <div class="col-12 col-md-3 col-lg-3">
-                                <label for="filterType" class="form-label fw-semibold">Tipe Transaksi</label>
-                                <select class="form-select" name="type" id="filterType" onchange="document.getElementById('filterForm').submit()">
-                                    <option value="">Semua Tipe</option>
-                                    <option value="booking" {{ request('type') == 'booking' ? 'selected' : '' }}>
-                                        Booking
-                                    </option>
-                                    <option value="dp" {{ request('type') == 'dp' ? 'selected' : '' }}>
-                                        DP
-                                    </option>
-                                </select>
-                            </div>
-
-                            <!-- Filter Status -->
-                            <div class="col-6 col-md-3 col-lg-2">
-                                <label for="filterStatus" class="form-label fw-semibold">Status</label>
-                                <select class="form-select" name="status" id="filterStatus" onchange="document.getElementById('filterForm').submit()">
-                                    <option value="">Semua Status</option>
-                                    <option value="Pending" {{ request('status') == 'Pending' ? 'selected' : '' }}>
-                                        Pending
-                                    </option>
-                                    <option value="Completed" {{ request('status') == 'Completed' ? 'selected' : '' }}>
-                                        Completed
-                                    </option>
-                                    <option value="Failed" {{ request('status') == 'Failed' ? 'selected' : '' }}>
-                                        Failed
-                                    </option>
-                                </select>
-                            </div>
-
-                            <!-- Action Buttons -->
-                            <div class="col-12 col-md-3 col-lg-3">
-                                <label class="form-label fw-semibold">&nbsp;</label>
-                                <div class="d-flex gap-2 flex-wrap">
-                                    <a 
-                                        href="{{ route('admin.transaksi') }}" 
-                                        class="btn btn-outline-secondary flex-fill flex-lg-grow-0"
-                                        title="Reset Filter"
-                                    >
-                                        <i class="fas fa-undo me-1"></i> Reset
-                                    </a>
-                                    <a 
-                                        href="{{ route('admin.transaksi.export', request()->query()) }}" 
-                                        class="btn btn-success flex-fill flex-lg-grow-0"
-                                        title="Export Excel"
-                                        target="_blank"
-                                    >
-                                        <i class="fas fa-download me-1"></i> Export
-                                    </a>
-                                </div>
+                    <div class="row g-3">
+                        <!-- Search Input -->
+                        <div class="col-12 col-md-6 col-lg-4">
+                            <label for="searchTransaction" class="form-label fw-semibold">Pencarian</label>
+                            <div class="input-group">
+                                <input 
+                                    type="text" 
+                                    class="form-control" 
+                                    placeholder="Nama, email, ID transaksi..." 
+                                    id="searchTransaction"
+                                >
+                                <button type="button" class="btn btn-primary" onclick="filterTransactions()">
+                                    <i class="fas fa-search"></i>
+                                </button>
                             </div>
                         </div>
-                    </form>
+
+                        <!-- Filter Type -->
+                        <div class="col-12 col-md-3 col-lg-3">
+                            <label for="filterType" class="form-label fw-semibold">Tipe Transaksi</label>
+                            <select class="form-select" id="filterType" onchange="filterTransactions()">
+                                <option value="">Semua Tipe</option>
+                                <option value="booking">Booking</option>
+                                <option value="dp">DP</option>
+                            </select>
+                        </div>
+
+                        <!-- Filter Status -->
+                        <div class="col-6 col-md-3 col-lg-2">
+                            <label for="filterStatus" class="form-label fw-semibold">Status</label>
+                            <select class="form-select" id="filterStatus" onchange="filterTransactions()">
+                                <option value="">Semua Status</option>
+                                <option value="pending">Pending</option>
+                                <option value="completed">Completed</option>
+                                <option value="failed">Failed</option>
+                            </select>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="col-12 col-md-3 col-lg-3">
+                            <label class="form-label fw-semibold">&nbsp;</label>
+                            <div class="d-flex gap-2 flex-wrap">
+                                <a 
+                                    href="{{ route('admin.transaksi') }}" 
+                                    class="btn btn-outline-secondary flex-fill flex-lg-grow-0"
+                                    title="Reset Filter"
+                                >
+                                    <i class="fas fa-undo me-1"></i> Reset
+                                </a>
+                                <a 
+                                    href="{{ route('admin.transaksi.export', request()->query()) }}" 
+                                    class="btn btn-success flex-fill flex-lg-grow-0"
+                                    title="Export Excel"
+                                    target="_blank"
+                                >
+                                    <i class="fas fa-download me-1"></i> Export
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -534,8 +520,25 @@
                                                 <span class="badge bg-warning text-dark">
                                                     <i class="fas fa-money-check me-1"></i>DP
                                                 </span>
+                                            @elseif($transaction->type == 'pemantapan')
+                                                <span class="badge bg-info text-dark">
+                                                    <i class="fas fa-chalkboard-teacher me-1"></i>Pemantapan
+                                                </span>
+                                            @elseif($transaction->type == 'pemberangkatan')
+                                                <span class="badge bg-success">
+                                                    <i class="fas fa-plane-departure me-1"></i>Pemberangkatan
+                                                </span>
+                                            @elseif($transaction->type == 'lunas')
+                                                <span class="badge bg-success">
+                                                    <i class="fas fa-check-circle me-1"></i>Lunas
+                                                </span>
+                                            @else
+                                                <span class="badge bg-secondary">
+                                                    <i class="fas fa-question-circle me-1"></i>Unknown
+                                                </span>
                                             @endif
                                         </td>
+
                                         <td class="text-end align-middle">
                                             <div class="transaction-amount">
                                                 Rp {{ number_format($transaction->amount, 0, ',', '.') }}
@@ -594,18 +597,17 @@
                                                             data-id="{{ $transaction->id }}">
                                                         <i class="fas fa-check me-1"></i> Terima
                                                     </button>
-
-                                                    <form method="POST" action="{{ route('admin.transaksi.verify', $transaction->id) }}" 
-                                                            class="flex-fill"
-                                                            onsubmit="return confirm('Yakin ingin menolak transaksi ini?')">
+                                                    <form method="POST" action="{{ route('admin.transaksi.verifyWithMeeting') }}" class="flex-fill">
                                                         @csrf
-                                                        <input type="hidden" name="action" value="reject">
-                                                        <button type="submit" class="btn btn-outline-danger btn-sm w-100">
+                                                        <input type="hidden" name="transaction_id" value="{{ $transaction->id }}">
+                                                        <input type="hidden" name="reject" value="1">
+                                                        <button type="submit" class="btn btn-outline-danger btn-sm w-100"
+                                                                onclick="return confirm('Yakin ingin menolak transaksi ini?')">
                                                             <i class="fas fa-times me-1"></i> Tolak
                                                         </button>
                                                     </form>
                                                 </div>
-                                            @endif
+                                                @endif
 
                                                 <!-- Delete Button -->
                                                 <button type="button" class="btn btn-outline-danger btn-sm w-100" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $transaction->id }}">
@@ -829,14 +831,14 @@
                                         </td>
                                         <td class="align-middle">
                                             <div class="d-flex align-items-center">
-                                                @if($installment->transaction->user->photo)
-                                                    <img src="{{ asset('storage/' . $installment->transaction->user->photo) }}" 
-                                                         alt="Foto Pengguna" 
-                                                         class="avatar bg-primary me-3" 
-                                                         style="width: 35px; height: 35px; object-fit: cover;">
+                                                @if($installment->transaction?->user?->photo)
+                                                    <img src="{{ asset('storage/' . $installment->transaction?->user?->photo) }}" 
+                                                        alt="Foto Pengguna" 
+                                                        class="avatar bg-primary me-3" 
+                                                        style="width: 35px; height: 35px; object-fit: cover;">
                                                 @else
                                                     <div class="avatar bg-primary me-3" style="width: 35px; height: 35px; font-size: 0.8rem;">
-                                                        {{ strtoupper(substr($installment->transaction->user->name ?? 'U', 0, 2)) }}
+                                                        {{ strtoupper(substr($installment->transaction?->user?->name ?? 'U', 0, 2)) }}
                                                     </div>
                                                 @endif
                                                 <div class="flex-grow-1">
@@ -918,8 +920,8 @@
                                             @endif
                                         </td>
                                         <td class="text-center align-middle">
-                                            @if($installment->proof_url)
-                                                <a href="{{ asset('storage/' . $installment->proof_url) }}" 
+                                            @if($transaction->feePayments->isNotEmpty() && $transaction->feePayments->first()->photo)
+                                                    <a href="{{ asset('storage/' . $transaction->feePayments->first()->photo) }}"  
                                                    target="_blank" 
                                                    class="btn btn-sm btn-outline-info">
                                                     <i class="fas fa-image me-1"></i> Lihat
@@ -948,7 +950,7 @@
                                                 @endif
 
                                                 <!-- Detail Button -->
-                                                <a href="{{ route('admin.detailTransaksi', $installment->transaction->id) }}" 
+                                                <a href="{{ route('admin.installments.detail', $installment->id) }}" 
                                                    class="btn btn-outline-info btn-sm">
                                                     <i class="fas fa-eye me-1"></i> Detail
                                                 </a>
@@ -1481,7 +1483,7 @@
      function confirmApprove(installmentId) {
         Swal.fire({
             title: 'Konfirmasi Terima Cicilan',
-            text: "Apakah Anda yakin ingin menyetujui cicilan ini? Aksi ini tidak dapat dibatalkan.",
+            text: "Apakah Anda yakin ingin menyetujui cicilan ini?",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#28a745',
@@ -1493,7 +1495,7 @@
                 // Buat form dinamis untuk mengirim permintaan
                 const form = document.createElement('form');
                 form.method = 'POST';
-                form.action = '/admin/installments/' + installmentId + '/verify';
+                form.action = '/installments/' + installmentId + '/verify';
                 form.style.display = 'none';
                 
                 // Tambahkan token CSRF
@@ -1531,7 +1533,7 @@
                 // Buat form dinamis untuk mengirim permintaan
                 const form = document.createElement('form');
                 form.method = 'POST';
-                form.action = '/admin/installments/' + installmentId + '/verify';
+                form.action = '/installments/' + installmentId + '/verify';
                 form.style.display = 'none';
                 
                 // Tambahkan token CSRF
@@ -1553,6 +1555,51 @@
             }
         });
     }
+
+    // Fungsi pencarian
+    function filterTransactions() {
+        const searchValue = document.getElementById('searchTransaction').value.toLowerCase();
+        const typeValue = document.getElementById('filterType').value.toLowerCase();
+        const statusValue = document.getElementById('filterStatus').value.toLowerCase();
+
+        const table = document.getElementById('transactionsTable'); // pastikan id tabel benar
+        const rows = table.querySelectorAll('tbody tr');
+
+        let visibleCount = 0;
+
+        rows.forEach(row => {
+            const nameCol   = row.querySelector('td:nth-child(2)')?.innerText.toLowerCase()
+            const typeCol   = row.querySelector('td:nth-child(3)')?.innerText.toLowerCase() 
+            const statusCol = row.querySelector('td:nth-child(5)')?.innerText.toLowerCase() 
+
+            const matchesSearch = !searchValue || nameCol.includes(searchValue)
+            const matchesType   = !typeValue || typeCol.includes(typeValue);
+            const matchesStatus = !statusValue || statusCol.includes(statusValue);
+
+            if (matchesSearch && matchesType && matchesStatus) {
+                row.style.display = '';
+                visibleCount++;
+            } else {
+                row.style.display = 'none';
+            }
+        });
+
+        // Tampilkan pesan jika tidak ada data
+        const tbody = table.querySelector('tbody');
+        let noDataRow = tbody.querySelector('.no-data-row');
+
+        if (visibleCount === 0) {
+            if (!noDataRow) {
+                const tr = document.createElement('tr');
+                tr.classList.add('no-data-row');
+                tr.innerHTML = `<td colspan="8" class="text-center py-4">Tidak ada transaksi ditemukan.</td>`;
+                tbody.appendChild(tr);
+            }
+        } else {
+            if (noDataRow) noDataRow.remove();
+        }
+    }
+
 </script>
 @endpush
 @endsection

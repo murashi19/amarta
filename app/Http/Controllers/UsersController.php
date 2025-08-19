@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Role;
 use App\Models\Status;
+use App\Models\Transaction;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -50,6 +51,45 @@ class UsersController extends Controller
 
         return view('admin.usersManage', compact('users', 'roles', 'statuses'));
     }
+
+    public function filter(Request $request)
+    {
+        // Ambil input filter
+        $search = $request->input('search');
+        $role   = $request->input('role');
+        $status = $request->input('status');
+
+        // Query dasar
+        $query = User::query();
+
+        // Filter pencarian (nama atau email)
+        if (!empty($search)) {
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+
+        // Filter role
+        if (!empty($role)) {
+            $query->where('role', $role);
+        }
+
+        // Filter status
+        if (!empty($status)) {
+            $query->where('status', $status);
+        }
+
+        // Ambil data (misalnya paginated)
+        $users = $query->orderBy('name', 'asc')->paginate(10);
+
+        // Return JSON
+        return response()->json([
+            'success' => true,
+            'data'    => $users
+        ]);
+    }
+
 
     public function create()
     {
@@ -404,8 +444,41 @@ class UsersController extends Controller
     public function profile()
     {
         $user = auth()->user()->load(['roles', 'status']);
-        return view('users.profile', compact('user'));
+
+        // Ambil semua transaksi + cicilannya
+        $transactions = Transaction::with('feePayments')
+            ->where('user_id', $user->id)
+            ->get();
+
+        // Filter sesuai aturan
+        $filtered = $transactions->filter(function($trx) use ($user) {
+            // Selalu tampilkan Completed
+            if ($trx->status === 'Completed') return true;
+
+            // Selalu tampilkan DP (supaya bisa lihat cicilan)
+            if ($trx->type === 'dp') return true;
+
+            switch ($user->status->name) {
+                case 'Registered':
+                    return $trx->type === 'booking';
+                case 'Meeting Joined':
+                case 'Active':
+                    return $trx->type === 'dp';
+                case 'Pemantapan':
+                    return $trx->type === 'pemantapan';
+                case 'Pemberangkatan':
+                    return $trx->type === 'pemberangkatan';
+                default:
+                    return false;
+            }
+        });
+
+        return view('users.profile', [
+            'user' => $user,
+            'transactions' => $filtered
+        ]);
     }
+
 
     // Tampilkan form edit profil
     public function editProfile()

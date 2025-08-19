@@ -19,7 +19,7 @@
     <script type="text/javascript">
         function googleTranslateElementInit() {
             new google.translate.TranslateElement(
-                { pageLanguage: 'id', includedLanguages: 'id,ja', layout: google.translate.TranslateElement.InlineLayout.SIMPLE },
+                { pageLanguage: 'id', includedLanguages: 'ja', layout: google.translate.TranslateElement.InlineLayout.SIMPLE },
                 'google_translate_element'
             );
         }
@@ -1246,25 +1246,6 @@
                 display: none;
             }
     </style>
-    <style type="text/css">
-        .goog-te-combo {
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            padding: 5px;
-        }
-        .goog-te-banner-frame {
-            display: none !important;
-        }
-        body {
-            top: 0 !important;
-        }
-        #google_translate_element {
-            padding: 10px;
-            background-color: #f8f9fa; /* Warna latar belakang */
-            border-bottom: 1px solid #dee2e6; /* Garis bawah */
-            text-align: center;
-        }
-    </style>
     @stack('styles')
 </head>
 <body>
@@ -1285,17 +1266,17 @@
                         <a class="nav-link {{ Request::is('/') ? 'active' : '' }}" href="/">Home</a>
                     </li>
                     <li class="nav-item mx-2">
-                        <a class="nav-link" href="program">Program</a>
+                        <a class="nav-link {{ Request::is('program') ? 'active' : '' }}" href="program">Program</a>
                     </li>
                     <li class="nav-item mx-2">
-                        <a class="nav-link" href="about">About Us</a>
+                        <a class="nav-link {{ Request::is('about') ? 'active' : '' }}" href="about">About Us</a>
                     </li>
                     <li class="nav-item mx-2">
-                        <a class="nav-link" href="contact">Contact</a>
+                        <a class="nav-link {{ Request::is('contact') ? 'active' : '' }}" href="contact">Contact</a>
                     </li>
                 </ul>
                 <div class="language">
-                    <button onclick="translatePage('id');" id="langID"><img src="asset/img/indo.png" alt="indo" style="height: 15px;"></button>
+                    <button onclick="translatePage('id');"  id="langID"><img src="asset/img/indo.png" alt="indo" style="height: 15px;"></button>
                     <span>|</span>
                     <button onclick="translatePage('ja');" id="langJP"><img src="asset/img/jap.png" alt="Jap" style="height: 15px;"></button>
                 </div>
@@ -2835,18 +2816,15 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     @stack('scripts')
+    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
     <script type="text/javascript">
         function googleTranslateElementInit() {
             new google.translate.TranslateElement(
-                { pageLanguage: 'id', includedLanguages: 'id,ja', layout: google.translate.TranslateElement.InlineLayout.SIMPLE },
+                { pageLanguage: 'id', includedLanguages: 'ja', layout: google.translate.TranslateElement.InlineLayout.SIMPLE },
                 'google_translate_element'
             );
         }
-    </script>
-    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-
-    <script type="text/javascript">
-        function GTranslateFireEvent(lang_code) {
+         function GTranslateFireEvent(lang_code) {
             var el = document.querySelector('.goog-te-combo');
             if (el) {
                 el.value = lang_code;
@@ -2859,5 +2837,6 @@
         document.getElementById('langID').onclick = function() { GTranslateFireEvent('id'); };
         document.getElementById('langJP').onclick = function() { GTranslateFireEvent('ja'); };
     </script>
+   
 </body>
 </html>

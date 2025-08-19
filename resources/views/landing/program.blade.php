@@ -1367,6 +1367,18 @@
                 </p>
               </div>
             </div>
+            
+            <!-- Kegiatan 4 -->
+            <div class="carousel-item2">
+              <div class="item-image2">
+                <img src="asset/img/photo2 (45).jpg" alt="Ujian Bahasa dan Interview" loading="lazy">
+              </div>
+              <div class="item-content2">
+                <p class="item-description">
+                  Ujian dan simulasi wawancara kerja langsung dilakukan oleh tim LPK sebagai bentuk evaluasi kesiapan kerja ke Jepang.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
 

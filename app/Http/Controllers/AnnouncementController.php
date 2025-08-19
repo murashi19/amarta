@@ -6,15 +6,22 @@ use App\Models\Announcement;
 use App\Helpers\AnnouncementHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class AnnouncementController extends Controller
 {
-    // --- Pengumuman ---
+   // --- Pengumuman ---
     public function index()
     {
         $announcements = Announcement::orderBy('id', 'desc')->get();
         
-        return view('admin.pengumuman', compact('announcements'));
+        // Calculate the counts for the stats cards
+        $totalAnnouncements = $announcements->count();
+        $publishedCount = $announcements->where('status', 'published')->count();
+        $draftCount = $announcements->where('status', 'draft')->count();
+        $scheduledCount = $announcements->where('status', 'scheduled')->count();
+
+        return view('admin.pengumuman', compact('announcements', 'totalAnnouncements', 'publishedCount', 'draftCount', 'scheduledCount'));
     }
 
     public function filter(Request $request)
@@ -54,18 +61,30 @@ class AnnouncementController extends Controller
         $validated = $request->validate([
             'title' => 'nullable|string|max:255',
             'content' => 'nullable|string',
-            'type' => 'required|string|in:manual,auto welcome,auto booking success,auto dp request,auto dp success',
+            'type' => 'required|string|in:umum,auto welcome,auto booking success,auto dp request,auto success, auto installment',
             'status' => 'required|string|in:draft,published,scheduled',
             'priority' => 'required|string|in:low,medium,high',
-            'target_audience' => 'nullable|string|in:all students,new registrants,paid students,meeting joined,dp paid,active students',
+            'target_audience' => 'nullable|string|in:all students,new registrants,paid students,meeting joined,active students',
             'meet_link' => 'nullable|url',
             'has_payment_button' => 'nullable|string',
             'scheduled_date' => 'nullable|date',
-            'scheduled_time' => 'nullable',
+            'scheduled_time' => 'nullable|date_format:H:i',
         ]);
 
         $validated['has_payment_button'] = $request->has('has_payment_button');
         $validated['created_by'] = Auth::id();
+
+        // Gabungkan scheduled_date dan scheduled_time ke scheduled_at
+        if (!empty($validated['scheduled_date']) && !empty($validated['scheduled_time'])) {
+            $validated['scheduled_at'] = Carbon\Carbon::parse(
+                $validated['scheduled_date'] . ' ' . $validated['scheduled_time']
+            );
+        } else {
+            $validated['scheduled_at'] = null;
+        }
+
+        // Hapus field lama supaya tidak error saat mass assignment
+        unset($validated['scheduled_date'], $validated['scheduled_time']);
 
         switch ($validated['type']) {
             case 'auto welcome':
@@ -100,7 +119,7 @@ class AnnouncementController extends Controller
                 $validated['has_payment_button'] = false;
                 break;
 
-            case 'auto dp success':
+            case 'auto installment':
                 $validated['has_payment_button'] = false;
                 break;
         }
@@ -110,26 +129,36 @@ class AnnouncementController extends Controller
         return redirect()->route('admin.pengumuman')->with('success', 'Pengumuman berhasil ditambahkan!');
     }
 
+
     public function edit($id)
     {
         $announcement = Announcement::findOrFail($id);
+
+        // Pecah scheduled_at jadi scheduled_date & scheduled_time
+        if (!empty($announcement->scheduled_at)) {
+            $announcement->scheduled_date = \Carbon\Carbon::parse($announcement->scheduled_at)->format('Y-m-d');
+            $announcement->scheduled_time = \Carbon\Carbon::parse($announcement->scheduled_at)->format('H:i');
+        } else {
+            $announcement->scheduled_date = null;
+            $announcement->scheduled_time = null;
+        }
+
         return response()->json($announcement);
     }
-
 
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
             'title' => 'nullable|string|max:255',
             'content' => 'nullable|string',
-            'type' => 'required|string|in:manual,auto welcome,auto booking success,auto dp request,auto dp success',
+            'type' => 'required|string|in:umum,auto welcome,auto booking success,auto dp request,auto success, auto installment',
             'status' => 'required|string|in:draft,published,scheduled',
             'priority' => 'required|string|in:low,medium,high',
-            'target_audience' => 'nullable|string|in:all students,new registrants,paid students,meeting joined,dp paid,active students',
+            'target_audience' => 'nullable|string|in:all students,new registrants,paid students,meeting joined,active students',
             'meet_link' => 'nullable|url',
             'has_payment_button' => 'nullable|string',
             'scheduled_date' => 'nullable|date',
-            'scheduled_time' => 'nullable',
+            'scheduled_time' => 'nullable|date_format:H:i',
         ]);
 
         $validated['has_payment_button'] = $request->has('has_payment_button');
@@ -137,27 +166,14 @@ class AnnouncementController extends Controller
         switch ($validated['type']) {
             case 'auto welcome':
                 $validated['has_payment_button'] = true;
-                if (empty($validated['title'])) {
-                    $validated['title'] = 'Selamat Datang di Program Kami';
-                }
+                $validated['title'] = $validated['title'] ?: 'Selamat Datang di Program Kami';
                 break;
 
             case 'auto dp request':
                 $validated['has_payment_button'] = true;
-                if (empty($validated['target_audience'])) {
-                    $validated['target_audience'] = 'meeting joined';
-                }
-                if (empty($validated['title'])) {
-                    $validated['title'] = 'Permintaan Pembayaran DP Program Kelas';
-                }
-                if (empty($validated['content'])) {
-                    $paymentUrl = route('transaksi.programKelas.createProgramKelas');
-                    $validated['content'] = 'Terima kasih telah melanjutkan program kelas kita, '
-                        . 'untuk bisa mengaktifkan kelas Anda, Anda harus membayar <strong>DP Program Kelas</strong> terlebih dahulu '
-                        . 'untuk melanjut ke Program Kelas Bahasa.<br><br>'
-                        . '<a href="' . $paymentUrl . '" class="btn btn-success" '
-                        . 'style="padding:10px 20px; font-size:16px; border-radius:6px;">💳 Bayar DP Program Kelas</a>';
-                }
+                $validated['target_audience'] = $validated['target_audience'] ?: 'meeting joined';
+                $validated['title'] = $validated['title'] ?: 'Permintaan Pembayaran DP Program Kelas';
+                $validated['content'] = $validated['content'] ?: 'Terima kasih telah melanjutkan program kelas kita, ...';
                 break;
 
             case 'auto booking success':
@@ -167,9 +183,16 @@ class AnnouncementController extends Controller
                 $validated['has_payment_button'] = false;
                 break;
 
-            case 'auto dp success':
+            case 'auto installment':
                 $validated['has_payment_button'] = false;
                 break;
+        }
+
+        // Gabungkan tanggal & jam kalau status scheduled
+        if ($validated['status'] === 'scheduled') {
+            if (!empty($validated['scheduled_date']) && !empty($validated['scheduled_time'])) {
+                $validated['scheduled_at'] = $validated['scheduled_date'] . ' ' . $validated['scheduled_time'];
+            }
         }
 
         $announcement = Announcement::findOrFail($id);
@@ -177,6 +200,7 @@ class AnnouncementController extends Controller
 
         return redirect()->route('admin.pengumuman')->with('success', 'Pengumuman berhasil diperbarui!');
     }
+
 
     public function destroy($id)
     {
@@ -421,6 +445,24 @@ class AnnouncementController extends Controller
                     \Log::info("Match result: " . ($isMatch ? 'YES' : 'NO'));
                     
                     return $isMatch;
+                });
+            }
+
+            // Cek apakah user masih punya cicilan
+            $hasOutstanding = \App\Models\FeePayment::whereHas('transaction', function($q) {
+                    $q->where('user_id', auth()->id());
+                })
+                ->where('status', '!=', 'Completed')
+                ->exists();
+
+            // Filter pengumuman berdasarkan kondisi tagihan
+            if ($hasOutstanding) {
+                $announcements = $announcements->filter(function ($item) {
+                    return $item->type === 'auto installment' || $item->type === 'umum';
+                });
+            } else {
+                $announcements = $announcements->filter(function ($item) {
+                    return $item->type === 'auto success' || $item->type === 'umum';
                 });
             }
 

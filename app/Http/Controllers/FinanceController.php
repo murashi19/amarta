@@ -27,7 +27,7 @@ class FinanceController extends Controller
         $fees = Fee::all()->keyBy('type');
 
         $biayaBooking = $fees['booking']->amount ?? 500000;
-        $biayaDp = $fees['dp']->amount ?? 7000000;
+        $biayaDp = $fees['kelas_bahasa']->amount ?? 7000000;
         $biayaPemantapan = $fees['pemantapan']->amount ?? 20000000;
         $biayaPemberangkatan = $fees['pemberangkatan']->amount ?? 35000000;
 

@@ -6,26 +6,21 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->enum('type', ['email', 'whatsapp', 'sms']);
+            $table->unsignedBigInteger('user_id');
+            $table->enum('type', ['email','whatsapp','sms']);
             $table->text('content');
             $table->boolean('is_sent')->default(false);
             $table->timestamp('sent_at')->nullable();
             $table->timestamps();
-        });
 
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+        });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('notifications');

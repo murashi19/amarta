@@ -2,6 +2,534 @@
 
 @section('title', 'Pengumuman')
 
+@push('styles')
+<style>
+    /* CSS Responsive untuk Mobile - Manajemen Pengumuman */
+    .card-stats {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        transition: transform 0.2s;
+    }
+
+    .card-stats:hover {
+        transform: translateY(-2px);
+    }
+
+    .opacity-75 {
+        opacity: 0.75;
+    }
+
+    .badge {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+    }
+
+    /* Mobile First Approach - Base styles untuk mobile */
+    @media (max-width: 768px) {
+        /* Container adjustments */
+        .col-md-12.p-4 {
+            padding: 0.75rem !important;
+        }
+
+        /* Header section */
+        .d-flex.justify-content-between.align-items-center.mb-4 {
+            flex-direction: column;
+            align-items: flex-start !important;
+            gap: 1rem;
+            margin-bottom: 2rem !important;
+        }
+
+        .d-flex.justify-content-between.align-items-center.mb-4 h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Stats cards responsive */
+        .row.mb-4 .col-md-3 {
+            margin-bottom: 1rem;
+        }
+
+        .card-stats {
+            margin-bottom: 1rem;
+        }
+
+        .card-stats .card-body {
+            padding: 1rem;
+        }
+
+        .card-stats h3 {
+            font-size: 1.5rem;
+        }
+
+        .card-stats p {
+            font-size: 0.875rem;
+            margin-bottom: 0;
+        }
+
+        .card-stats i {
+            font-size: 1.5rem !important;
+        }
+
+        /* Filter section mobile optimization */
+        .card-body .row.g-3 {
+            gap: 0.5rem !important;
+        }
+
+        .card-body .row.g-3 > div {
+            margin-bottom: 1rem;
+        }
+
+        /* Search and filter inputs */
+        .form-control, .form-select {
+            font-size: 16px; /* Prevents zoom on iOS */
+            min-height: 44px; /* Touch-friendly */
+        }
+
+        /* Action buttons di filter */
+        .card-body .d-flex.gap-2 {
+            flex-direction: column;
+            gap: 0.5rem !important;
+        }
+
+        .card-body .d-flex.gap-2 .btn {
+            width: 100%;
+            justify-content: center;
+            min-height: 44px;
+            font-size: 0.875rem;
+        }
+
+        .card-body .d-flex.gap-2 .btn i {
+            margin-right: 0.5rem;
+        }
+
+        /* Table responsive improvements */
+        .table-responsive {
+            font-size: 0.875rem;
+            border-radius: 0.375rem;
+            border: 1px solid var(--bs-border-color);
+            max-height: 70vh;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* Hide less important columns on mobile */
+        .table th:nth-child(5), /* Prioritas */
+        .table td:nth-child(5),
+        .table th:nth-child(6), /* Target Audiens */
+        .table td:nth-child(6),
+        .table th:nth-child(7), /* Tanggal */
+        .table td:nth-child(7) {
+            display: none;
+        }
+
+        /* Adjust remaining columns for mobile */
+        .table th:nth-child(1), .table td:nth-child(1) { width: 8%; }
+        .table th:nth-child(2), .table td:nth-child(2) { width: 50%; }
+        .table th:nth-child(3), .table td:nth-child(3) { width: 20%; }
+        .table th:nth-child(4), .table td:nth-child(4) { width: 15%; }
+        .table th:nth-child(8), .table td:nth-child(8) { width: 7%; }
+
+        /* Table content adjustments */
+        .table th, .table td {
+            padding: 0.5rem 0.25rem;
+            vertical-align: middle;
+        }
+
+        /* Title column improvements for mobile */
+        .table td:nth-child(2) strong {
+            font-size: 0.875rem;
+            line-height: 1.2;
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        .table td:nth-child(2) small {
+            font-size: 0.75rem;
+            line-height: 1.3;
+            display: block;
+            color: #6c757d;
+        }
+
+        /* Badge adjustments for mobile */
+        .badge {
+            font-size: 0.7rem;
+            padding: 0.2rem 0.4rem;
+            margin: 0.1rem;
+            display: inline-block;
+        }
+
+        .table td .badge {
+            margin-bottom: 0.25rem;
+            white-space: nowrap;
+        }
+
+        /* Dropdown actions */
+        .dropdown-toggle {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+            min-height: 32px;
+            border: 1px solid #dee2e6;
+        }
+
+        .dropdown-menu {
+            font-size: 0.875rem;
+            min-width: 150px;
+            z-index: 1050;
+        }
+
+        .dropdown-item {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+        }
+
+        .dropdown-item i {
+            width: 16px;
+            text-align: center;
+        }
+
+        /* Alert adjustments */
+        .alert {
+            font-size: 0.875rem;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .alert .btn-close {
+            padding: 0.375rem;
+            font-size: 0.875rem;
+        }
+
+        /* Modal adjustments for mobile */
+        .modal-dialog {
+            margin: 0.5rem;
+            max-width: calc(100vw - 1rem);
+        }
+
+        .modal-dialog-scrollable .modal-content {
+            max-height: calc(100vh - 1rem);
+        }
+
+        .modal-body {
+            padding: 1rem;
+        }
+
+        .modal-header {
+            padding: 1rem;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .modal-footer {
+            padding: 1rem;
+            flex-direction: column;
+            gap: 0.5rem;
+            border-top: 1px solid #dee2e6;
+        }
+
+        .modal-footer .btn {
+            width: 100%;
+            margin: 0;
+            min-height: 44px;
+        }
+
+        /* Form dalam modal */
+        .modal .form-control,
+        .modal .form-select {
+            font-size: 16px;
+            min-height: 44px;
+        }
+
+        .modal .form-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .modal textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        /* Row dalam modal form */
+        .modal .row {
+            margin-bottom: 1rem;
+        }
+
+        .modal .row:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Card dalam view modal */
+        .modal .card {
+            border: 1px solid #dee2e6;
+            margin-bottom: 1rem;
+        }
+
+        .modal .card-header {
+            background-color: #f8f9fa;
+            padding: 0.75rem 1rem;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .modal .card-body {
+            padding: 0.75rem 1rem;
+        }
+
+        /* Loading states dalam modal */
+        #viewAnnouncementLoading,
+        #viewAnnouncementError {
+            padding: 2rem 1rem;
+            text-align: center;
+        }
+
+        #viewAnnouncementLoading i,
+        #viewAnnouncementError i {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Sticky table header */
+        .table thead th {
+            position: sticky;
+            top: 0;
+            background: var(--bs-dark);
+            z-index: 10;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        /* Empty state */
+        .table tbody td[colspan] {
+            text-align: center;
+            padding: 2rem 1rem;
+        }
+
+        .table tbody td[colspan] i {
+            font-size: 2rem;
+            color: #6c757d;
+            margin-bottom: 1rem;
+            display: block;
+        }
+    }
+
+    /* Extra small devices (portrait phones, less than 576px) */
+    @media (max-width: 576px) {
+        .col-md-12.p-4 {
+            padding: 0.5rem !important;
+        }
+
+        /* Further reduce font sizes */
+        .card-stats h3 {
+            font-size: 1.25rem;
+        }
+
+        .card-stats p {
+            font-size: 0.8rem;
+        }
+
+        /* Make table even more compact */
+        .table {
+            font-size: 0.75rem;
+        }
+
+        .table th, .table td {
+            padding: 0.4rem 0.2rem;
+        }
+
+        /* Hide jenis column on very small screens */
+        .table th:nth-child(3),
+        .table td:nth-child(3) {
+            display: none;
+        }
+
+        /* Adjust remaining columns for very small screens */
+        .table th:nth-child(2), .table td:nth-child(2) { width: 70%; }
+        .table th:nth-child(4), .table td:nth-child(4) { width: 15%; }
+        .table th:nth-child(8), .table td:nth-child(8) { width: 10%; }
+
+        /* Stack badges vertically on very small screens */
+        .table td .badge {
+            display: block;
+            margin: 0.1rem 0;
+            text-align: center;
+        }
+
+        /* Modal improvements for very small screens */
+        .modal-dialog {
+            margin: 0.25rem;
+            max-width: calc(100vw - 0.5rem);
+        }
+
+        .modal-body {
+            padding: 0.75rem;
+        }
+
+        .modal-header,
+        .modal-footer {
+            padding: 0.75rem;
+        }
+
+        /* Form adjustments for very small screens */
+        .modal .row > div {
+            margin-bottom: 1rem;
+        }
+
+        .modal .col-md-8,
+        .modal .col-md-6,
+        .modal .col-md-4 {
+            width: 100%;
+            max-width: 100%;
+        }
+    }
+
+    /* Landscape phones and small tablets (576px to 768px) */
+    @media (min-width: 576px) and (max-width: 768px) {
+        .col-md-12.p-4 {
+            padding: 1rem !important;
+        }
+
+        /* Show jenis column back on landscape */
+        .table th:nth-child(3),
+        .table td:nth-child(3) {
+            display: table-cell;
+        }
+
+        /* Show prioritas column on landscape */
+        .table th:nth-child(5),
+        .table td:nth-child(5) {
+            display: table-cell;
+        }
+
+        /* Adjust column widths for landscape */
+        .table th:nth-child(1), .table td:nth-child(1) { width: 5%; }
+        .table th:nth-child(2), .table td:nth-child(2) { width: 40%; }
+        .table th:nth-child(3), .table td:nth-child(3) { width: 15%; }
+        .table th:nth-child(4), .table td:nth-child(4) { width: 12%; }
+        .table th:nth-child(5), .table td:nth-child(5) { width: 12%; }
+        .table th:nth-child(8), .table td:nth-child(8) { width: 6%; }
+
+        /* Filter buttons can be horizontal on landscape tablets */
+        .card-body .d-flex.gap-2 {
+            flex-direction: row;
+        }
+
+        .card-body .d-flex.gap-2 .btn {
+            width: auto;
+            flex: 1;
+        }
+    }
+
+    /* Medium devices (tablets, 768px and up) */
+    @media (min-width: 768px) and (max-width: 992px) {
+        /* Show all columns on tablets */
+        .table th, .table td {
+            display: table-cell !important;
+        }
+
+        /* Slightly reduce padding */
+        .table th, .table td {
+            padding: 0.75rem 0.5rem;
+        }
+
+        /* Reset column widths for tablets */
+        .table th:nth-child(1), .table td:nth-child(1) { width: 3%; }
+        .table th:nth-child(2), .table td:nth-child(2) { width: 25%; }
+        .table th:nth-child(3), .table td:nth-child(3) { width: 15%; }
+        .table th:nth-child(4), .table td:nth-child(4) { width: 10%; }
+        .table th:nth-child(5), .table td:nth-child(5) { width: 10%; }
+        .table th:nth-child(6), .table td:nth-child(6) { width: 15%; }
+        .table th:nth-child(7), .table td:nth-child(7) { width: 10%; }
+        .table th:nth-child(8), .table td:nth-child(8) { width: 4%; }
+    }
+
+    /* Additional mobile-specific improvements */
+    @media (max-width: 768px) {
+        /* Improve touch targets */
+        .btn {
+            min-height: 44px;
+            touch-action: manipulation;
+        }
+
+        .btn-sm {
+            min-height: 36px;
+            padding: 0.375rem 0.75rem;
+        }
+
+        /* Better focus states for accessibility */
+        .btn:focus,
+        .form-control:focus,
+        .form-select:focus {
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+            outline: none;
+        }
+
+        /* Loading states */
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Scrollable content dalam modal */
+        .modal-body {
+            overflow-y: auto;
+            max-height: calc(100vh - 200px);
+        }
+
+        /* Sticky modal header dan footer */
+        .modal-header {
+            position: sticky;
+            top: 0;
+            z-index: 1051;
+            background: white;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .modal-footer {
+            position: sticky;
+            bottom: 0;
+            z-index: 1051;
+            background: white;
+            border-top: 1px solid #dee2e6;
+        }
+    }
+
+    /* Print styles */
+    @media print {
+        .btn, .dropdown, .modal, .alert {
+            display: none !important;
+        }
+        
+        .table-responsive {
+            overflow: visible !important;
+            max-height: none !important;
+        }
+    }
+
+    /* Utilities untuk consistency */
+    .text-nowrap-mobile {
+        @media (max-width: 768px) {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+
+    .d-mobile-block {
+        @media (max-width: 768px) {
+            display: block !important;
+        }
+    }
+
+    .d-mobile-none {
+        @media (max-width: 768px) {
+            display: none !important;
+        }
+    }
+</style>
+@endpush
 @section('content')
 <!-- Main Content -->
 <div class="col-md-12 p-4">
@@ -16,7 +544,7 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between">
                         <div>
-                            <h3 class="mb-0">{{ $totalAnnouncements ?? 5 }}</h3>
+                            <h3 class="mb-0">{{ $totalAnnouncements }}</h3>
                             <p class="mb-0">Total Pengumuman</p>
                         </div>
                         <div>
@@ -31,7 +559,7 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between">
                         <div>
-                            <h3 class="mb-0">{{ $publishedCount ?? 3 }}</h3>
+                            <h3 class="mb-0">{{ $publishedCount}}</h3>
                             <p class="mb-0">Terbit</p>
                         </div>
                         <div>
@@ -46,7 +574,7 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between">
                         <div>
-                            <h3 class="mb-0">{{ $draftCount ?? 2 }}</h3>
+                            <h3 class="mb-0">{{ $draftCount }}</h3>
                             <p class="mb-0">Draft</p>
                         </div>
                         <div>
@@ -61,7 +589,7 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between">
                         <div>
-                            <h3 class="mb-0">{{ $scheduledCount ?? 0 }}</h3>
+                            <h3 class="mb-0">{{ $scheduledCount }}</h3>
                             <p class="mb-0">Terjadwal</p>
                         </div>
                         <div>
@@ -97,8 +625,9 @@
                             <option value="auto welcome">Otomatis - Welcome</option>
                             <option value="auto booking success">Otomatis - Booking Berhasil</option>
                             <option value="auto dp request">Otomatis - DP Request</option>
-                            <option value="auto dp success">Otomatis - DP Berhasil</option>
-                            <option value="manual">Manual</option>
+                            <option value="auto success">Otomatis - Installment Lunas</option>
+                            <option value="auto installment">Otomatis - Installment</option>
+                            <option value="umum">Umum</option>
                         </select>
                     </div>
 
@@ -117,9 +646,10 @@
                     <div class="col-lg-2 col-md-4">
                         <label class="form-label">&nbsp;</label>
                         <div class="d-flex gap-2">
-                            <button type="button" class="btn btn-outline-primary flex-fill" onclick="filterAnnouncements()"> <i class="fas fa-search mr-2"></i>Cari</button>
-
-                                
+                            <button type="button" class="btn btn-outline-primary flex-fill" onclick="filterAnnouncements()">
+                                 <i class="fas fa-search mr-2">
+                                 </i>
+                                 Cari
                             </button>
                             <button 
                                 class="btn btn-primary flex-fill" 
@@ -131,6 +661,7 @@
                             </button>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -278,11 +809,12 @@
                         <div class="col-md-4">
                             <label for="type" class="form-label">Jenis Pengumuman</label>
                             <select class="form-select" id="type" name="type" onchange="toggleAutoFields()">
-                                <option value="manual">Manual</option>
+                                <option value="umum">Umum</option>
                                 <option value="auto welcome">Otomatis - Welcome</option>
                                 <option value="auto booking success">Otomatis - Booking Berhasil</option>
                                 <option value="auto dp request">Otomatis - DP Request</option>
-                                <option value="auto dp success">Otomatis - DP Berhasil</option>
+                                <option value="auto success">Otomatis - Installment Lunas</option>
+                                <option value="auto installment">Otomatis - Installment</option>
                             </select>
                         </div>
                         <div class="col-md-4">
@@ -292,7 +824,6 @@
                                 <option value="new registrants">Pendaftar Baru</option>
                                 <option value="paid students">Siswa yang Sudah Bayar Booking</option>
                                 <option value="meeting joined">Siswa yang Sudah Join Meeting</option>
-                                <option value="dp paid">Siswa yang Sudah Bayar DP</option>
                                 <option value="active students">Siswa Aktif</option>
                             </select>
                         </div>
@@ -329,11 +860,11 @@
                     <div id="scheduledDateField" class="mt-3" style="display: none;">
                         <div class="row">
                             <div class="col-md-6">
-                                <label for="scheduled_date" class="form-label">Tanggal Terbit</label>
+                                <label for="scheduled_date" class="form-label">Tanggal</label>
                                 <input type="date" class="form-control" id="scheduled_date" name="scheduled_date">
                             </div>
                             <div class="col-md-6">
-                                <label for="scheduled_time" class="form-label">Jam Terbit</label>
+                                <label for="scheduled_time" class="form-label">Jam</label>
                                 <input type="time" class="form-control" id="scheduled_time" name="scheduled_time">
                             </div>
                         </div>
@@ -362,7 +893,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="editAnnouncementForm" action="#" method="POST">
+                <form id="editAnnouncementForm" encript="multipart/form-data" method="POST">
                     @csrf
                     @method('PUT')
                     
@@ -385,11 +916,12 @@
                         <div class="col-md-4">
                             <label for="editType" class="form-label">Jenis Pengumuman</label>
                             <select class="form-select" id="editType" name="type" onchange="toggleEditAutoFields()">
-                                <option value="manual">Manual</option>
+                                <option value="umum">Umum</option>
                                 <option value="auto welcome">Otomatis - Welcome</option>
                                 <option value="auto booking success">Otomatis - Booking Berhasil</option>
                                 <option value="auto dp request">Otomatis - DP Request</option>
-                                <option value="auto dp success">Otomatis - DP Berhasil</option>
+                                <option value="auto success">Otomatis - Installment Lunas</option>
+                                <option value="auto installment">Otomatis - Installment</option>
                             </select>
                         </div>
                         <div class="col-md-4">
@@ -399,7 +931,6 @@
                                 <option value="new registrants">Pendaftar Baru</option>
                                 <option value="paid students">Siswa yang Sudah Bayar Booking</option>
                                 <option value="meeting joined">Siswa yang Sudah Join Meeting</option>
-                                <option value="dp paid">Siswa yang Sudah Bayar DP</option>
                                 <option value="active students">Siswa Aktif</option>
                             </select>
                         </div>
@@ -436,11 +967,11 @@
                     <div id="editScheduledDateField" class="mt-3" style="display: none;">
                         <div class="row">
                             <div class="col-md-6">
-                                <label for="editScheduledDate" class="form-label">Tanggal Terbit</label>
+                                <label for="editScheduledDate" class="form-label">Tanggal</label>
                                 <input type="date" class="form-control" id="editScheduledDate" name="scheduled_date">
                             </div>
                             <div class="col-md-6">
-                                <label for="editScheduledTime" class="form-label">Jam Terbit</label>
+                                <label for="editScheduledTime" class="form-label">Jam</label>
                                 <input type="time" class="form-control" id="editScheduledTime" name="scheduled_time">
                             </div>
                         </div>
@@ -564,7 +1095,7 @@
 
 @endsection
 
-
+@push('scripts')
 <script>
     // Pastikan semua variabel global ada
     let currentEditId = null;
@@ -765,7 +1296,7 @@
         modal.show();
         
         // Fetch data from server
-        fetch(`{{ url('admin/pengumuman') }}/${id}/edit`, {
+        fetch(`/admin/pengumuman/${id}/edit`, {
             method: 'GET',
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
@@ -789,7 +1320,7 @@
             
             document.getElementById('editTitle').value = data.title || '';
             document.getElementById('editPriority').value = data.priority || 'medium';
-            document.getElementById('editType').value = data.type || 'manual';
+            document.getElementById('editType').value = data.type || 'umum';
             document.getElementById('editTargetAudience').value = data.target_audience || 'all students';
             document.getElementById('editStatus').value = data.status || 'draft';
             document.getElementById('editContent').value = data.content || '';
@@ -958,7 +1489,7 @@
         if (!badge) return;
         
         const typeMap = {
-            'manual': 'Manual',
+            'umum': 'Umum',
             'auto welcome': 'Otomatis - Welcome',
             'auto booking success': 'Otomatis - Booking Berhasil'
         };
@@ -1112,5 +1643,4 @@
 
     console.log('✅ All JavaScript functions loaded');
 </script>
-@section('scripts')
-@endsection
+@endpush

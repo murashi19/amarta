@@ -2,7 +2,6 @@
 
 @section('title', 'Manajemen Pengguna')
 
-@section('content')
 @push('styles')
 <style>
     .badge {
@@ -70,8 +69,316 @@
     .opacity-75 {
         opacity: 0.75;
     }
+
+    /* CSS Responsive untuk Mobile - Manajemen Pengguna */
+
+    @media (max-width: 768px) {
+        /* Container adjustments */
+        .container-fluid {
+            padding: 0.75rem;
+        }
+
+        /* Header section */
+        .d-flex.justify-content-between.align-items-center.mb-4 {
+            flex-direction: column;
+            align-items: flex-start !important;
+            gap: 1rem;
+        }
+
+        .d-flex.justify-content-between.align-items-center.mb-4 h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Stats cards responsive */
+        .row.mb-4 .col-md-3 {
+            margin-bottom: 1rem;
+        }
+
+        .card-stats {
+            margin-bottom: 1rem;
+        }
+
+        .card-stats .card-body {
+            padding: 1rem;
+        }
+
+        .card-stats h3 {
+            font-size: 1.5rem;
+        }
+
+        .card-stats i {
+            font-size: 1.5rem !important;
+        }
+
+        /* Filter section */
+        .card-body .row.g-3 {
+            gap: 0.5rem !important;
+        }
+
+        .card-body .row.g-3 > div {
+            margin-bottom: 1rem;
+        }
+
+        /* Action buttons di filter */
+        .card-body .d-flex.gap-2 {
+            flex-direction: column;
+            gap: 0.5rem !important;
+        }
+
+        .card-body .d-flex.gap-2 .btn {
+            width: 100%;
+            justify-content: center;
+        }
+
+        /* Table responsive improvements */
+        .table-responsive {
+            font-size: 0.875rem;
+        }
+
+        /* Hide less important columns on mobile */
+        .table th:nth-child(4), /* Gender */
+        .table td:nth-child(4),
+        .table th:nth-child(5), /* Tempat/Tanggal Lahir */
+        .table td:nth-child(5) {
+            display: none;
+        }
+
+        /* Adjust remaining columns */
+        .table th:nth-child(1), .table td:nth-child(1) { width: 8%; }
+        .table th:nth-child(2), .table td:nth-child(2) { width: 35%; }
+        .table th:nth-child(3), .table td:nth-child(3) { width: 25%; }
+        .table th:nth-child(6), .table td:nth-child(6) { width: 15%; }
+        .table th:nth-child(7), .table td:nth-child(7) { width: 12%; }
+        .table th:nth-child(8), .table td:nth-child(8) { width: 5%; }
+
+        /* User avatar and info */
+        .avatar {
+            width: 32px;
+            height: 32px;
+            font-size: 0.75rem;
+        }
+
+        .d-flex.align-items-center .fw-bold {
+            font-size: 0.875rem;
+            line-height: 1.2;
+        }
+
+        .d-flex.align-items-center .text-muted {
+            font-size: 0.75rem;
+        }
+
+        /* Contact info adjustments */
+        .table td:nth-child(3) div {
+            font-size: 0.75rem;
+        }
+
+        .table td:nth-child(3) small {
+            font-size: 0.7rem;
+        }
+
+        /* Badge adjustments */
+        .badge {
+            font-size: 0.7rem;
+            padding: 0.2rem 0.4rem;
+        }
+
+        /* Dropdown actions */
+        .dropdown-toggle {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+        }
+
+        .dropdown-menu {
+            font-size: 0.875rem;
+            min-width: 150px;
+        }
+
+        /* Pagination adjustments */
+        .card-footer {
+            flex-direction: column;
+            gap: 1rem;
+            text-align: center;
+        }
+
+        .pagination {
+            justify-content: center;
+            margin: 0;
+        }
+
+        .pagination .page-link {
+            padding: 0.375rem 0.75rem;
+            font-size: 0.875rem;
+        }
+
+        /* Modal adjustments */
+        .modal-dialog {
+            margin: 0.5rem;
+            max-width: calc(100vw - 1rem);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .modal-footer {
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .modal-footer .btn {
+            width: 100%;
+            margin: 0;
+        }
+
+        /* Alert adjustments */
+        .alert {
+            font-size: 0.875rem;
+            padding: 0.75rem;
+        }
+
+        .alert .btn-close {
+            padding: 0.375rem;
+            font-size: 0.875rem;
+        }
+    }
+
+    /* Extra small devices (portrait phones, less than 576px) */
+    @media (max-width: 576px) {
+        .container-fluid {
+            padding: 0.5rem;
+        }
+
+        /* Further reduce font sizes */
+        .card-stats h3 {
+            font-size: 1.25rem;
+        }
+
+        .card-stats p {
+            font-size: 0.875rem;
+        }
+
+        /* Make table even more compact */
+        .table {
+            font-size: 0.75rem;
+        }
+
+        .table th, .table td {
+            padding: 0.5rem 0.25rem;
+            vertical-align: middle;
+        }
+
+        /* Stack user info vertically on very small screens */
+        .d-flex.align-items-center {
+            flex-direction: column;
+            align-items: flex-start !important;
+            gap: 0.5rem;
+        }
+
+        .d-flex.align-items-center .avatar {
+            align-self: center;
+        }
+
+        /* Adjust contact column */
+        .table td:nth-child(3) {
+            width: 30%;
+        }
+
+        /* Hide role column on very small screens */
+        .table th:nth-child(7),
+        .table td:nth-child(7) {
+            display: none;
+        }
+
+        /* Adjust remaining column widths */
+        .table th:nth-child(6), .table td:nth-child(6) { width: 20%; }
+        .table th:nth-child(8), .table td:nth-child(8) { width: 10%; }
+    }
+
+    /* Landscape phones and small tablets */
+    @media (min-width: 576px) and (max-width: 768px) {
+        .container-fluid {
+            padding: 1rem;
+        }
+
+        /* Show gender column back on landscape */
+        .table th:nth-child(4),
+        .table td:nth-child(4) {
+            display: table-cell;
+        }
+
+        /* Adjust column widths for landscape */
+        .table th:nth-child(1), .table td:nth-child(1) { width: 5%; }
+        .table th:nth-child(2), .table td:nth-child(2) { width: 25%; }
+        .table th:nth-child(3), .table td:nth-child(3) { width: 20%; }
+        .table th:nth-child(4), .table td:nth-child(4) { width: 10%; }
+        .table th:nth-child(6), .table td:nth-child(6) { width: 12%; }
+        .table th:nth-child(7), .table td:nth-child(7) { width: 12%; }
+        .table th:nth-child(8), .table td:nth-child(8) { width: 8%; }
+    }
+
+    /* Medium devices (tablets, 768px and up) */
+    @media (min-width: 768px) and (max-width: 992px) {
+        /* Show all columns on tablets */
+        .table th, .table td {
+            display: table-cell !important;
+        }
+
+        /* Slightly reduce padding */
+        .table th, .table td {
+            padding: 0.75rem 0.5rem;
+        }
+    }
+
+    /* Additional mobile-specific improvements */
+    @media (max-width: 768px) {
+        /* Improve touch targets */
+        .btn {
+            min-height: 44px;
+            touch-action: manipulation;
+        }
+
+        .form-control, .form-select {
+            min-height: 44px;
+            font-size: 16px; /* Prevents zoom on iOS */
+        }
+
+        /* Sticky header on mobile */
+        .table thead th {
+            position: sticky;
+            top: 0;
+            background: var(--bs-dark);
+            z-index: 10;
+        }
+
+        /* Improve table scrolling */
+        .table-responsive {
+            border-radius: 0.375rem;
+            border: 1px solid var(--bs-border-color);
+            max-height: 70vh;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* Loading states */
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Better focus states for accessibility */
+        .btn:focus,
+        .form-control:focus,
+        .form-select:focus {
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+            outline: none;
+        }
+    }
+
 </style>
 @endpush
+@section('content')
+
 <div class="container-fluid">
     <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -124,8 +431,11 @@
                         <div>
                             <h3 class="mb-0">
                                 {{ isset($users) ? $users->filter(function($user) { 
-                                    return $user->status && in_array($user->status->name, ['Booking Paid', 'Meeting Joined', 'DP Paid', 'Active']); 
+                                    return $user->roles()->where('name', 'User')->exists()
+                                        && $user->status 
+                                        && in_array($user->status->name, ['Booking Paid', 'Meeting Joined', 'DP Paid', 'Active']); 
                                 })->count() : 0 }}
+
                             </h3>
                             <p class="mb-0">Sudah Bayar Booking</p>
                         </div>
@@ -158,78 +468,50 @@
     </div>
 
     <!-- Filter & Search -->
-    <div class="card mb-4">
-        <div class="card-body">
-            <form method="GET" action="{{ route('admin.usersManage') }}" id="filterForm">
+    <div class="mt-4">
+        <div class="card mb-4">
+            <div class="card-body">
                 <div class="row g-3">
+                    <!-- Filter Status -->
+                    <div class="col-lg-3 col-md-6">
+                        <label for="filterStatus" class="form-label">Status</label>
+                        <select class="form-select" id="filterStatus">
+                            <option value="">Semua Status</option>
+                            <option value="Registered">Registered</option>
+                            <option value="Booking Paid">Booking Paid</option>
+                            <option value="Meeting Joined">Meeting Joined</option>
+                            <option value="Active">Active</option>
+                            <option value="Pemantapan">Pemantapan</option>
+                            <option value="Pemberangkatan">Pemberangkatan</option>
+                        </select>
+                    </div>
+
+                    <!-- Filter Type -->
+                    <div class="col-lg-3 col-md-6">
+                        <label for="filterRole" class="form-label">Role</label>
+                        <select class="form-select" id="filterRole">
+                            <option value="">Semua Role</option>
+                            <option value="Admin">Admin</option>
+                            <option value="User">User</option>
+                        </select>
+                    </div>
+
                     <!-- Search Input -->
-                    <div class="col-lg-4 col-md-6">
-                        <label for="searchUser" class="form-label">Pencarian</label>
+                    <div class="col-lg-4 col-md-8">
+                        <label for="searchUsers" class="form-label">Pencarian</label>
                         <input 
                             type="text" 
                             class="form-control" 
-                            name="search"
-                            value="{{ request('search') }}"
-                            placeholder="Nama, email, telepon..." 
-                            id="searchUser"
+                            placeholder="Cari pengguna..." 
+                            id="searchUsers"
                         >
-                    </div>
-
-                    <!-- Filter Status -->
-                    <div class="col-lg-2 col-md-6">
-                        <label for="filterStatus" class="form-label">Status</label>
-                        <select class="form-select" name="status_id" id="filterStatus" onchange="document.getElementById('filterForm').submit()">
-                            <option value="">Semua Status</option>
-                            @if(isset($statuses))
-                                @foreach($statuses as $status)
-                                    <option value="{{ $status->id }}" 
-                                            {{ request('status_id') == $status->id ? 'selected' : '' }}>
-                                        {{ $status->name }}
-                                    </option>
-                                @endforeach
-                            @endif
-                        </select>
-                    </div>
-
-                    <!-- Filter Role -->
-                    <div class="col-lg-2 col-md-6">
-                        <label for="filterRole" class="form-label">Role</label>
-                        <select class="form-select" name="role_id" id="filterRole" onchange="document.getElementById('filterForm').submit()">
-                            <option value="">Semua Role</option>
-                            @if(isset($roles))
-                                @foreach($roles as $role)
-                                    <option value="{{ $role->id }}" 
-                                            {{ request('role_id') == $role->id ? 'selected' : '' }}>
-                                        {{ $role->name }}
-                                    </option>
-                                @endforeach
-                            @endif
-                        </select>
-                    </div>
-
-                    <!-- Filter Gender -->
-                    <div class="col-lg-2 col-md-6">
-                        <label for="filterGender" class="form-label">Gender</label>
-                        <select class="form-select" name="gender" id="filterGender" onchange="document.getElementById('filterForm').submit()">
-                            <option value="">Semua Gender</option>
-                            <option value="Laki-laki" {{ request('gender') == 'Laki-laki' ? 'selected' : '' }}>
-                                Laki-laki
-                            </option>
-                            <option value="Perempuan" {{ request('gender') == 'Perempuan' ? 'selected' : '' }}>
-                                Perempuan
-                            </option>
-                        </select>
                     </div>
 
                     <!-- Action Buttons -->
                     <div class="col-lg-2 col-md-6">
                         <label class="form-label">&nbsp;</label>
                         <div class="d-flex gap-2">
-                            <button 
-                                type="submit"
-                                class="btn btn-outline-primary flex-fill" 
-                                title="Cari"
-                            >
+                            <button type="button" class="btn btn-outline-primary flex-fill" onclick="filterUsers()">
                                 <i class="fas fa-search"></i>
                             </button>
                             <a 
@@ -250,7 +532,7 @@
                         </div>
                     </div>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 
@@ -476,10 +758,57 @@
         </div>
     </div>
 </div>
+@endsection
+
 @push('scripts')
 <script>
     function viewUserDetail(userId) {
         window.location.href = "{{ route('admin.userDetail', ':userId') }}".replace(':userId', userId);
+    }
+     // Fungsi: Filter 
+       function filterUsers() {
+        const statusFilter = document.getElementById('filterStatus').value.toLowerCase();
+        const roleFilter = document.getElementById('filterRole').value.toLowerCase();
+        const searchFilter = document.getElementById('searchUsers').value.toLowerCase();
+
+        const table = document.getElementById('usersTable');
+        const rows = table.querySelectorAll('tbody tr');
+
+        let visibleCount = 0;
+
+        rows.forEach(row => {
+            // Ambil isi kolom yang sesuai urutan tabel
+            const nameCol   = row.querySelector('td:nth-child(2)')?.innerText.toLowerCase() || ""; // Nama pengguna
+            const statusCol = row.querySelector('td:nth-child(6)')?.innerText.toLowerCase() || ""; // Status
+            const roleCol   = row.querySelector('td:nth-child(7)')?.innerText.toLowerCase() || ""; // Role
+
+            // Cek apakah row cocok filter
+            const matchesStatus = !statusFilter || statusCol.includes(statusFilter);
+            const matchesRole   = !roleFilter || roleCol.includes(roleFilter);
+            const matchesSearch = !searchFilter || nameCol.includes(searchFilter);
+
+            if (matchesStatus && matchesRole && matchesSearch) {
+                row.style.display = '';
+                visibleCount++;
+            } else {
+                row.style.display = 'none';
+            }
+        });
+
+        // Pesan jika tidak ada hasil
+        const tbody = table.querySelector('tbody');
+        let noDataRow = tbody.querySelector('.no-data-row');
+
+        if (visibleCount === 0) {
+            if (!noDataRow) {
+                const tr = document.createElement('tr');
+                tr.classList.add('no-data-row');
+                tr.innerHTML = `<td colspan="9" class="text-center py-4">Tidak ada pengguna ditemukan.</td>`;
+                tbody.appendChild(tr);
+            }
+        } else {
+            if (noDataRow) noDataRow.remove();
+        }
     }
 
     // Handle delete modal
@@ -515,5 +844,5 @@
     @endif
 </script>
 @endpush
-@endsection
+
 

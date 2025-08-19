@@ -338,10 +338,9 @@
                 <!-- Link Meeting -->
                 <div class="meet-link-section">
                     <div class="meet-link-header">
-                       <img src="https://cdn-icons-png.flaticon.com/512/5977/5977576.png" alt="video" style="width:24px; vertical-align:middle; margin-right:8px;">
                         <strong>Link Meeting</strong>
                     </div>
-                    <a href="{{ $meetLink }}" class="meet-button" target="_blank">
+                    <a href="{{ $meetLink }}" class="meet-button text-white" target="_blank">
                         <img src="https://cdn-icons-png.flaticon.com/512/25/25284.png" alt="video" style="width:24px;  vertical-align:middle; margin-right:8px;"> Bergabung ke Meeting
                     </a>
                     <div class="meet-url">{{ $meetLink }}</div>

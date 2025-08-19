@@ -46,6 +46,9 @@ class ManageTransactionController extends Controller
 
         $transactions = $transactionQuery->latest()->paginate(15, ['*'], 'transactions_page');
 
+        // Hitung jumlah transaksi
+        $transactionsCount = $transactions->total();
+
         // Filter transaksi setelah diambil
         $transactions->getCollection()->transform(function ($transaction) {
             if ($transaction->status === 'Verification') {
@@ -58,6 +61,8 @@ class ManageTransactionController extends Controller
             }
             return $transaction;
         });
+
+
         // Handle installments
         $installmentQuery = FeePayment::with(['transaction.user'])
             ->whereHas('transaction', function ($q) {
@@ -99,127 +104,185 @@ class ManageTransactionController extends Controller
         }
     }
 
-    public function verify(Request $request, $id)
+    public function detailInstallment($id)
     {
         try {
-            $transaction = Transaction::findOrFail($id);
+            $installment = FeePayment::with(['transaction.user'])->findOrFail($id);
 
-            if (!in_array($transaction->status, ['Pending', 'verification'])) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Transaksi tidak dalam status yang dapat diverifikasi'
-                ], 400);
-            }
+            return view('admin.detailInstallment', compact('installment'));
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Installment not found'
+            ], 404);
+        }
+    }
+
+    public function verify(Request $request, $id)
+    {
+        DB::beginTransaction();
+
+        try {
+            $installment = FeePayment::findOrFail($id);
+            $transaction = $installment->transaction;
 
             $action = $request->action;
 
             if ($action === 'approve') {
-                // Ubah status transaksi
-                $transaction->update([
+                // Ubah status cicilan jadi Completed
+                $installment->update([
                     'status' => 'Completed',
                     'paid_at' => now()
                 ]);
 
-                // Update user status jadi Paid Student (status_id = 2)
-                $user = $transaction->user;
-                $user->status_id = 2;
-                $user->save();
-
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Transaksi berhasil disetujui dan status user diperbarui.'
-                ]);
             } elseif ($action === 'reject') {
-                $transaction->update(['status' => 'Failed']);
-
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Transaksi ditolak.'
+                // Ubah status cicilan jadi Failed
+                $installment->update([
+                    'status' => 'Failed'
                 ]);
-            } elseif ($action === 'verify') {
-                $transaction->update(['status' => 'verification']);
 
+            } else {
                 return response()->json([
-                    'success' => true,
-                    'message' => 'Transaksi ditandai untuk verifikasi manual.'
-                ]);
+                    'success' => false,
+                    'message' => 'Aksi tidak valid.'
+                ], 400);
             }
 
+            // === Hitung ulang total cicilan ===
+            $totalCompleted = FeePayment::where('transaction_id', $transaction->id)
+                ->where('status', 'Completed')
+                ->sum('amount');
+
+            $totalVerification = FeePayment::where('transaction_id', $transaction->id)
+                ->where('status', 'Verification')
+                ->sum('amount');
+
+            $totalFailed = FeePayment::where('transaction_id', $transaction->id)
+                ->where('status', 'Failed')
+                ->sum('amount');
+
+            // === Tentukan status transaksi ===
+            if ($totalCompleted >= $transaction->amount) {
+                // Semua cicilan sudah lunas
+                $newTrxStatus = 'Completed';
+            } elseif ($totalVerification > 0) {
+                // Masih ada cicilan dalam proses verifikasi
+                $newTrxStatus = 'Verification';
+            } elseif ($totalFailed > 0 && $totalCompleted + $totalVerification < $transaction->amount) {
+                // Ada cicilan gagal & belum lunas → anggap Pending
+                $newTrxStatus = 'Pending';
+            } else {
+                // Default (belum lunas, masih jalan)
+                $newTrxStatus = 'Pending';
+            }
+
+            $transaction->update([
+                'status' => $newTrxStatus,
+                'paid_at' => ($newTrxStatus === 'Completed') ? now() : null
+            ]);
+
+            // Update user status kalau transaksi sudah lunas
+            if ($newTrxStatus === 'Completed') {
+                $user = $transaction->user;
+                if ($user && $user->status_id != 2) {
+                    $user->update(['status_id' => 2]); // Paid Student
+                }
+            }
+
+            DB::commit();
+
             return response()->json([
-                'success' => false,
-                'message' => 'Aksi tidak valid.'
-            ], 400);
+                'success' => true,
+                'message' => 'Cicilan berhasil diverifikasi.',
+                'transaction_status' => $newTrxStatus
+            ]);
 
         } catch (\Exception $e) {
-            Log::error('Verifikasi transaksi gagal: ' . $e->getMessage());
+            DB::rollBack();
+            Log::error('Verifikasi cicilan gagal: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
-                'message' => 'Gagal memverifikasi transaksi.'
+                'message' => 'Gagal memverifikasi cicilan.'
             ], 500);
         }
     }
 
+
+
     public function verifyWithMeeting(Request $request)
-    {
-        $request->validate([
-            'transaction_id' => 'required|exists:transactions,id',
-            'meeting_date' => 'required|date',
-            'meeting_time' => 'required',
-            'meet_link' => 'required|url',
+{
+    // 👉 Jika tombol Tolak ditekan
+    if ($request->has('reject')) {
+        $transaction = Transaction::findOrFail($request->transaction_id);
+
+        $transaction->update([
+            'status' => 'Failed',
         ]);
 
-        try {
-            $transaction = Transaction::with('user')->findOrFail($request->transaction_id);
-
-            if ($transaction->status !== 'Pending' && $transaction->status !== 'Verification') {
-                return redirect()->back()->with('error', 'Transaksi tidak dalam status Pending atau Verification.');
-            }
-
-            // ✅ Update transaksi
-            $transaction->update([
-                'status' => 'Completed',
-                'paid_at' => now()
-            ]);
-
-            $this->updateUserStatus($transaction);
-
-            // ✅ Update announcement
-            $announcement = Announcement::where('type', 'auto booking success')
-                ->where('status', 'published')
-                ->latest()
-                ->first();
-
-            if (!$announcement) {
-                return redirect()->back()->with('error', 'Pengumuman auto booking success tidak ditemukan.');
-            }
-
-            $scheduledAt = Carbon::parse($request->meeting_date . ' ' . $request->meeting_time);
-
-            $announcement->update([
-                'meet_link' => $request->meet_link,
-                'scheduled_at' => $scheduledAt,
-            ]);
-
-            // ✅ Kirim email ke semua user dengan status_id = 2 (Booking Paid)
-            $users = User::where('status_id', 2)->get();
-
-            foreach ($users as $user) {
-                Mail::to($user->email)->send(new \App\Mail\MeetingInvitationMail(
-                    $user,
-                    $announcement->title,
-                    $announcement->content,
-                    $request->meet_link,
-                    $scheduledAt
-                ));
-            }
-
-            return redirect()->back()->with('success', 'Transaksi disetujui, pengumuman diperbarui, dan email undangan meeting telah dikirim.');
-
-        } catch (\Exception $e) {
-            \Log::error('Gagal verifikasi dengan meeting: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Gagal menyetujui transaksi.');
-        }
+        return redirect()->back()->with('success', 'Transaksi berhasil ditolak.');
     }
+
+    // 👉 Kalau Terima, jalankan validasi & proses meeting (kode kamu yang sudah ada)
+    $request->validate([
+        'transaction_id' => 'required|exists:transactions,id',
+        'meeting_date' => 'required|date',
+        'meeting_time' => 'required',
+        'meet_link' => 'required|url',
+    ]);
+
+    try {
+        $transaction = Transaction::with('user')->findOrFail($request->transaction_id);
+
+        if ($transaction->status !== 'Pending' && $transaction->status !== 'Verification') {
+            return redirect()->back()->with('error', 'Transaksi tidak dalam status Pending atau Verification.');
+        }
+
+        // ✅ Update transaksi
+        $transaction->update([
+            'status' => 'Completed',
+            'paid_at' => now()
+        ]);
+
+        $this->updateUserStatus($transaction);
+
+        // ✅ Update announcement
+        $announcement = Announcement::where('type', 'auto booking success')
+            ->where('status', 'published')
+            ->latest()
+            ->first();
+
+        if (!$announcement) {
+            return redirect()->back()->with('error', 'Pengumuman auto booking success tidak ditemukan.');
+        }
+
+        $scheduledAt = Carbon::parse($request->meeting_date . ' ' . $request->meeting_time);
+
+        $announcement->update([
+            'meet_link' => $request->meet_link,
+            'scheduled_at' => $scheduledAt,
+        ]);
+
+        // ✅ Kirim email
+        $users = User::where('status_id', 2)->get();
+
+        foreach ($users as $user) {
+            Mail::to($user->email)->send(new \App\Mail\MeetingInvitationMail(
+                $user,
+                $announcement->title,
+                $announcement->content,
+                $request->meet_link,
+                $scheduledAt
+            ));
+        }
+
+        return redirect()->back()->with('success', 'Transaksi disetujui, pengumuman diperbarui, dan email undangan meeting telah dikirim.');
+
+    } catch (\Exception $e) {
+        \Log::error('Gagal verifikasi dengan meeting: ' . $e->getMessage());
+        return redirect()->back()->with('error', 'Gagal menyetujui transaksi.');
+    }
+}
+
 
     private function updateUserStatus($transaction)
     {
@@ -460,7 +523,7 @@ class ManageTransactionController extends Controller
 
         $installments = $query->latest()->paginate(15);
 
-        return view('admin.cicilanProgramKelas', compact('installments'));
+        return view('admin.transaksi', ['tab' => 'installments'], compact('installments'));
     }
 
     public function verifyInstallment(Request $request, $id)

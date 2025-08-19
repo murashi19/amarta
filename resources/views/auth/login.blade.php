@@ -78,7 +78,7 @@
                             </div>
 
                             {{-- Remember Me --}}
-                            <div class="mb-4">
+                            <!-- <div class="mb-4">
                                 <div class="form-check">
                                     <input class="form-check-input" 
                                            type="checkbox" 
@@ -88,7 +88,7 @@
                                         Ingat saya
                                     </label>
                                 </div>
-                            </div>
+                            </div> -->
 
                             {{-- Submit Button --}}
                             <div class="d-grid mb-3">
@@ -104,7 +104,7 @@
                 <div class="text-center mt-4">
                     <p class="text-muted mb-0">
                         Belum punya akun? 
-                        <a href="{{ url('form') }}" class="text-decoration-none">
+                        <a href="{{ url('register') }}" class="text-decoration-none">
                             Daftar di sini
                         </a>
                     </p>

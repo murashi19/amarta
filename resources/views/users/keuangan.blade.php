@@ -357,133 +357,130 @@
         </div>
     </div>
 
-    <div class="container">
-        <!-- Summary Cards -->
-            @php
-                $userStatus = Auth::user()->status->name ?? 'Unknown';
-                $isDeparturePaid = $userStatus === 'Departure Paid';
-            @endphp
+    <!-- Summary Cards -->
+        @php
+            $userStatus = Auth::user()->status->name ?? 'Unknown';
+            $isProgramPaid = $userStatus === 'Pemantapan';
+            $isPemantapanPaid = $userStatus === 'Pemberangkatan';
+        @endphp
 
-            <div class="row mb-4">
-                <!-- Total Tagihan -->
-                <div class="col-lg-3 col-md-6 mb-3">
-                    <div class="summary-card fade-in" style="animation-delay: 0.1s;">
-                        <div class="card-icon">
-                            <i class="fas fa-calculator"></i>
-                        </div>
-                        <h6 class="card-title">Total Tagihan</h6>
-                        <div class="amount">
-                            Rp {{ number_format(
-                                $isDeparturePaid ? $totalBiaya : ($biayaBooking + $biayaDp),
-                                0, ',', '.'
-                            ) }}
-                        </div>
-                        <small class="text-muted">
-                            {{ $userClass->classProgram->name ?? 'Program Bahasa Jepang N5' }}
-                        </small>
+        <div class="row mb-4">
+            <!-- Total Tagihan -->
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="summary-card fade-in" style="animation-delay: 0.1s;">
+                    <div class="card-icon">
+                        <i class="fas fa-calculator"></i>
                     </div>
-                </div>
-
-                <!-- Program Kelas -->
-                <div class="col-lg-3 col-md-6 mb-3">
-                    <div class="summary-card fade-in" style="animation-delay: 0.2s;">
-                        <div class="card-icon">
-                            <i class="fas fa-book-open"></i>
-                        </div>
-                        <h6 class="card-title">Program Kelas</h6>
-                        <div class="amount">Rp {{ number_format($biayaDp, 0, ',', '.') }}</div>
-                        <small class="text-muted">
-                            @if($dpTransaction && $dpTransaction->status == 'Completed')
-                                <span class="badge badge-paid">Sudah Dibayar</span>
-                            @elseif($bookingTransaction && $bookingTransaction->status == 'Completed')
-                                <span class="badge badge-pending">Belum Dibayar</span>
-                            @else
-                                <span class="badge badge-waiting">Menunggu Booking</span>
-                            @endif
-                        </small>
+                    <h6 class="card-title">Total Tagihan</h6>
+                    <div class="amount">
+                        Rp {{ number_format(
+                            isset($totalBiaya) ? $totalBiaya : ($biayaBooking + $biayaDp + $biayaPemantapan + $biayaPemberangkatan),
+                            0, ',', '.'
+                        ) }}
                     </div>
-                </div>
-
-                <!-- Biaya Pemantapan -->
-                <div class="col-lg-3 col-md-6 mb-3">
-                    <div class="summary-card fade-in" style="animation-delay: 0.3s;">
-                        <div class="card-icon">
-                            <i class="fas fa-user-graduate"></i>
-                        </div>
-                        <h6 class="card-title">Biaya Pemantapan</h6>
-                        <div class="amount">
-                            {{ $isDeparturePaid ? 'Rp ' . number_format($biayaPemantapan, 0, ',', '.') : 'Rp -' }}
-                        </div>
-                        <small class="text-muted">
-                            {{ $isDeparturePaid ? 'Wajib dibayar sebelum keberangkatan' : 'Tampilkan saat status: Departure Paid' }}
-                        </small>
-                    </div>
-                </div>
-
-                <!-- Biaya Pemberangkatan -->
-                <div class="col-lg-3 col-md-6 mb-3">
-                    <div class="summary-card fade-in" style="animation-delay: 0.4s;">
-                        <div class="card-icon">
-                            <i class="fas fa-plane-departure"></i>
-                        </div>
-                        <h6 class="card-title">Pemberangkatan</h6>
-                        <div class="amount">
-                            {{ $isDeparturePaid ? 'Rp ' . number_format($biayaPemberangkatan, 0, ',', '.') : 'Rp -' }}
-                        </div>
-                        <small class="text-muted">
-                            {{ $isDeparturePaid ? 'Segera lakukan pembayaran' : 'Tunggu sampai status: Departure Paid' }}
-                        </small>
-                    </div>
+                    <small class="text-muted">
+                        {{ $userClass->classProgram->name ?? 'Program Bahasa Jepang N5' }}
+                    </small>
                 </div>
             </div>
 
-        
-            <!-- Info Alert -->
-            <div class="alert info-alert fade-in" role="alert">
-                <div class="row align-items-center">
-                    <div class="col-auto">
-                        <i class="fas fa-info-circle alert-icon text-primary"></i>
+            <!-- Program Kelas -->
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="summary-card fade-in" style="animation-delay: 0.2s;">
+                    <div class="card-icon">
+                        <i class="fas fa-book-open"></i>
                     </div>
-                    <div class="col">
-                        <h5 class="alert-heading mb-2"><i class="fas fa-credit-card me-2"></i>Informasi Pembayaran</h5>
-                        <div class="row">
-                            <div class="col-md-12 mb-2">
-                                <strong>Total Biaya Program {{ $userClass->classProgram->name ?? 'Bahasa Jepang N5' }}:</strong> 
-                                <span class="text-primary fw-bold">
-                                    Rp {{ number_format($totalBiaya ?? 15000000, 0, ',', '.') }}
-                                </span>
-                            </div>
-                            <div class="col-md-12 mb-2">
-                                <strong>Sistem Pembayaran Bertahap:</strong>
-                                <ul class="mb-0 mt-1">
-                                    <li>Booking Class: <span class="fw-bold">Rp {{ number_format($biayaBooking ?? 500000, 0, ',', '.') }}</span></li>
-                                    <li>Program Kelas: <span class="fw-bold">Rp {{ number_format($biayaDp ?? 7000000, 0, ',', '.') }}</span></li>
-                                    <li>Biaya Pemantapan: 
-                                        <span class="fw-bold">
-                                            @if(($user->status->name ?? '') === 'Departure Paid')
-                                                Rp {{ number_format($biayaPemantapan ?? 20000000, 0, ',', '.') }}
-                                            @else
-                                                -
-                                            @endif
-                                        </span>
-                                    </li>
-                                    <li>Biaya Pemberangkatan: 
-                                        <span class="fw-bold">
-                                            @if(($user->status->name ?? '') === 'Departure Paid')
-                                                Rp {{ number_format($biayaPemberangkatan ?? 35000000, 0, ',', '.') }}
-                                            @else
-                                                -
-                                            @endif
-                                        </span>
-                                    </li>
-                                </ul>
-                            </div>
+                    <h6 class="card-title">Program Kelas</h6>
+                    <div class="amount">Rp {{ number_format($biayaDp, 0, ',', '.') }}</div>
+                    <small class="text-muted">
+                        @if($dpTransaction && $dpTransaction->status == 'Completed')
+                            <span class="badge badge-paid">Sudah Dibayar</span>
+                        @elseif($bookingTransaction && $bookingTransaction->status == 'Completed')
+                            <span class="badge badge-pending">Belum Dibayar</span>
+                        @else
+                            <span class="badge badge-waiting">Menunggu Booking</span>
+                        @endif
+                    </small>
+                </div>
+            </div>
+
+            <!-- Biaya Pemantapan -->
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="summary-card fade-in" style="animation-delay: 0.3s;">
+                    <div class="card-icon">
+                        <i class="fas fa-user-graduate"></i>
+                    </div>
+                    <h6 class="card-title">Biaya Pemantapan</h6>
+                    <div class="amount">
+                        {{ $isProgramPaid ? 'Rp ' . number_format($biayaPemantapan, 0, ',', '.') : 'Rp -' }}
+                    </div>
+                    <small class="text-muted">
+                        {{ $isProgramPaid ? 'Wajib dibayar sebelum keberangkatan' : 'Tampilkan saat status: Pemantapan' }}
+                    </small>
+                </div>
+            </div>
+
+            <!-- Biaya Pemberangkatan -->
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="summary-card fade-in" style="animation-delay: 0.4s;">
+                    <div class="card-icon">
+                        <i class="fas fa-plane-departure"></i>
+                    </div>
+                    <h6 class="card-title">Pemberangkatan</h6>
+                    <div class="amount">
+                        {{ $isPemantapanPaid ? 'Rp ' . number_format($biayaPemberangkatan, 0, ',', '.') : 'Rp -' }}
+                    </div>
+                    <small class="text-muted">
+                        {{ $isPemantapanPaid ? 'Segera lakukan pembayaran' : 'Tunggu sampai status: Pemberangkatan' }}
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Info Alert -->
+        <div class="alert info-alert fade-in" role="alert">
+            <div class="row align-items-center">
+                <div class="col-auto">
+                    <i class="fas fa-info-circle alert-icon text-primary"></i>
+                </div>
+                <div class="col">
+                    <h5 class="alert-heading mb-2"><i class="fas fa-credit-card me-2"></i>Informasi Pembayaran</h5>
+                    <div class="row">
+                        <div class="col-md-12 mb-2">
+                            <strong>Total Biaya Program {{ $userClass->classProgram->name ?? 'Bahasa Jepang N5' }}:</strong> 
+                            <span class="text-primary fw-bold">
+                                Rp {{ number_format($totalBiaya ?? 15000000, 0, ',', '.') }}
+                            </span>
+                        </div>
+                        <div class="col-md-12 mb-2">
+                            <strong>Sistem Pembayaran Bertahap:</strong>
+                            <ul class="mb-0 mt-1">
+                                <li>Booking Class: <span class="fw-bold">Rp {{ number_format($biayaBooking ?? 500000, 0, ',', '.') }}</span></li>
+                                <li>Program Kelas: <span class="fw-bold">Rp {{ number_format($biayaDp ?? 7000000, 0, ',', '.') }}</span></li>
+                                <li>Biaya Pemantapan: 
+                                    <span class="fw-bold">
+                                        @if(($user->status->name ?? '') === 'Pemantapan')
+                                            Rp {{ number_format($biayaPemantapan ?? 20000000, 0, ',', '.') }}
+                                        @else
+                                            -
+                                        @endif
+                                    </span>
+                                </li>
+                                <li>Biaya Pemberangkatan: 
+                                    <span class="fw-bold">
+                                        @if(($user->status->name ?? '') === 'Pemberangkatan')
+                                            Rp {{ number_format($biayaPemberangkatan ?? 35000000, 0, ',', '.') }}
+                                        @else
+                                            -
+                                        @endif
+                                    </span>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </div>
             </div>
-
-
+        </div>
 
         <!-- Navigation Tabs -->
         <div class="row mb-4">
@@ -513,7 +510,7 @@
             </div>
         </div>
 
-        <!-- Tab Content -->
+       <!-- Tab Content -->
         <div class="tab-content" id="paymentTabsContent">
             <!-- Ringkasan Tagihan Tab -->
             <div class="tab-pane fade show active" id="tagihan" role="tabpanel">
@@ -629,7 +626,7 @@
                                     </td>
                                     <td>
                                         <strong class="text-secondary">
-                                            @if(($user->status->name ?? '') === 'Departure Paid')
+                                            @if(($user->status->name ?? '') === 'Pemantapan')
                                                 Rp {{ number_format($biayaPemantapan ?? 20000000, 0, ',', '.') }}
                                             @else
                                                 -
@@ -655,7 +652,7 @@
                                     </td>
                                     <td>
                                         @if($dpTransaction && $dpTransaction->status == 'Completed' && !$pemantapanPaid)
-                                            <a href="#" class="btn btn-custom btn-pay btn-sm">
+                                            <a href="{{ route('transaksi.showSinglePayment', 'pemantapan') }}"  class="btn btn-custom btn-pay btn-sm">
                                                 <i class="fas fa-credit-card me-1"></i>Bayar
                                             </a>
                                         @elseif($pemantapanPaid)
@@ -681,7 +678,7 @@
                                     </td>
                                     <td>
                                         <strong class="text-warning">
-                                            @if(($user->status->name ?? '') === 'Departure Paid')
+                                            @if(($user->status->name ?? '') === 'Pemberangkatan')
                                                 Rp {{ number_format($biayaPemberangkatan ?? 35000000, 0, ',', '.') }}
                                             @else
                                                 -
@@ -707,7 +704,7 @@
                                     </td>
                                     <td>
                                         @if($pemantapanPaid && !$pemberangkatanPaid)
-                                            <a href="#" class="btn btn-custom btn-pay btn-sm">
+                                            <a href="{{ route('transaksi.showSinglePayment', 'pemberangkatan') }}" class="btn btn-custom btn-pay btn-sm">
                                                 <i class="fas fa-credit-card me-1"></i>Bayar
                                             </a>
                                         @elseif($pemberangkatanPaid)
@@ -769,10 +766,11 @@
                         </div>
                     </div>
                 </div>
+                
                 @if($bookingTransaction && $bookingTransaction->status == 'Completed')
                     <div class="card table-card mb-4">
                         <div class="card-header bg-transparent border-0 p-3">
-                            <h5 class="mb-0"><i class="fas fa-book-open me-2"></i>Detail Biaya Pemantapan</h5>
+                            <h5 class="mb-0"><i class="fas fa-book-open me-2"></i>Detail Biaya Program Kelas</h5>
                         </div>
                         <div class="table-responsive">
                             <table class="table align-middle">
@@ -813,7 +811,7 @@
                                                 <a href="{{ $dpTransaction && $dpTransaction->id 
                                                     ? route('transaksi.programKelas', ['id' => $dpTransaction->id]) 
                                                     : route('transaksi.programKelas.createProgramKelas') }}" 
-                                                    class="btn btn-primary btn-sm">
+                                                    class="btn btn-custom btn-pay btn-sm">
                                                     <i class="fas fa-credit-card me-1"></i>Bayar
                                                 </a>
                                             @else
@@ -827,8 +825,6 @@
                             </table>
                         </div>
                     </div>
-                </div>
-            </div>
 
                     {{-- Riwayat Cicilan --}}
                     @if(!empty($feePayments) && $feePayments->count() > 0)
@@ -900,7 +896,6 @@
                             </div>
                         </div>
                     @endif
-
                 @else
                     {{-- Empty State --}}
                     <div class="empty-state text-center p-4">
@@ -917,8 +912,6 @@
                     </div>
                 @endif
             </div>
-        </div>
-
 
             <!-- Konten Pemantapan Tab -->
             <div class="tab-pane fade" id="pemantapan" role="tabpanel">
@@ -930,7 +923,7 @@
                                     <i class="fas fa-book-open"></i>
                                 </div>
                                 <h5>Biaya Pemantapan</h5>
-                                @if($user->status->name === 'Departure Paid')
+                                @if($user->status->name === 'Pemantapan')
                                     <h3 class="text-info">Rp {{ number_format($biayaPemantapan ?? 20000000, 0, ',', '.') }}</h3>
                                 @else
                                     <h3 class="text-muted">-</h3>
@@ -1004,12 +997,9 @@
                                         </td>
                                         <td>
                                             @if(!$pemantapanPaid)
-                                                <a href="#" class="btn btn-custom btn-pay btn-sm">
+                                                <a href="{{ route('transaksi.showSinglePayment', 'pemantapan') }}" 
+                                                    class="btn btn-custom btn-pay btn-sm">
                                                     <i class="fas fa-credit-card me-1"></i>Bayar
-                                                </a>
-                                            @elseif($pemantapanTransaction?->xendit_invoice_id)
-                                                <a href="#" class="btn btn-outline-primary btn-sm">
-                                                    <i class="fas fa-file-invoice me-1"></i>Invoice
                                                 </a>
                                             @else
                                                 <span class="btn btn-custom btn-success-custom btn-sm">
@@ -1042,27 +1032,21 @@
                     <div class="col-lg-4 mb-4">
                         <div class="card table-card">
                             <div class="card-body text-center">
-                                <div class="card-icon mx-auto mb-3" style="background: linear-gradient(135deg, #f093fb, #f5576c);">
-                                    <i class="fas fa-plane-departure"></i>
+                                <div class="card-icon mx-auto mb-3" style="background: linear-gradient(135deg, #4ecdc4, #44a08d);">
+                                    <i class="fas fa-plane"></i>
                                 </div>
                                 <h5>Biaya Pemberangkatan</h5>
-
-                                @if(($user->status->name ?? '') === 'Departure Paid')
-                                    <h3 class="text-warning">
-                                        Rp {{ number_format($biayaPemberangkatan ?? 35000000, 0, ',', '.') }}
-                                    </h3>
+                                @if($user->status->name === 'Pemberangkatan')
+                                    <h3 class="text-warning">Rp {{ number_format($biayaPemberangkatan ?? 35000000, 0, ',', '.') }}</h3>
                                 @else
-                                    <h3 class="text-warning">-</h3>
+                                    <h3 class="text-muted">-</h3>
                                 @endif
-
                                 <p class="text-muted">
                                     Status: 
-                                    @if($pemantapanTransaction && $pemantapanTransaction->status == 'Completed')
-                                        @if($pemberangkatanPaid)
-                                            <span class="badge badge-paid">Sudah Dibayar</span>
-                                        @else
-                                            <span class="badge badge-pending">Belum Dibayar</span>
-                                        @endif
+                                    @if($pemberangkatanPaid)
+                                        <span class="badge badge-paid">Sudah Dibayar</span>
+                                    @elseif($pemantapanPaid)
+                                        <span class="badge badge-pending">Belum Dibayar</span>
                                     @else
                                         <span class="badge badge-waiting">Menunggu Pemantapan</span>
                                     @endif
@@ -1074,27 +1058,21 @@
                     <div class="col-lg-8 mb-4">
                         <div class="alert info-alert">
                             <h6><i class="fas fa-info-circle me-2"></i>Informasi Biaya Pemberangkatan</h6>
-                            @if($pemantapanTransaction && $pemantapanTransaction->status == 'Completed')
-                                <ul class="mb-0">
-                                    <li>Biaya pemberangkatan sudah tersedia untuk dibayar</li>
-                                    <li>Mencakup tiket pesawat, visa, transportasi, jaket almamater, dan keperluan lainnya</li>
-                                    <li>Jadwal keberangkatan akan diinformasikan setelah pembayaran</li>
-                                </ul>
-                            @else
-                                <ul class="mb-0">
-                                    <li>Biaya tersedia setelah menyelesaikan pembayaran Pemantapan</li>
-                                    <li>Digunakan untuk keperluan keberangkatan ke Jepang</li>
-                                    <li>Harap selesaikan semua pembayaran sebelumnya terlebih dahulu</li>
-                                </ul>
-                            @endif
+                            <ul class="mb-0">
+                                <li>Biaya ini digunakan untuk: Tiket pesawat, Visa, dan keperluan pemberangkatan ke Jepang.</li>
+                                <li>Akses pemberangkatan akan diberikan setelah pembayaran selesai.</li>
+                                @if(!$pemantapanPaid || $user->status->name !== 'Pemberangkatan')
+                                    <li><strong>Anda harus menyelesaikan Program Kelas dan Pemantapan terlebih dahulu.</strong></li>
+                                @endif
+                            </ul>
                         </div>
                     </div>
                 </div>
 
-                @if($pemantapanTransaction && $pemantapanTransaction->status == 'Completed')
+                @if($pemantapanPaid)
                     <div class="card table-card">
                         <div class="card-header bg-transparent border-0 p-3">
-                            <h5 class="mb-0"><i class="fas fa-plane-departure me-2"></i>Detail Biaya Pemberangkatan</h5>
+                            <h5 class="mb-0"><i class="fas fa-plane me-2"></i>Detail Biaya Pemberangkatan</h5>
                         </div>
                         <div class="table-responsive">
                             <table class="table">
@@ -1109,11 +1087,13 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>{{ $pemberangkatanTransaction->paid_at?->format('d/m/Y H:i') ?? date('d/m/Y') }}</td>
+                                        <td>
+                                            {{ $pemberangkatanTransaction?->paid_at ? $pemberangkatanTransaction->paid_at->format('d/m/Y H:i') : '-' }}
+                                        </td>
                                         <td>
                                             <div>
-                                                <strong>Pemberangkatan - {{ $userClass->classProgram->name ?? 'Program Bahasa Jepang N5' }}</strong>
-                                                <br><small class="text-muted">Tiket, visa, transportasi, dan keperluan keberangkatan</small>
+                                                <strong>Pembayaran Pemberangkatan</strong><br>
+                                                <small class="text-muted">Tiket, visa, keperluan Jepang</small>
                                             </div>
                                         </td>
                                         <td>
@@ -1130,19 +1110,14 @@
                                         </td>
                                         <td>
                                             @if(!$pemberangkatanPaid)
-                                                <a href="#" class="btn btn-custom btn-pay btn-sm">
+                                                <a href="{{ route('transaksi.showSinglePayment', 'pemberangkatan') }}"  
+                                                    class="btn btn-custom btn-pay btn-sm">
                                                     <i class="fas fa-credit-card me-1"></i>Bayar
                                                 </a>
                                             @else
-                                                @if($pemberangkatanTransaction->xendit_invoice_id)
-                                                    <a href="#" class="btn btn-outline-primary btn-sm">
-                                                        <i class="fas fa-file-invoice me-1"></i>Invoice
-                                                    </a>
-                                                @else
-                                                    <span class="btn btn-custom btn-success-custom btn-sm">
-                                                        <i class="fas fa-check me-1"></i>Lunas
-                                                    </span>
-                                                @endif
+                                                <span class="btn btn-custom btn-success-custom btn-sm">
+                                                    <i class="fas fa-check me-1"></i>Lunas
+                                                </span>
                                             @endif
                                         </td>
                                     </tr>
@@ -1153,19 +1128,18 @@
                 @else
                     <div class="empty-state">
                         <div class="empty-state-icon">
-                            <i class="fas fa-plane-departure"></i>
+                            <i class="fas fa-hourglass-half"></i>
                         </div>
-                        <h4>Biaya Pemberangkatan Belum Tersedia</h4>
-                        <p>Silahkan selesaikan pembayaran Pemantapan terlebih dahulu untuk membuka akses pembayaran biaya pemberangkatan</p>
+                        <h4>Pembayaran Belum Dibuka</h4>
+                        <p>Silahkan selesaikan pembayaran Pemantapan terlebih dahulu untuk membuka akses pembayaran Pemberangkatan.</p>
                         <a href="#" class="btn btn-custom btn-pay" onclick="document.getElementById('pemantapan-tab').click()">
-                            <i class="fas fa-book-open me-2"></i>Lihat Biaya Pemantapan
+                            <i class="fas fa-bookmark me-2"></i>Bayar Pemantapan
                         </a>
                     </div>
                 @endif
             </div>
-
         </div>
-    </div>
+
     <!-- Modal konfirmasi Bootstrap -->
     <div class="modal fade" id="confirmPaymentModal" tabindex="-1" aria-labelledby="confirmPaymentModalLabel" aria-hidden="true">
         <div class="modal-dialog">

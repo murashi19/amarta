@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Carbon\Carbon; 
 
 class AuthController extends Controller
@@ -29,16 +30,28 @@ class AuthController extends Controller
         try {
             $request->validate([
                 'name' => ['required', 'string', 'max:255'],
-                'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+                'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
                 'password' => ['required', 'string', 'min:8', 'confirmed'],
-                'phone_number' => ['required', 'string', 'max:255'],
+                'gender' => ['required', Rule::in(['Laki-laki', 'Perempuan'])],
+                'phone_number' => ['required', 'string', 'max:255', 'unique:users,phone_number'],
                 'address' => ['required', 'string', 'max:255'],
+                'birth_place' => ['nullable', 'string', 'max:255'], // opsional
                 'birth_date' => ['required', 'date'],
-                'education_level' => ['required', 'string', 'max:255'],
+                'education_level' => [
+                    'required',
+                    Rule::in([
+                        'SMP/Sederajat',
+                        'SMA/SMK/Sederajat',
+                        'Diploma 3 (D3)',
+                        'Sarjana (S1)',
+                        'Lainnya'
+                    ])
+                ],
+                'photo' => ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:5120'],
             ]);
 
             $plainPassword = $request->password;
-            $otpCode = rand(100000, 999999); // OTP 6 digit angka
+            $otpCode = rand(100000, 999999); // kode OTP 6 digit
 
             // Mulai transaksi
             DB::transaction(function () use ($request, &$user, $plainPassword, $otpCode) {
@@ -47,7 +60,9 @@ class AuthController extends Controller
                     'email' => $request->email,
                     'password' => Hash::make($plainPassword),
                     'phone_number' => $request->phone_number,
-                    'status_id' => 8,
+                    'status_id' => 8, // status Verifikasi
+                    'gender' => $request->gender,
+                    'birth_place' => $request->birth_place,
                     'address' => $request->address,
                     'birth_date' => $request->birth_date,
                     'education_level' => $request->education_level,
@@ -91,23 +106,16 @@ class AuthController extends Controller
     {
         $request->validate([
             'email' => 'required|email',
-            'verification_code' => 'required|digits:6',
+            'verification_code' => 'required|numeric|digits:6',
         ]);
 
         $user = User::where('email', $request->email)
-                    ->where('status_id', 8)
+                    ->where('status_id', 8) // status Verifikasi
                     ->first();
 
-        // Cek apakah user ada
         if (!$user) {
             Log::error('Verification failed: User not found or already verified.', ['email' => $request->email]);
             return back()->withErrors(['error' => 'Akun tidak ditemukan atau sudah terverifikasi.']);
-        }
-
-        // Cek apakah kode OTP yang dimasukkan sama
-        if ($user->verification_code != $request->verification_code) {
-            Log::warning('Verification failed: Incorrect code.', ['email' => $request->email, 'input_code' => $request->verification_code]);
-            return back()->withErrors(['verification_code' => 'Kode verifikasi salah.']);
         }
 
         // Cek apakah kode OTP sudah kadaluwarsa
@@ -116,16 +124,27 @@ class AuthController extends Controller
             return back()->withErrors(['verification_code' => 'Kode verifikasi sudah kadaluwarsa. Silakan kirim ulang.']);
         }
 
-        // Jika semua validasi berhasil, update status user
-        $user->status_id = 1;
+        // Cek apakah kode OTP sesuai
+        if ($user->verification_code != $request->verification_code) {
+            Log::warning('Verification failed: Incorrect code.', [
+                'email' => $request->email,
+                'input_code' => $request->verification_code,
+                'expected_code' => $user->verification_code
+            ]);
+            return back()->withErrors(['verification_code' => 'Kode verifikasi salah.']);
+        }
+
+        // Jika semua validasi berhasil, update status user jadi Registered
+        $user->status_id = 1; // Registered
         $user->verification_code = null;
         $user->verification_expires_at = null;
         $user->save();
-        
+
         Log::info('User successfully verified.', ['email' => $user->email]);
 
         return redirect()->route('login')->with('success', 'Akun berhasil diverifikasi! Silakan login.');
     }
+
 
     // Function untuk mengirim ulang OTP
     public function resendOtp(Request $request)

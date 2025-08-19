@@ -564,42 +564,66 @@
                                     <th>Dibayar</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                @foreach($user->transactions as $trx)
-                                <tr>
-                                    <td>
-                                        <div style="font-weight: 500;">
-                                            {{ $trx->created_at->format('d M Y') }}
-                                        </div>
-                                        <small class="text-muted">{{ $trx->created_at->format('H:i') }}</small>
-                                    </td>
-                                    <td>
-                                        <span class="badge-type badge-{{ $trx->type }}">
-                                            {{ $trx->type == 'subscription' ? 'Berlangganan' : 'Pembelian' }}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <strong style="color: var(--gray-800);">
-                                            Rp {{ number_format($trx->amount, 0, ',', '.') }}
-                                        </strong>
-                                    </td>
-                                    <td>
-                                        <span class="badge-type badge-{{ strtolower($trx->status) }}">
-                                            {{ $trx->status == 'Completed' ? 'Selesai' : ($trx->status == 'Pending' ? 'Menunggu' : 'Gagal') }}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        @if($trx->paid_at)
-                                            <div style="font-weight: 500;">
-                                                {{ \Carbon\Carbon::parse($trx->paid_at)->format('d M Y') }}
-                                            </div>
-                                            <small class="text-muted">{{ \Carbon\Carbon::parse($trx->paid_at)->format('H:i') }}</small>
-                                        @else
-                                            <span class="text-muted">-</span>
-                                        @endif
-                                    </td>
-                                </tr>
-                                @endforeach
+                            <tbody>                                 
+                                @foreach($transactions as $trx)                                     
+                                    {{-- Transaksi utama --}}                                     
+                                    <tr>                                         
+                                        <td>{{ $trx->created_at->format('d M Y') }}</td>                                         
+                                        <td><span class="badge bg-primary">{{ ucfirst($trx->type) }}</span></td>                                         
+                                        <td>Rp {{ number_format($trx->amount, 0, ',', '.') }}</td>                                         
+                                        <td>                                             
+                                            @if(strtolower($trx->status) === 'paid' || strtolower($trx->status) === 'success' || strtolower($trx->status) === 'completed')
+                                                <span class="badge bg-success">{{ $trx->status }}</span>
+                                            @elseif(strtolower($trx->status) === 'pending' || strtolower($trx->status) === 'waiting')
+                                                <span class="badge bg-warning">{{ $trx->status }}</span>
+                                            @elseif(strtolower($trx->status) === 'failed' || strtolower($trx->status) === 'cancelled' || strtolower($trx->status) === 'expired')
+                                                <span class="badge bg-danger">{{ $trx->status }}</span>
+                                            @elseif(strtolower($trx->status) === 'processing')
+                                                <span class="badge bg-info">{{ $trx->status }}</span>
+                                            @else
+                                                <span class="badge bg-secondary">{{ $trx->status }}</span>
+                                            @endif
+                                        </td>                                         
+                                        <td>                                             
+                                            @if($trx->paid_at)                                                 
+                                                {{ $trx->paid_at->format('d M Y H:i') }}                                             
+                                            @else                                                 
+                                                <span class="text-muted">-</span>                                             
+                                            @endif                                         
+                                        </td>                                     
+                                    </tr>                                      
+
+                                    {{-- Cicilan untuk DP --}}                                     
+                                    @if($trx->type === 'dp' && $trx->feePayments->count())                                         
+                                        @foreach($trx->feePayments as $cicil)                                             
+                                            <tr class="table-light">                                                 
+                                                <td>{{ $cicil->created_at->format('d M Y') }}</td>                                                 
+                                                <td><span class="badge bg-secondary">Cicilan DP{{ $cicil->installment_number }}</span></td>                                                 
+                                                <td>Rp {{ number_format($cicil->amount, 0, ',', '.') }}</td>                                                 
+                                                <td>                                                     
+                                                    @if(strtolower($cicil->status) === 'paid' || strtolower($cicil->status) === 'success' || strtolower($cicil->status) === 'completed')
+                                                        <span class="badge bg-success">{{ $cicil->status }}</span>
+                                                    @elseif(strtolower($cicil->status) === 'pending' || strtolower($cicil->status) === 'waiting')
+                                                        <span class="badge bg-warning">{{ $cicil->status }}</span>
+                                                    @elseif(strtolower($cicil->status) === 'failed' || strtolower($cicil->status) === 'cancelled' || strtolower($cicil->status) === 'expired')
+                                                        <span class="badge bg-danger">{{ $cicil->status }}</span>
+                                                    @elseif(strtolower($cicil->status) === 'processing')
+                                                        <span class="badge bg-info">{{ $cicil->status }}</span>
+                                                    @else
+                                                        <span class="badge bg-secondary">{{ $cicil->status }}</span>
+                                                    @endif
+                                                </td>                                                 
+                                                <td>                                                     
+                                                    @if($cicil->paid_at)                                                         
+                                                        {{ \Carbon\Carbon::parse($cicil->paid_at)->format('d M Y H:i') }}                                                     
+                                                    @else                                                         
+                                                        <span class="text-muted">-</span>                                                     
+                                                    @endif                                                 
+                                                </td>                                             
+                                            </tr>                                         
+                                        @endforeach                                     
+                                    @endif                                 
+                                @endforeach                             
                             </tbody>
                         </table>
                     </div>

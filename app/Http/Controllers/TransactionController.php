@@ -116,13 +116,13 @@ class TransactionController extends Controller
         $trx->update(['status' => 'verification']);
 
         return redirect()->route('dashboard.users')
-    ->with('success', 'Bukti pembayaran berhasil dikirim. Menunggu verifikasi admin.');
+        ->with('success', 'Bukti pembayaran berhasil dikirim. Menunggu verifikasi admin.');
 
     }
 
 
 
-  public function createProgramKelas()
+    public function createProgramKelas()
     {
         $user = Auth::user();
 
@@ -173,19 +173,32 @@ class TransactionController extends Controller
             abort(403, 'Akses tidak diizinkan.');
         }
 
-        // Get all installments for this transaction
+        // Ambil semua cicilan
         $installments = FeePayment::where('transaction_id', $trx->id)
             ->orderBy('created_at', 'desc')
             ->get();
 
-        // Calculate total paid amount
-        $totalPaid = $installments->whereIn('status', ['Completed', 'Verification'])->sum('amount');
+        // Hitung total sudah dibayar
+        $totalPaid = $installments->where('status', 'Completed')->sum('amount');
 
-        // Get payment methods for display
+        // Cek apakah ada cicilan menunggu verifikasi
+        $hasPending = $installments->whereIn('status', ['Pending', 'Verification'])->isNotEmpty();
+
+        // Disable form kalau ada pending/verification atau transaksi sudah lunas
+        $isDisabled = $hasPending || $trx->status === 'Completed';
+
         $paymentMethods = PaymentMethod::all()->groupBy('type');
 
-        return view('transaksi.programKelas', compact('trx', 'installments', 'totalPaid', 'paymentMethods'));
+        return view('transaksi.programKelas', compact(
+            'trx',
+            'installments',
+            'totalPaid',
+            'paymentMethods',
+            'isDisabled',
+            'hasPending'
+        ));
     }
+
 
     /**
      * Store installment payment
@@ -200,10 +213,6 @@ class TransactionController extends Controller
 
             // 1. Authorization & Transaction State Checks
             if ($trx->user_id !== Auth::id()) {
-                \Log::warning('Unauthorized access attempt to store installment.', [
-                    'transaction_id' => $id,
-                    'user_id' => Auth::id()
-                ]);
                 return response()->json([
                     'success' => false,
                     'message' => 'Akses tidak diizinkan.'
@@ -223,8 +232,8 @@ class TransactionController extends Controller
                     'message' => 'Transaksi sudah expired.'
                 ], 400);
             }
-            
-            // Periksa apakah ini adalah transaksi yang bisa dicicil (misal: dp)
+
+            // Pastikan hanya transaksi DP yang bisa dicicil
             if ($trx->type !== 'dp') {
                 return response()->json([
                     'success' => false,
@@ -245,12 +254,6 @@ class TransactionController extends Controller
                 'payment_proof' => 'required|file|mimes:jpg,jpeg,png,pdf|max:5120',
                 'selected_method' => 'nullable|string|max:50',
                 'payment_notes' => 'nullable|string|max:500',
-            ], [
-                'amount.max' => 'Jumlah pembayaran melebihi sisa tagihan.',
-                'amount.min' => 'Minimal pembayaran adalah Rp 100.000.',
-                'payment_proof.required' => 'Bukti pembayaran harus diupload.',
-                'payment_proof.mimes' => 'Format file harus JPG, PNG, atau PDF.',
-                'payment_proof.max' => 'Ukuran file maksimal 5MB.',
             ]);
 
             // 4. File Upload
@@ -264,7 +267,7 @@ class TransactionController extends Controller
                 }
             }
 
-            // 5. Create Installment Record
+            // 5. Create Installment Record (FeePayment)
             $referenceNumber = 'INS-' . strtoupper(uniqid()) . '-' . $trx->id;
             $nextInstallmentNumber = FeePayment::where('transaction_id', $trx->id)->count() + 1;
 
@@ -279,24 +282,11 @@ class TransactionController extends Controller
                 'reference_number' => $referenceNumber,
                 'paid_at' => now(),
                 'expires_at' => now()->addHours(24),
-                'status' => 'Verification',
+                'status' => 'Verification', // default: menunggu verifikasi admin
             ]);
 
-            // 6. Update Transaction & User Status
-            $newTotalPaid = FeePayment::where('transaction_id', $trx->id)
-                ->whereIn('status', ['Completed', 'Verification'])
-                ->sum('amount');
-            $isFullyPaid = ($newTotalPaid >= $trx->amount);
-            $newTrxStatus = $isFullyPaid ? 'Completed' : 'Verification';
-
-            $trx->update(['status' => $newTrxStatus]);
-
-            $user = $trx->user;
-            // Perbarui status user jika memenuhi syarat
-            // Disesuaikan dengan alur bisnis Anda: dari 'Meeting Joined' (id 3) ke 'Active' (id 5)
-            if ($user && $user->status_id == 3) {
-                $user->update(['status_id' => 5]);
-            }
+            // 🚨 Tidak update transaksi dulu! Tunggu admin verify.
+            // Transaksi hanya berubah di function verify().
 
             DB::commit();
 
@@ -307,10 +297,9 @@ class TransactionController extends Controller
                     'installment_id' => $installment->id,
                     'reference_number' => $referenceNumber,
                     'amount' => $request->amount,
-                    'total_paid' => $newTotalPaid,
-                    'remaining' => $trx->amount - $newTotalPaid,
-                    'is_fully_paid' => $isFullyPaid,
-                    'status' => $newTrxStatus
+                    'total_paid' => $totalPaid + $request->amount,
+                    'remaining' => $trx->amount - ($totalPaid + $request->amount),
+                    'status' => 'Verification' // status cicilan, bukan transaksi
                 ]
             ]);
 
@@ -319,12 +308,6 @@ class TransactionController extends Controller
             if (isset($proofPath)) {
                 Storage::disk('public')->delete($proofPath);
             }
-            \Log::error('Validation error on installment payment.', [
-                'transaction_id' => $id,
-                'user_id' => Auth::id(),
-                'request_data' => $request->except(['payment_proof']),
-                'validation_errors' => $e->errors()
-            ]);
             return response()->json([
                 'success' => false,
                 'message' => 'Data tidak valid.',
@@ -336,12 +319,6 @@ class TransactionController extends Controller
             if (isset($proofPath)) {
                 Storage::disk('public')->delete($proofPath);
             }
-            \Log::error('Payment upload error: ' . $e->getMessage(), [
-                'transaction_id' => $id,
-                'user_id' => Auth::id(),
-                'request_data' => $request->except(['payment_proof'])
-            ]);
-
             return response()->json([
                 'success' => false,
                 'message' => 'Terjadi kesalahan saat memproses pembayaran: ' . $e->getMessage()
@@ -355,24 +332,25 @@ class TransactionController extends Controller
      */
     public function getPaymentMethodDetails(Request $request)
     {
-        $type = $request->get('type');
-        $method = $request->get('method');
+        $bankCode = strtolower($request->query('method'));
+        $type = $request->query('type', 'bank_transfer');
 
-        if ($type === 'transfer_bank' && $method) {
-            $paymentMethod = PaymentMethod::getByBankName($method);
-            
-            if ($paymentMethod) {
-                return response()->json([
-                    'success' => true,
-                    'data' => $paymentMethod
-                ]);
-            }
+        $bank = PaymentMethod::whereRaw('LOWER(bank_name) = ?', [$bankCode])
+            ->where('type', $type)
+            ->first();
+
+        if ($bank) {
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'bank_name'      => $bank->bank_name,
+                    'account_number' => $bank->account_number,
+                    'account_name'   => $bank->account_name
+                ]
+            ]);
         }
 
-        return response()->json([
-            'success' => false,
-            'message' => 'Metode pembayaran tidak ditemukan'
-        ], 404);
+        return response()->json(['success' => false], 404);
     }
 
     /**
@@ -456,6 +434,129 @@ class TransactionController extends Controller
         ]);
 
     }
+
+    /**
+     * Tampilkan halaman pembayaran single payment (Pemantapan / Pemberangkatan)
+     */
+    public function showSinglePayment($type)
+    {
+        // 🔒 Cek tipe transaksi
+        if (!in_array($type, ['pemantapan', 'pemberangkatan'])) {
+            abort(404, 'Tipe transaksi tidak valid.');
+        }
+
+        // Ambil transaksi terbaru milik user dengan tipe tersebut
+        $trx = Transaction::where('user_id', Auth::id())
+            ->where('type', $type)
+            ->latest()
+            ->firstOrFail();
+
+        $paymentMethods = PaymentMethod::all()->groupBy('type');
+        $bank = PaymentMethod::where('id', 2)->firstOrFail();
+
+        // 🔒 Pastikan status valid
+        if (!in_array($trx->status, ['Pending', 'Verification', 'Completed'])) {
+            abort(403, 'Status transaksi tidak valid.');
+        }
+
+        // 🔒 Cek kadaluarsa
+        if ($trx->expires_at && now()->greaterThan($trx->expires_at)) {
+            $trx->update(['status' => 'Failed']);
+            abort(403, 'Waktu pembayaran sudah habis. Transaksi kadaluarsa.');
+        }
+
+        // 🔒 Cek jika sudah lunas
+        if ($trx->status === 'Completed') {
+            abort(403, 'Transaksi ini sudah lunas.');
+        }
+
+        // 🔒 Cek jika ada bukti pembayaran
+        if ($trx->proof) {
+            abort(403, 'Transaksi ini sudah memiliki bukti pembayaran.');
+        }
+
+        $isDisabled = $trx->status !== 'Pending' && $trx->status !== 'Verification';
+
+        return view('transaksi.payment', compact(
+            'trx',
+            'paymentMethods',
+            'bank',
+            'isDisabled'
+        ));
+    }
+
+
+    /**
+     * Upload bukti pembayaran untuk transaksi single payment (Pemantapan / Pemberangkatan)
+     */
+    public function uploadSinglePaymentProof(Request $request, $id)
+    {
+        $trx = Transaction::findOrFail($id);
+
+        // 🔒 Cek kepemilikan
+        if ($trx->user_id !== Auth::id()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Akses tidak diizinkan.'
+            ], 403);
+        }
+
+        // 🔒 Cek tipe transaksi
+        if (!in_array($trx->type, ['pemantapan', 'pemberangkatan'])) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Transaksi ini bukan pembayaran Pemantapan atau Pemberangkatan.'
+            ], 400);
+        }
+
+        // 🔒 Pastikan status valid
+        if (!in_array($trx->status, ['Pending', 'Verification'])) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Transaksi ini tidak bisa diubah.'
+            ], 400);
+        }
+
+        // 🔒 Cek kadaluarsa
+        if ($trx->expires_at && now()->greaterThan($trx->expires_at)) {
+            $trx->update(['status' => 'Failed']);
+            return response()->json([
+                'success' => false,
+                'message' => 'Waktu pembayaran sudah habis. Transaksi kadaluarsa.'
+            ], 400);
+        }
+
+        // ✅ Validasi file
+        $request->validate([
+            'proof' => 'required|mimes:jpg,jpeg,png,pdf|max:5120',
+            'payment_method' => 'required|string|in:bank_transfer,ewallet,cash',
+            'selected_method' => 'nullable|string|max:50',
+            'payment_notes'   => 'nullable|string|max:500',
+        ]);
+
+        $path = $request->file('proof')->store('proofs', 'public');
+
+        // Simpan ke tabel fee_payments
+        $payment = FeePayment::create([
+            'transaction_id'  => $trx->id,
+            'amount'          => $trx->amount,
+            'payment_method'  => $request->payment_method,
+            'selected_method' => $request->selected_method,
+            'photo'           => $path,
+            'notes'           => $request->payment_notes,
+            'reference_number'=> strtoupper($trx->type) . '-' . uniqid(),
+            'paid_at'         => now(),
+            'status'          => 'Verification', // menunggu admin
+        ]);
+
+        // Update status transaksi jadi menunggu verifikasi
+        $trx->update(['status' => 'Verification']);
+
+        return redirect()->route('transaksi.showSinglePayment', ['id' => $trx->id])
+            ->with('success', 'Bukti pembayaran berhasil dikirim. Menunggu verifikasi admin.');
+    }
+
+
 
 }
 

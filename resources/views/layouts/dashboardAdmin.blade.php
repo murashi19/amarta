@@ -81,14 +81,14 @@
             box-shadow: var(--shadow-soft);
             z-index: 1000;
             transition: all 0.3s ease;
-            padding-top: 80px;
+            padding-top: 65px;
             overflow-y: auto;
         }
 
         .sidebar-header {
-            padding: 1.5rem;
+            padding: 1.8rem;
             border-bottom: 1px solid #e9ecef;
-            background: var(--gradient-light);
+            background: white;
         }
 
         .sidebar-menu {
@@ -421,6 +421,42 @@
             margin-top: 0.25rem;
             line-height: 1.3;
         }
+        /* Profile item di sidebar */
+        #sidebar {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        .sidebar-menu {
+            flex: 1; /* Menu mengisi sisa ruang */
+        }
+        .sidebar-menu .profile-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: var(--color-dark);
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .sidebar-menu .profile-item:hover {
+            background: var(--color-hover);
+            color: var(--color-primary);
+        }
+
+        .sidebar-menu .profile-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid var(--color-primary);
+            margin-right: 12px;
+        }
+        #mobileLogoutContainer {
+            padding: 15px 20px;
+            border-top: 1px solid var(--color-border);
+        }
+
     </style>
     @stack('styles')
 </head>
@@ -437,9 +473,10 @@
                 <i class="fas fa-bars text-white"></i>
             </button>
 
+            <!-- Profile Dropdown -->
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item dropdown">
+                    <li class="nav-item dropdown" id="profileDropdown">
                         <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
                              @if(Auth::user()->photo)
                                 <img 
@@ -471,9 +508,10 @@
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <h5 class="mb-0">Navigation</h5>
+            <h5 class="mb-0"></h5>
         </div>
-        <ul class="sidebar-menu">
+        <ul class="sidebar-menu" id="sidebarMenu">
+            <li id="mobileProfileContainer" class="d-md-none"></li>
             <li>
                 <a href="{{ url('dashboard/admin') }}" class="{{ request()->routeIs('dashboard.admin') ? 'active' : '' }}">
                     <i class="fas fa-tachometer-alt"></i>Dashboard
@@ -494,6 +532,7 @@
                     <i class="fas fa-users"></i>Manajemen User
                 </a>
             </li>
+            <div id="mobileLogoutContainer" class="d-md-none"></div>
         </ul>
     </div>
 
@@ -523,7 +562,7 @@
 
         @yield('content')
     </div>
-@stack('scripts')
+    
     <!-- Hidden logout form -->
     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
         @csrf
@@ -532,6 +571,57 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const profileDropdown = document.getElementById("profileDropdown");
+            const mobileProfileContainer = document.getElementById("mobileProfileContainer");
+            const mobileLogoutContainer = document.getElementById("mobileLogoutContainer");
+            const navbarProfileParent = document.querySelector("#navbarNav .navbar-nav");
+
+            const mobileProfileHTML = `
+                <a href="{{ url('admin/profile') }}" class="profile-item">
+                    @if(Auth::user()->photo)
+                        <img src="{{ asset('storage/' . Auth::user()->photo) }}" alt="User" class="profile-avatar">
+                    @else
+                        <i class="fas fa-user-circle me-2" style="font-size: 32px; color: var(--color-primary);"></i>
+                    @endif
+                    <span>{{ Auth::user()->name }}</span>
+                </a>
+            `;
+
+            const mobileLogoutHTML = `
+                <a href="{{ route('logout') }}" class="profile-item text-danger" 
+                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    <i class="fas fa-sign-out-alt me-2"></i> Logout
+                </a>
+            `;
+
+            function moveProfileDropdown() {
+                if (window.innerWidth <= 768) {
+                    // Mobile → profile di atas, logout di bawah
+                    if (mobileProfileContainer.innerHTML.trim() === "") {
+                        mobileProfileContainer.innerHTML = mobileProfileHTML;
+                    }
+                    if (mobileLogoutContainer.innerHTML.trim() === "") {
+                        mobileLogoutContainer.innerHTML = mobileLogoutHTML;
+                    }
+                    if (navbarProfileParent.contains(profileDropdown)) {
+                        navbarProfileParent.removeChild(profileDropdown);
+                    }
+                } else {
+                    // Desktop → balikin ke navbar
+                    if (!navbarProfileParent.contains(profileDropdown)) {
+                        navbarProfileParent.appendChild(profileDropdown);
+                    }
+                    mobileProfileContainer.innerHTML = "";
+                    mobileLogoutContainer.innerHTML = "";
+                }
+            }
+
+            moveProfileDropdown();
+            window.addEventListener("resize", moveProfileDropdown);
+        });
+
+
         // Add some interactive effects
         document.querySelectorAll('.dashboard-card').forEach(card => {
             card.addEventListener('mouseenter', function() {
@@ -617,7 +707,10 @@
 
         // Update stats setiap 30 detik
         setInterval(updateStats, 30000);
-    </script>
 
+        
+
+    </script>
+@stack('scripts')
 </body>
 </html>

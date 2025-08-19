@@ -22,7 +22,8 @@ class User extends Authenticatable
         'address',
         'education_level',
         'photo',
-        'notes',
+        'verification_code',
+        'verification_expires_at',
         'status_id',
     ];
 

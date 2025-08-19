@@ -577,36 +577,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- System Information -->
-            <div class="info-section">
-                <div class="section-header">
-                    <h3 class="section-title">
-                        <i class="fas fa-server section-icon"></i>
-                        Informasi Sistem
-                    </h3>
-                </div>
-                <div class="section-content">
-                    <div class="info-grid">
-                        <div class="info-item">
-                            <span class="info-label">Laravel Version</span>
-                            <span class="info-value">{{ app()->version() }}</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">PHP Version</span>
-                            <span class="info-value">{{ phpversion() }}</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Environment</span>
-                            <span class="info-value">{{ app()->environment() }}</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Timezone</span>
-                            <span class="info-value">{{ config('app.timezone') }}</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </div>
