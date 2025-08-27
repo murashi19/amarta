@@ -634,13 +634,13 @@
                         <img src="asset/img/photo (21).jpg" class="d-block w-100 carousel-image" alt="Image 1">
                         <div class="carousel-caption d-flex align-items-center justify-content-center h-100">
                             <div class="text-center">
-                                <h1 class="display-3 fw-bold text-white">Contact Us</h1>
+                                <h1 class="display-3 fw-bold text-white">{{__('app.contactus')}}</h1>
                                 <div class="wave-line">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="100" height="20" viewBox="0 0 100 20">
                                         <path d="M0,10 Q25,0 50,10 T100,10" stroke="#fff" stroke-width="2" fill="none"/>
                                     </svg>
                                 </div>
-                                <p class="lead text-white-75 mt-3">Hubungi kami untuk informasi lebih lanjut.</p>
+                                <p class="lead text-white-75 mt-3">{{__('app.text')}}</p>
                             </div>
                         </div>
                     </div>
@@ -649,28 +649,28 @@
                         <img src="asset/img/photo (30).jpg" class="d-block w-100 carousel-image" alt="Image 2">
                         <div class="carousel-caption d-flex align-items-center justify-content-center h-100">
                             <div class="text-center">
-                                <h1 class="display-3 fw-bold text-white">Our Locations</h1>
+                                <h1 class="display-3 fw-bold text-white">{{__('app.ourlocation')}}</h1>
                                 <div class="wave-line">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="100" height="20" viewBox="0 0 100 20">
                                         <path d="M0,10 Q25,0 50,10 T100,10" stroke="#fff" stroke-width="2" fill="none"/>
                                 </svg>
                                 </div>
-                                <p class="lead text-white-75 mt-3">Temukan lokasi kantor kami dengan mudah.</p>
+                                <p class="lead text-white-75 mt-3">{{__('app.text2')}}</p>
                             </div>
                         </div>
                     </div>
                     {{-- Carousel Item 3 --}}
                     <div class="carousel-item">
-                        <img src="asset/line/photo (22).jpg" class="d-block w-100 carousel-image" alt="Image 3">
+                        <img src="asset/img/photo (22).jpg" class="d-block w-100 carousel-image" alt="Image 3">
                         <div class="carousel-caption d-flex align-items-center justify-content-center h-100">
                             <div class="text-center">
-                                <h1 class="display-3 fw-bold text-white">Get in Touch</h1>
+                                <h1 class="display-3 fw-bold text-white">{{__('app.getintouch')}}</h1>
                                 <div class="wave-line">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="100" height="20" viewBox="0 0 100 20">
                                         <path d="M0,10 Q25,0 50,10 T100,10" stroke="#fff" stroke-width="2" fill="none"/>
                                     </svg>
                                 </div>
-                                <p class="lead text-white-75 mt-3">Kami siap membantu menjawab pertanyaan Anda.</p>
+                                <p class="lead text-white-75 mt-3">{{__('app.text3')}}</p>
                             </div>
                         </div>
                     </div>
@@ -693,9 +693,10 @@
             <div class="row">
                 {{-- Kolom Kiri: Form Kirim Pesan --}}
                 <div class="col-lg-6 mb-4 mb-lg-0">
-                    <h2 class="section-title-custom">Kirim Pesan</h2>
-                    <p class="mb-4 text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Nunc lacinia porta quam, quis elementum neque pulvinar ac.</p>
-
+                    <h2 class="section-title-custom">{{__('app.title_form')}}</h2>
+                        <p class="mb-4 text-muted">
+                            {{__('app.text_form')}}
+                        </p>
                     <form>
                         <div class="row gx-3 mb-3"> {{-- Menggunakan gx-3 untuk gap horizontal antar kolom --}}
                             <div class="col-md-6">
@@ -716,7 +717,7 @@
                         <div class="mb-4"> {{-- mb-4 untuk margin bawah textarea --}}
                             <textarea class="form-control" id="pesan" rows="5" placeholder="Pesan"></textarea>
                         </div>
-                        <button type="submit" class="btn btn-primary button-dark-blue px-4 py-2">Kirim Pesan</button>
+                        <button type="submit" class="btn btn-primary button-dark-blue px-4 py-2">"{{__('app.button_form')}}"</button>
                     </form>
                 </div>
 
@@ -746,7 +747,7 @@
     </section>
     <section id="contact-cards" class="py-5">
         <div class="container">
-            <h2 class="text-center section-title-custom mb-5">Hubungi Kami</h2> {{-- Anda bisa ganti judul ini --}}
+            <h2 class="text-center section-title-custom mb-5">{{__('app.contact_card')}}</h2> {{-- Anda bisa ganti judul ini --}}
             <div class="row justify-content-center">
                 {{-- Card 1: WhatsApp --}}
                 <div class="col-md-4 mb-4">
@@ -754,7 +755,7 @@
                         <div class="icon-circle whatsapp-green">
                             <i class="fab fa-whatsapp"></i>
                         </div>
-                        <h3 class="contact-title">+6285283123744</h3>
+                        <h3 class="contact-title">{{__('app.contact_title')}}</h3>
                     </a>
                 </div>
 
@@ -764,7 +765,7 @@
                         <div class="icon-circle email-red">
                             <i class="fas fa-envelope"></i>
                         </div>
-                        <h3 class="contact-title">lpkamartacibitung@gmail.com</h3>
+                        <h3 class="contact-title">{{__('app.email_label')}}</h3>
                     </a>
                 </div>
 
@@ -774,7 +775,7 @@
                         <div class="icon-circle phone-blue">
                             <i class="fas fa-phone-alt"></i>
                         </div>
-                        <h3 class="contact-title">+6282134716388</h3>
+                        <h3 class="contact-title">{{__('app.phone_label')}}</h3>
                     </a>
                 </div>
             </div>
@@ -785,7 +786,7 @@
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-12 text-center mb-5">
-                    <h1 class="mb-4">Frequently Asked Questions (FAQ)</h1>
+                    <h1 class="mb-4">{{__('app.faq_title')}}</h1>
                     <div class="underline mx-auto"></div> {{-- Garis bawah seperti di section title --}}
                 </div>
             </div>
@@ -794,20 +795,20 @@
                     <img src="{{ asset('Asset/img/faq-illustration.png') }}" alt="FAQ Illustration" class="img-fluid" style="max-height: 350px;">
                 </div>
                 <div class="col-lg-8">
-                    <h2 class="mb-3 txt-primary fw-bold">INGIN BERTANYA?</h2>
-                    <p class="mb-4 text-muted">Silahkan Anda cek jika mempunyai pertanyaan-pertanyaan seputar bekerja di Jepang. Jika pertanyaan yang Anda ingin ajukan tidak ada, silahkan hubungi melalui kontak kami.</p>
+                    <h2 class="mb-3 txt-primary fw-bold">{{__('app.faq_subtitle')}}</h2>
+                    <p class="mb-4 text-muted">{{__('app.faq_description')}}</p>
 
                     <div class="accordion" id="faqAccordion">
                         {{-- FAQ Item 1 --}}
                         <div class="accordion-item">
                             <h2 class="accordion-header" id="headingOne">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                                    Q : Berapa Kuota Kelas?
+                                   {{__('app.q1')}}
                                 </button>
                             </h2>
                             <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
                                 <div class="accordion-body">
-                                    A : 50 orang peserta
+                                    {{__('app.a1')}}
                                 </div>
                             </div>
                         </div>
@@ -816,12 +817,12 @@
                         <div class="accordion-item">
                             <h2 class="accordion-header" id="headingTwo">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                    Q : Apakah ada asrama?
+                                    {{__('app.q2')}}
                                 </button>
                             </h2>
                             <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faqAccordion">
                                 <div class="accordion-body">
-                                    A : Ada, Kami menyediakan fasilitas Asrama untuk peserta
+                                   {{__('app.a2')}}
                                 </div>
                             </div>
                         </div>
@@ -830,12 +831,12 @@
                         <div class="accordion-item">
                             <h2 class="accordion-header" id="headingThree">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                                    Q : Jika tidak lulus JFT Basic dan Skill Kaigo apakah ada kesempatan mengulang?
+                                    {{__('app.q3')}}
                                 </button>
                             </h2>
                             <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#faqAccordion">
                                 <div class="accordion-body">
-                                    A : Tentu, dan akan dibimbing, tetapi biaya dibebankan kepada peserta
+                                    {{__('app.a3')}}
                                 </div>
                             </div>
                         </div>
@@ -844,12 +845,12 @@
                         <div class="accordion-item">
                             <h2 class="accordion-header" id="headingFour">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-                                    Q : Jika belajarnya lebih cepat, biaya bisa dikurangi?
+                                    {{__('app.q4')}}
                                 </button>
                             </h2>
                             <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#faqAccordion">
                                 <div class="accordion-body">
-                                    A : Tidak bisa, biaya tersebut merupakan paket pendidikan, lebih cepat lebih baik agar anda bisa segera maju MENSETSU ke perusahaan.
+                                    {{__('app.a4')}}
                                 </div>
                             </div>
                         </div>

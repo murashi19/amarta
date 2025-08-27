@@ -339,7 +339,7 @@
     }
 
     .alert-warning {
-        background: var(--gradient-light);
+        background: rgba(226, 177, 30, 0.1);
         color: var(--color-warning);
         border-left: 4px solid var(--color-warning);
     }
@@ -373,10 +373,10 @@
                             </div>
                         </div>
                         <h1 class="display-3 text-white fw-bold mb-4 animate-slide-up">
-                            Persyaratan <span class="text-warning">Peserta</span>
+                            {{__('app.persyaratan')}}<span class="text-warning">{{__('app.peserta')}}</span>
                         </h1>
                         <p class="lead text-white-50 mb-5 animate-slide-up" style="animation-delay: 0.2s;">
-                            Penuhi kualifikasi dan siapkan diri Anda untuk meraih kesempatan emas berkarir di Jepang bersama LPK Amarta!
+                            {{__('app.daftar_text')}}
                         </p>
                         <div class="hero-scroll animate-bounce">
                             <i class="fas fa-chevron-down text-white-50"></i>
@@ -396,11 +396,11 @@
                 <div class="col-lg-8 text-center">
                     <div class="section-header">
                         <h2 class="text-center mb-5 text-primary fw-bold">
-                            Apa Saja yang Dibutuhkan untuk Bergabung?
+                            {{__('app.section_header')}}
                         </h2>
                         <div class="section-divider mx-auto mb-4"></div>
                         <p class="lead text-muted">
-                            Berikut adalah syarat-syarat lengkap yang perlu Anda penuhi untuk bergabung dengan program kami
+                            {{__('app.section_desc')}}
                         </p>
                     </div>
                 </div>
@@ -419,31 +419,31 @@
                             <div class="requirements-list">
                                 <div class="requirement-item">
                                     <i class="fas fa-check text-success"></i>
-                                    <span>Warga Negara Indonesia (WNI)</span>
+                                    <span>{{__('app.syarat_1')}}</span>
                                 </div>
                                 <div class="requirement-item">
                                     <i class="fas fa-check text-success"></i>
-                                    <span>Usia 18–30 tahun (program magang), atau hingga 35 tahun (SSW)</span>
+                                    <span>{{__('app.syarat_2')}}</span>
                                 </div>
                                 <div class="requirement-item">
                                     <i class="fas fa-check text-success"></i>
-                                    <span>Sehat jasmani dan rohani</span>
+                                    <span>{{__('app.syarat_3')}}</span>
                                 </div>
                                 <div class="requirement-item">
                                     <i class="fas fa-check text-success"></i>
-                                    <span>Lulusan minimal SMA/SMK sederajat</span>
+                                    <span>{{__('app.syarat_4')}}</span>
                                 </div>
                                 <div class="requirement-item">
                                     <i class="fas fa-check text-success"></i>
-                                    <span>Tidak memiliki catatan kriminal</span>
+                                    <span>{{__('app.syarat_5')}}</span>
                                 </div>
                                 <div class="requirement-item">
                                     <i class="fas fa-check text-success"></i>
-                                    <span>Tidak bertato atau bertindik berlebihan</span>
+                                    <span>{{__('app.syarat_6')}}</span>
                                 </div>
                                 <div class="requirement-item">
                                     <i class="fas fa-check text-success"></i>
-                                    <span>Bersedia mengikuti pelatihan selama beberapa bulan di LPK</span>
+                                    <span>{{__('app.syarat_7')}}</span>
                                 </div>
                             </div>
                         </div>
@@ -457,31 +457,31 @@
                             <i class="fas fa-file-alt"></i>
                         </div>
                         <div class="card-content">
-                            <h3 class="card-title">Dokumen Administrasi</h3>
+                            <h3 class="card-title">{{__('app.dokumen_title')}}</h3>
                             <div class="requirements-list">
                                 <div class="requirement-item">
                                     <i class="fas fa-file text-info"></i>
-                                    <span>KTP, KK, dan Akta Kelahiran</span>
+                                    <span>{{__('app.dokumen_1')}}</span>
                                 </div>
                                 <div class="requirement-item">
                                     <i class="fas fa-file text-info"></i>
-                                    <span>Ijazah dan transkrip nilai terakhir</span>
+                                    <span>{{__('app.dokumen_2')}}</span>
                                 </div>
                                 <div class="requirement-item">
                                     <i class="fas fa-file text-info"></i>
-                                    <span>SKCK (Surat Keterangan Catatan Kepolisian)</span>
+                                    <span>{{__('app.dokumen_3')}}</span>
                                 </div>
                                 <div class="requirement-item">
                                     <i class="fas fa-file text-info"></i>
-                                    <span>Surat keterangan sehat dari dokter</span>
+                                    <span>{{__('app.dokumen_4')}}</span>
                                 </div>
                                 <div class="requirement-item">
                                     <i class="fas fa-file text-info"></i>
-                                    <span>Pas foto latar belakang putih (3x4 & 4x6)</span>
+                                    <span>{{__('app.dokumen_5')}}</span>
                                 </div>
                                 <div class="requirement-item">
                                     <i class="fas fa-file text-info"></i>
-                                    <span>Sertifikat pelatihan/pengalaman kerja (jika ada)</span>
+                                    <span>{{__('app.dokumen_6')}}</span>
                                 </div>
                             </div>
                         </div>
@@ -495,26 +495,26 @@
                             <i class="fas fa-language"></i>
                         </div>
                         <div class="card-content">
-                            <h3 class="card-title">Kemampuan Bahasa Jepang</h3>
+                            <h3 class="card-title">{{__('app.bahasa_jepang_title')}}</h3>
                             <div class="requirements-list">
                                 <div class="requirement-item special">
                                     <i class="fas fa-star text-warning"></i>
                                     <div>
-                                        <strong>Program Magang (TITP):</strong><br>
-                                        <small>min. JLPT N5 atau JFT-Basic A2</small>
+                                        <strong>{{__('app.program_magang')}}</strong><br>
+                                        <small>{{__('app.program_magang_req')}}</small>
                                     </div>
                                 </div>
                                 <div class="requirement-item special">
                                     <i class="fas fa-star text-warning"></i>
                                     <div>
-                                        <strong>Program SSW:</strong><br>
-                                        <small>min. JLPT N4 atau JFT-Basic A2 + Ujian Keterampilan Kerja</small>
+                                        <strong>{{__('app.program_ssw')}}</strong><br>
+                                        <small>{{__('app.program_ssw_req')}}</small>
                                     </div>
                                 </div>
                             </div>
                             <div class="alert alert-warning mt-3">
                                 <i class="fas fa-lightbulb me-2"></i>
-                                <small><strong>Tips:</strong> Kami menyediakan kelas bahasa Jepang untuk mempersiapkan Anda!</small>
+                                <small><strong>{{__('app.tips_bahasa')}}</strong> {{__('app.tips_bahasa_desc')}}</small>
                             </div>
                         </div>
                     </div>
@@ -527,26 +527,26 @@
                             <i class="fas fa-wallet"></i>
                         </div>
                         <div class="card-content">
-                            <h3 class="card-title">Biaya Pelatihan</h3>
+                            <h3 class="card-title">{{__('app.biaya_title')}}</h3>
                             <div class="requirements-list">
                                 <div class="requirement-item">
                                     <i class="fas fa-money-bill text-success"></i>
-                                    <span>Biaya pelatihan bahasa Jepang (3–12 bulan)</span>
+                                    <span>{{__('app.biaya_1')}}</span>
                                 </div>
                                 <div class="requirement-item">
                                     <i class="fas fa-money-bill text-success"></i>
-                                    <span>Biaya makan, asrama, dan seragam</span>
+                                    <span>{{__('app.biaya_2')}}</span>
                                 </div>
                                 <div class="requirement-item">
                                     <i class="fas fa-money-bill text-success"></i>
-                                    <span>Biaya dokumen dan visa (dibayarkan di akhir tahap)</span>
+                                    <span>{{__('app.biaya_3')}}</span>
                                 </div>
                             </div>
                             <div class="alert alert-success mt-3">
                                 <i class="fas fa-gift me-2"></i>
                                 <div>
-                                    <strong>Kabar Baik!</strong><br>
-                                    <small>Telah bekerja sama dengan perusahaan Jepang menyediakan program beasiswa atau pembayaran bertahap.</small>
+                                    <strong>{{__('app.kabar_baik')}}</strong><br>
+                                    <small>{{__('app.kabar_baik_desc')}}</small>
                                 </div>
                             </div>
                         </div>
@@ -560,20 +560,20 @@
                             <i class="fas fa-handshake"></i>
                         </div>
                         <div class="card-content">
-                            <h3 class="card-title">Siap Ikatan Kontrak</h3>
+                            <h3 class="card-title">{{__('app.kontrak_title')}}</h3>
                             <div class="requirements-list">
                                 <div class="requirement-item">
                                     <i class="fas fa-clipboard-check text-danger"></i>
-                                    <span>Siap terikat kontrak kerja/magang selama 3–5 tahun di Jepang</span>
+                                    <span>{{__('app.kontrak_1')}}</span>
                                 </div>
                                 <div class="requirement-item">
                                     <i class="fas fa-clipboard-check text-danger"></i>
-                                    <span>Tidak menikah selama program (khusus magang, tergantung LPK & perusahaan)</span>
+                                    <span>{{__('app.kontrak_2')}}</span>
                                 </div>
                             </div>
                             <div class="alert alert-info mt-3">
                                 <i class="fas fa-info-circle me-2"></i>
-                                <small><strong>Catatan:</strong> Kontrak ini melindungi hak dan kewajiban kedua belah pihak</small>
+                                <small><strong>{{__('app.catatan')}}</strong> {{__('app.catatan_desc')}}</small>
                             </div>
                         </div>
                     </div>
@@ -589,10 +589,9 @@
                                 <i class="fas fa-info-circle text-primary" style="font-size: 3rem;"></i>
                             </div>
                             <div class="col-lg-10">
-                                <h4 class="text-primary mb-2">Informasi Penting</h4>
+                                <h4 class="text-primary mb-2">{{__('app.info_penting')}}</h4>
                                 <p class="mb-0 text-muted">
-                                    Semua persyaratan di atas dapat berubah sewaktu-waktu tergantung pada kebijakan pemerintah Jepang dan perusahaan mitra. 
-                                    Tim kami akan membantu Anda dalam mempersiapkan semua dokumen yang diperlukan.
+                                    {{__('app.info_desc')}}
                                 </p>
                             </div>
                         </div>
@@ -613,12 +612,12 @@
                             <i class="fas fa-rocket" style="font-size: 4rem; color: var(--color-warning);"></i>
                         </div>
                         <h2 class="display-5 fw-bold mb-4">
-                            Siap Mewujudkan Impian Berkarir di <span style="color: var(--color-warning);">Jepang?</span>
+                            {{__('app.cta_title')}} <span style="color: var(--color-warning);">{{__('app.cta_jepang')}}</span>
                         </h2>
                         <p class="lead mb-4">
-                            Jangan tunda lagi kesempatan emas ini! Dengan pendaftaran awal hanya
-                            <span class="badge text-dark fs-5 mx-2" style="background-color: var(--color-warning);">Rp 500.000,-</span>
-                            Anda sudah bisa memulai langkah pertama menuju masa depan cerah di Negeri Sakura!
+                            {{__('app.cta_desc')}}
+                            <span class="badge text-dark fs-5 mx-2" style="background-color: var(--color-warning);">{{__('app.cta_price')}}</span>
+                            {{__('app.cta_desc_2')}}
                         </p>
                         
                         <div class="cta-buttons">
@@ -626,12 +625,12 @@
                                 <a href="{{ url('/register') }}" class="btn btn-lg px-5 py-3 fw-bold shadow-lg" 
                                    style="background-color: var(--color-warning); color: var(--color-dark); border: none;">
                                     <i class="fas fa-paper-plane me-2"></i>
-                                    LANJUT DAFTAR
+                                    {{__('app.btn_daftar')}}
                                 </a>
                                 <a href="https://wa.me/6285283123744" target="_blank" 
                                    class="btn btn-outline-light btn-lg px-5 py-3 fw-bold shadow-lg">
                                     <i class="fab fa-whatsapp me-2"></i>
-                                    Konsultasi via WhatsApp
+                                    {{__('app.btn_konsultasi')}}
                                 </a>
                             </div>
                         </div>
@@ -643,21 +642,21 @@
                                     <div class="trust-item">
                                         <i class="fas fa-users mb-2" style="font-size: 2rem; color: var(--color-warning);"></i>
                                         <div class="fw-bold">1000+</div>
-                                        <small>Peserta Terlatih</small>
+                                        <small>{{__('app.peserta_terlatih')}}</small>
                                     </div>
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <div class="trust-item">
                                         <i class="fas fa-building mb-2" style="font-size: 2rem; color: var(--color-warning);"></i>
                                         <div class="fw-bold">50+</div>
-                                        <small>Perusahaan Mitra</small>
+                                        <small>{{__('app.perusahaan_mitra')}}</small>
                                     </div>
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <div class="trust-item">
                                         <i class="fas fa-award mb-2" style="font-size: 2rem; color: var(--color-warning);"></i>
                                         <div class="fw-bold">95%</div>
-                                        <small>Tingkat Keberhasilan</small>
+                                        <small>{{__('app.tingkat_keberhasilan')}}</small>
                                     </div>
                                 </div>
                             </div>

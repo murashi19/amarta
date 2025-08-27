@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>LPK PT Amarta Indonesia</title>
-    <meta name="google" content="notranslate">
     
     <!-- Font Awesome CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -15,16 +15,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
     <!-- Panggil CSS Swiper -->
     <link rel="stylesheet" href="{{ asset('Asset/swiper/swiper-bundle.min.css') }}">
-    
-    <script type="text/javascript">
-        function googleTranslateElementInit() {
-            new google.translate.TranslateElement(
-                { pageLanguage: 'id', includedLanguages: 'ja', layout: google.translate.TranslateElement.InlineLayout.SIMPLE },
-                'google_translate_element'
-            );
-        }
-    </script>
-    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
     
     <style>
         :root {
@@ -210,7 +200,7 @@
             backdrop-filter: blur(10px);
             background-color: rgba(239, 242, 246, 0.95) !important;
             box-shadow: var(--shadow-sm);
-            min-height: 60px; /* diperkecil dari 80px */
+            min-height: 80px; /* diperkecil dari 80px */
             padding: 0.25rem 1rem;
         }
 
@@ -294,11 +284,13 @@
             display: flex;
             gap: 8px;
             transition: var(--transition-normal);
+            margin-left: 20px;
+            margin-right: -100px;
         }
 
         .button-nav a {
             font-size: 14px;
-            padding: 6px 12px;
+            padding: 8px 16px;
         }
 
         .nav-item.mx-2 {
@@ -890,8 +882,10 @@
             }
 
             .logo-container {
-                width: 100%;
-                height: 100px;
+                background: white;
+                border-radius: 10px;
+                width: 300px;
+                height: 100%;
                 display: flex;
                 align-items: center;
                 justify-content: flex-start;
@@ -899,7 +893,7 @@
             }
 
             .logo-container img {
-                max-height: 80px;
+                max-height: 150px;
                 width: auto;
             }
 
@@ -1249,12 +1243,11 @@
     @stack('styles')
 </head>
 <body>
-    <div id="google_translate_element"></div>
     <!-- NAVBAR -->
     <nav class="navbar navbar-expand-lg">
         <div class="container">
             <a class="navbar-brand" href="#">
-                <img src="asset/img/Amarta-Logo.png" alt="Logo Amarta" style="height: 40px;">
+                <img src="asset/img/Amarta-Logo.png" alt="Logo Amarta" style="height: 80px;">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
                     aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -1263,27 +1256,42 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav mx-auto">
                     <li class="nav-item mx-2">
-                        <a class="nav-link {{ Request::is('/') ? 'active' : '' }}" href="/">Home</a>
+                        <a class="nav-link {{ Request::is('/') ? 'active' : '' }}" href="/">{{ __('app.home') }}</a>
                     </li>
                     <li class="nav-item mx-2">
-                        <a class="nav-link {{ Request::is('program') ? 'active' : '' }}" href="program">Program</a>
+                        <a class="nav-link {{ Request::is('program') ? 'active' : '' }}" href="program">{{ __('app.program') }}</a>
                     </li>
                     <li class="nav-item mx-2">
-                        <a class="nav-link {{ Request::is('about') ? 'active' : '' }}" href="about">About Us</a>
+                        <a class="nav-link {{ Request::is('about') ? 'active' : '' }}" href="about">{{ __('app.about') }}</a>
                     </li>
                     <li class="nav-item mx-2">
-                        <a class="nav-link {{ Request::is('contact') ? 'active' : '' }}" href="contact">Contact</a>
+                        <a class="nav-link {{ Request::is('contact') ? 'active' : '' }}" href="contact">{{ __('app.contact') }}</a>
                     </li>
                 </ul>
-                <div class="language">
-                    <button onclick="translatePage('id');"  id="langID"><img src="asset/img/indo.png" alt="indo" style="height: 15px;"></button>
-                    <span>|</span>
-                    <button onclick="translatePage('ja');" id="langJP"><img src="asset/img/jap.png" alt="Jap" style="height: 15px;"></button>
+                <div class="dropdown">
+                    <button class="btn btn-light dropdown-toggle" type="button" id="languageDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        🌐 Pilih Bahasa
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="languageDropdown">
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center" href="{{ route('lang.change', ['lang' => 'id']) }}">
+                                <img src="{{ asset('img/indo.png') }}" alt="" style="height: 15px; margin-right: 8px;">
+                                Bahasa Indonesia
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center" href="{{ route('lang.change', ['lang' => 'ja']) }}">
+                                <img src="{{ asset('img/jap.png') }}" alt="" style="height: 15px; margin-right: 8px;">
+                                日本語 (Jepang)
+                            </a>
+                        </li>
+                    </ul>
                 </div>
 
+
                 <div class="button-nav">
-                    <a class="px-2 py-1 button-secondary button-hoversecondary poppins-medium" href="{{ url('daftar') }}">Register</a>
-                    <a class="px-4 py-1 button-primary button-hover poppins-medium" href="{{ url('login') }}">Login</a>
+                    <a class="px-4 py-2 button-secondary button-hoversecondary poppins-medium" href="{{ url('daftar') }}">{{ __('app.register') }}</a>
+                    <a class="px-4 py-2 button-primary button-hover poppins-medium" href="{{ url('login') }}">{{ __('app.login') }}</a>
                 </div>
             </div>
         </div>
@@ -1304,29 +1312,29 @@
                     <div class="logo-container">
                         <img img src="asset/img/Amarta-Logo.png" alt="">
                     </div>
-                    <h3>LPK Amartha Indonesia</h3>
-                    <p>AMARTA BANGUN INDONESIA adalah Perusahaan Swasta yang bergerak sebagai Penyedia Jasa recruitment semua level yang berdiri pada tanggal 10 juli 2020.</p>
-                </div>
+                        <h3>{{ __('app.footer_title') }}</h3>
+                        <p>{{ __('app.footer_subtitle') }}</p>
+                    </div>
 
                 <!-- Location Section -->
                 <div class="footer-column">
-                    <h3>Lokasi Kantor</h3>
-                    <p>Sukajaya, Kec. Cibitung, Kabupaten Bekasi, Jawa Barat</p>
+                    <h3>{{ __('app.office_location') }}</h3>
+                    <p>{{ __('app.office_address') }}</p>
                     <a href="https://maps.app.goo.gl/FSzUzLi9fZwsgTdt9" class="location-btn">
                         <svg class="location-icon" viewBox="0 0 24 24">
                             <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
                         </svg>
-                        Lihat Maps
+                        {{ __('app.view_map') }}
                     </a>
                 </div>
 
                 <!-- Contact Section -->
                 <div class="footer-column contact-section">
-                    <h3>Kontak Kami</h3>
-                    <span class="contact-highlight">Tanya - Tanya Klik Disini !</span>
-                    <p class="consultation-text">Konsultasi Gratis !!</p>
+                    <h3>{{ __('app.contact_us') }}</h3>
+                    <span class="contact-highlight">{{ __('app.question_text') }}</span>
+                    <p class="consultation-text">{{ __('app.consultation_text') }}</p>
                     
-                    <div class="social-links">
+                     <div class="social-links">
                         <a href="https://wa.me/6285283123744" class="social-link whatsapp" target="_blank">
                             <svg class="social-icon" viewBox="0 0 24 24">
                                 <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893A11.821 11.821 0 0020.465 3.488"/>
@@ -1338,16 +1346,15 @@
                             </svg>
                         </a>
                     </div>
-
                     <div class="email-info">
-                        <strong>Email :</strong> lpkamartacibitung@gmail.com
+                        <strong>{{ __('app.email_label') }}</strong> lpkamartacibitung@gmail.com
                     </div>
                 </div>
             </div>
 
             <!-- Copyright -->
             <div class="footer-bottom">
-                <p class="copyright">© 2025 LPK Amartha - All Rights Reserved</p>
+                <p class="copyright">{{ __('app.copyright') }}</p>
             </div>
         </div>
     </footer>
@@ -2816,27 +2823,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     @stack('scripts')
-    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-    <script type="text/javascript">
-        function googleTranslateElementInit() {
-            new google.translate.TranslateElement(
-                { pageLanguage: 'id', includedLanguages: 'ja', layout: google.translate.TranslateElement.InlineLayout.SIMPLE },
-                'google_translate_element'
-            );
-        }
-         function GTranslateFireEvent(lang_code) {
-            var el = document.querySelector('.goog-te-combo');
-            if (el) {
-                el.value = lang_code;
-                el.dispatchEvent(new Event('change'));
-            } else {
-                alert('Widget terjemahan belum siap. Coba muat ulang halaman.');
-            }
-        }
 
-        document.getElementById('langID').onclick = function() { GTranslateFireEvent('id'); };
-        document.getElementById('langJP').onclick = function() { GTranslateFireEvent('ja'); };
-    </script>
-   
 </body>
 </html>

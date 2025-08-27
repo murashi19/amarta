@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Pluralizer;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,8 +24,6 @@ class AppServiceProvider extends ServiceProvider
         if (env('APP_ENV') !== 'production') {
             URL::forceRootUrl(config('app.url'));
         }
-        if (app()->environment('production') || app()->environment('local')) {
        
-    }
     }
 }

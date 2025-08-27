@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -8,6 +9,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Middleware\AdminOnly;
 use App\Http\Middleware\OwnsTransaction;
 use App\Http\Middleware\CheckFinanceAccess;
+use App\Http\Middleware\OwnsPaymentOrder;
+use App\Http\Middleware\EnsureUserIsVerified;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\UsersController;
@@ -15,16 +18,19 @@ use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\ManageTransactionController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\FinanceController;
-
+use App\Http\Controllers\LanguageController;
 
 // --- Landing Page ---
-Route::get('/', fn() => view('landing/home'));
-Route::get('/program', fn() => view('landing/program'));
-Route::get('/about', fn() => view('landing/about'));
-Route::get('/contact', fn() => view('landing/contact'));
-Route::get('/daftar', fn() => view('landing/daftar'));
+
+Route::get('/', fn() => view('home'));
+Route::get('/program', fn() => view('program'));
+Route::get('/about', fn() => view('about'));
+Route::get('/contact', fn() => view('contact'));
+Route::get('/daftar', fn() => view('daftar'));
+Route::get('change/{lang}', [LanguageController::class, 'change'])->name('lang.change');
 Route::get('/register', fn() => view('auth/register'));
 Route::get('/verify', fn() => view('auth/verify'));
+
 
 // --- Auth Routes ---
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
@@ -98,7 +104,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
 });
 
 // --- Dashboard User ---
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'verifikasi'])->group(function () {
     Route::get('/dashboard/users', [AnnouncementController::class, 'AnnountmentsUser'])->name('dashboard.users');
 
     // Profile
@@ -110,8 +116,6 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['auth', 'CheckFinanceAccess'])->group(function () {
         Route::get('/users/keuangan', [FinanceController::class, 'index'])->name('users.keuangan');
     });
-
-    // Transaksi
 
     // Transaksi Booking
    Route::get('/transaksi/booking/{transaction}', [TransactionController::class, 'showBooking'])
@@ -135,10 +139,8 @@ Route::middleware(['auth'])->group(function () {
         ->name('transaksi.programKelas');
     Route::get('/payment-method-details', [TransactionController::class, 'getPaymentMethodDetails']);
 
-    
     Route::post('/transaksi/program-kelas/{id}/cicilan', [TransactionController::class, 'storeInstallment'])
         ->name('transaksi.programKelas.storeInstallment');
-
 
     Route::get('/transaksi/payment/type/{type}', [TransactionController::class, 'showSinglePayment'])
         ->name('transaksi.showSinglePayment');

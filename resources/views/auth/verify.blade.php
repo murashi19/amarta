@@ -681,19 +681,26 @@
                         <span>Tidak menerima kode?</span>
                     </div>
                     
-                    <div class="text-center">
+                   <div class="text-center">
                         <form action="{{ route('resendOtp') }}" method="POST" style="display: inline;" novalidate>
                             @csrf
                             <input type="hidden" name="email" value="{{ $email }}">
-                            <button type="submit" class="btn btn-resend" aria-describedby="resend-help">
+
+                            <button type="submit" id="resend-btn" class="btn btn-resend" aria-describedby="resend-help">
                                 <i class="fas fa-redo me-2" aria-hidden="true"></i>
                                 <span>Kirim Ulang Kode</span>
                             </button>
+
                             <small id="resend-help" class="sr-only">
                                 Klik untuk mengirim ulang kode verifikasi ke email Anda
                             </small>
                         </form>
+
+                        <small id="resend-timer" class="text-muted d-block mt-2" style="display:none;">
+                            Tunggu <span id="countdown">60</span> detik untuk kirim ulang
+                        </small>
                     </div>
+
                     
                     <div class="text-center mt-4">
                         <small class="text-white">
@@ -822,6 +829,28 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             this.value = numericData;
         }
+    });
+
+    const btn = document.getElementById("resend-btn");
+    const timer = document.getElementById("resend-timer");
+    const countdown = document.getElementById("countdown");
+
+    btn.addEventListener("click", function () {
+        let seconds = 120; // durasi limit (sesuai dengan backend RateLimiter)
+
+        btn.disabled = true;
+        timer.style.display = "block";
+
+        const interval = setInterval(() => {
+            seconds--;
+            countdown.textContent = seconds;
+
+            if (seconds <= 0) {
+                clearInterval(interval);
+                btn.disabled = false;
+                timer.style.display = "none";
+            }
+        }, 1000);
     });
 });
 

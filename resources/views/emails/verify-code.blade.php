@@ -371,6 +371,15 @@
                 </span>
                 <div class="otp-code">{{ $verification_code }}</div>
             </div>
+            <!-- Tambahkan Link Verifikasi -->
+            <p style="text-align:center; margin: 25px 0;">
+                <a href="{{ $verificationUrl }}" 
+                style="display: inline-block; padding: 12px 25px; background: #2196F3; color: #fff; font-size: 16px; 
+                        font-weight: 600; text-decoration: none; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
+                    <i class="fas fa-check-circle" style="margin-right:8px;"></i>
+                    Klik untuk Verifikasi Akun
+                </a>
+            </p>
 
             <!-- Warning Box -->
             <div class="warning-box">

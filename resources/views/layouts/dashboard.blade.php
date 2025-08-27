@@ -46,9 +46,12 @@
         }
 
         .navbar-brand {
-            color: white !important;
-            font-weight: bold;
-            font-size: 1.5rem;
+            background: var(--color-light);
+            border-radius: 5px;
+            padding: 0.5rem 1rem;
+            font-size: 1.25rem; /* dari 1.5rem jadi 1.25rem */
+            color: var(--color-primary) !important;
+            margin-left: 3.5rem;
         }
 
         .navbar-nav .nav-link {
@@ -62,6 +65,22 @@
             border-radius: 5px;
             transform: translateY(-2px);
         }
+
+        .logo-container {
+                background: white;
+                border-radius: 10px;
+                width: 100px;
+                height: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+                margin-bottom: 30px;
+            }
+
+            .logo-container img {
+                max-height: 80px;
+                width: auto;
+            }
 
         .user-avatar {
             width: 40px;
@@ -469,9 +488,8 @@
     <!-- Navbar -->
      <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
         <div class="container-fluid">
-            <a class="navbar-brand" href="{{ url('dashboard/users') }}">
-                <i class="fas fa-graduation-cap me-2"></i>
-                Amarta
+            <a class="navbar-brand" href="{{ route('dashboard.users') }}">
+                <img src="{{ asset('Asset/img/Amarta-Logo.png') }}" alt="Logo Amarta" style="height: 50px; ">
             </a>
             
             <button class="navbar-toggler d-lg-none" type="button" id="sidebarToggle">

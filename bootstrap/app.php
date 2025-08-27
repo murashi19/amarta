@@ -4,6 +4,8 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\SetLocale;
+
 
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -14,13 +16,20 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        $middleware->web(append:[
+            SetLocale::class
+        ]);
         $middleware->alias([
             'admin' => \App\Http\Middleware\AdminOnly::class,
             'ownsTransaction' => \App\Http\Middleware\OwnsTransaction::class,
             'CheckFinanceAccess' => \App\Http\Middleware\CheckFinanceAccess::class,
             'ownsPaymentOrder' => \App\Http\Middleware\OwnsPaymentOrder::class,
+            'verifikasi' => \App\Http\Middleware\EnsureUserIsVerified::class,
         ]);
+
+        
     })
+
     ->withExceptions(function (Exceptions $exceptions) {
         //
     })->create();

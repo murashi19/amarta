@@ -17,7 +17,6 @@ use Carbon\Carbon;
 
 class TransactionController extends Controller
 {
-
     use AuthorizesRequests;
     // Fungsi untuk membuat transaksi booking
     public function showBooking(Transaction $transaction)
@@ -120,8 +119,6 @@ class TransactionController extends Controller
 
     }
 
-
-
     public function createProgramKelas()
     {
         $user = Auth::user();
@@ -160,6 +157,7 @@ class TransactionController extends Controller
         // Redirect ke halaman pembayaran
         return redirect()->route('transaksi.programKelas', ['id' => $trx->id])
             ->with('success', 'Pembayaran Program Kelas berhasil dibuat.');
+
     }
 
     /**

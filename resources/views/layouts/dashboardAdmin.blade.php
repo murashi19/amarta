@@ -45,10 +45,13 @@
             padding: 1rem 0;
         }
 
-        .navbar-brand {
-            color: white !important;
-            font-weight: bold;
-            font-size: 1.5rem;
+         .navbar-brand {
+            background: var(--color-light);
+            border-radius: 5px;
+            padding: 0.5rem 1rem;
+            font-size: 1.25rem; /* dari 1.5rem jadi 1.25rem */
+            color: var(--color-primary) !important;
+            margin-left: 3.5rem;
         }
 
         .navbar-nav .nav-link {
@@ -464,9 +467,8 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
         <div class="container-fluid">
-            <a class="navbar-brand" href="{{ url('dashboard/admin') }}">
-                <i class="fas fa-graduation-cap me-2"></i>
-                Amarta
+            <a class="navbar-brand" href="{{ route('dashboard.admin') }}">
+                <img src="{{ asset('Asset/img/Amarta-Logo.png') }}" alt="Logo Amarta" style="height: 50px; ">
             </a>
             
             <button class="navbar-toggler d-lg-none" type="button" id="sidebarToggle">
