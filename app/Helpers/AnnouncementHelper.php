@@ -35,7 +35,7 @@ class AnnouncementHelper
         $audienceMap = [
             // Variasi untuk new registrants
             'new registrants' => [1],
-            'new registrant' => [1],
+            'new registrants' => [1],
             'new_registrants' => [1],
             'new_registrant' => [1],
             'registrants' => [1],
@@ -54,6 +54,12 @@ class AnnouncementHelper
             'meeting_joined' => [3],
             'joined' => [3],
             'joined meeting' => [3],
+
+            // Variasi untuk dp paid
+            'dp paid' => [4],
+            'dp_paid' => [4],
+            'paid dp' => [4],
+            'paid_dp' => [4],
             
             
             // Variasi untuk active students
@@ -64,11 +70,11 @@ class AnnouncementHelper
             'active' => [5, 6, 7],
             
             // Variasi untuk all students
-            'all student' => [1, 2, 3, 5, 6, 7],
-            'all students' => [1, 2, 3, 5, 6, 7],
-            'all_students' => [1, 2, 3, 5, 6, 7],
-            'all_student' => [1, 2, 3, 5, 6, 7],
-            'all' => [1, 2, 3, 5, 6, 7],
+            'all student' => [1, 2, 3, 4, 5, 6, 7],
+            'all students' => [1, 2, 3, 4, 5, 6, 7],
+            'all_students' => [1, 2, 3, 4, 5, 6, 7],
+            'all_student' => [1, 2, 3, 4, 5, 6, 7],
+            'all' => [1, 2, 3, 4, 5, 6, 7],
         ];
 
         // Cek apakah target audience ada dalam mapping

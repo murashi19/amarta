@@ -13,8 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Validation\Rule;
 use Carbon\Carbon; 
 
@@ -27,8 +26,6 @@ class AuthController extends Controller
     }
 
     // Proses register
-    
-
     public function register(Request $request)
     {
         try {
@@ -39,7 +36,7 @@ class AuthController extends Controller
                 'gender' => ['required', Rule::in(['Laki-laki', 'Perempuan'])],
                 'phone_number' => ['required', 'string', 'max:255', 'unique:users,phone_number'],
                 'address' => ['required', 'string', 'max:255'],
-                'birth_place' => ['nullable', 'string', 'max:255'],
+                'birth_place' => ['nullable', 'string', 'max:255'], // opsional
                 'birth_date' => ['required', 'date'],
                 'education_level' => [
                     'required',
@@ -55,12 +52,10 @@ class AuthController extends Controller
             ]);
 
             $plainPassword = $request->password;
-            $otpCode = rand(100000, 999999);
+            $otpCode = rand(100000, 999999); // kode OTP 6 digit
 
-            // Generate token
-            $token = Str::random(64);
-
-            DB::transaction(function () use ($request, &$user, $plainPassword, $otpCode, $token) {
+            // Mulai transaksi
+            DB::transaction(function () use ($request, &$user, $plainPassword, $otpCode) {
                 $user = User::create([
                     'name' => $request->name,
                     'email' => $request->email,
@@ -73,8 +68,7 @@ class AuthController extends Controller
                     'birth_date' => $request->birth_date,
                     'education_level' => $request->education_level,
                     'verification_code' => $otpCode,
-                    'verification_expires_at' => Carbon::now()->addMinutes(15),
-                    'verification_token' => hash('sha256', $token), // simpan HASH, bukan plain
+                    'verification_expires_at' => Carbon::now()->addMinutes(15), // berlaku 15 menit
                 ]);
 
                 $defaultRole = Role::where('name', 'User')->first();
@@ -83,9 +77,12 @@ class AuthController extends Controller
                 }
             });
 
-            // 🔐 Enkripsi plain token agar URL lebih aman
-            $encryptedToken = Crypt::encryptString($token);
-            $verificationUrl = route('verifyOtp', ['token' => $encryptedToken]);
+            // Kirim OTP lewat email
+            $verificationUrl = URL::temporarySignedRoute(
+                'verifyOtp',
+                now()->addMinutes(15), // link berlaku 15 menit
+                ['id' => $user->id]
+            );
 
             Mail::to($user->email)->send(new UserVerificationMail(
                 $user->name,
@@ -93,8 +90,10 @@ class AuthController extends Controller
                 $verificationUrl
             ));
 
+
             return redirect()->route('login')
-                ->with('success', 'Registrasi berhasil! Silakan cek email untuk verifikasi.');
+            ->with('success', 'Registrasi berhasil! Silakan cek email untuk kode verifikasi.');
+
         } catch (\Exception $e) {
             Log::error('Error saat register user: ' . $e->getMessage(), [
                 'trace' => $e->getTraceAsString(),
@@ -105,155 +104,100 @@ class AuthController extends Controller
         }
     }
 
-
-    public function showVerify(Request $request)
+   public function showVerify(Request $request, $id)
     {
-        try {
-            $encryptedToken = $request->get('token');
-            if (!$encryptedToken) {
-                return redirect()->route('login')->withErrors(['error' => 'Token verifikasi tidak ditemukan.']);
-            }
+        // Laravel otomatis validasi signature lewat middleware 'signed'
 
-            // 🔐 Decrypt token
-            $plainToken = Crypt::decryptString($encryptedToken);
+        $user = User::findOrFail($id);
 
-            // Cari user berdasarkan HASH dari plain token
-            $user = User::where('verification_token', hash('sha256', $plainToken))
-                ->where('verification_expires_at', '>=', now())
-                ->first();
-
-            if (!$user) {
-                return redirect()->route('login')
-                    ->withErrors(['error' => 'Token verifikasi tidak valid atau sudah kadaluarsa.']);
-            }
-
-            return view('auth.verify', [
-                'email' => $user->email,
-                'token' => $encryptedToken, // tetep kirim token terenkripsi ke form
-            ]);
-        } catch (\Exception $e) {
+        if (now()->greaterThan($user->verification_expires_at)) {
             return redirect()->route('login')
-                ->withErrors(['error' => 'Token verifikasi tidak valid.']);
+                ->withErrors(['error' => 'Link verifikasi sudah kadaluarsa.']);
         }
+
+        return view('auth.verify', [
+            'maskedEmail' => str($user->email)->mask('*', 3, 5), // sekadar masking
+            'userId'      => $user->id,
+            'user' => $user
+        ]);
     }
 
+
+    // Function baru untuk verifikasi kode OTP
     public function processVerification(Request $request)
     {
         $request->validate([
-            'token' => 'required',
+            'user_id' => 'required|integer',
             'verification_code' => 'required|numeric|digits:6',
         ]);
 
-        try {
-            // 🔐 Decrypt token yang dikirim dari form
-            $plainToken = Crypt::decryptString($request->token);
-        } catch (\Exception $e) {
-            Log::error('Verification failed: Invalid token.', ['token' => $request->token]);
-            return back()->withErrors(['error' => 'Token verifikasi tidak valid.']);
-        }
-
-        // Cari user berdasarkan token hash
-        $user = User::where('verification_token', hash('sha256', $plainToken))
-                    ->where('status_id', 8) // status Verifikasi
+        $user = User::where('id', $request->user_id)
+                    ->where('status_id', 8) // status "Verifikasi"
                     ->first();
 
         if (!$user) {
-            Log::error('Verification failed: User not found or already verified.');
+            Log::warning('Verification failed: User not found or already verified.', [
+                'user_id' => $request->user_id
+            ]);
             return back()->withErrors(['error' => 'Akun tidak ditemukan atau sudah terverifikasi.']);
         }
 
-        // Cek apakah kode OTP sudah kadaluarsa
-        if (Carbon::now()->greaterThan($user->verification_expires_at)) {
-            Log::warning('Verification failed: Expired code.', ['email' => $user->email]);
+        // Cek expired
+        if (now()->greaterThan($user->verification_expires_at)) {
+            Log::warning('Verification failed: Expired code.', [
+                'user_id' => $user->id
+            ]);
             return back()->withErrors(['verification_code' => 'Kode verifikasi sudah kadaluwarsa. Silakan kirim ulang.']);
         }
 
-        // Cek apakah kode OTP sesuai
-        if ($user->verification_code != $request->verification_code) {
-            Log::warning('Verification failed: Incorrect code.', [
-                'email' => $user->email,
-                'input_code' => $request->verification_code,
-                'expected_code' => $user->verification_code
-            ]);
+        // Cek kode OTP (pakai hash biar aman)
+        if ($request->verification_code !== $user->verification_code) {
             return back()->withErrors(['verification_code' => 'Kode verifikasi salah.']);
         }
 
-        // ✅ Jika semua validasi berhasil, update status user jadi Registered
+
+        // Update status user → Registered
         $user->update([
             'status_id' => 1, // Registered
             'verification_code' => null,
             'verification_expires_at' => null,
-            'verification_token' => null, // buang token biar link gak bisa dipakai ulang
         ]);
 
-        Log::info('User successfully verified.', ['email' => $user->email]);
+        Log::info('User successfully verified.', [
+            'user_id' => $user->id,
+            'email'   => $user->email
+        ]);
 
         return redirect()->route('login')->with('success', 'Akun berhasil diverifikasi! Silakan login.');
     }
 
-
-
     // Function untuk mengirim ulang OTP
     public function resendOtp(Request $request)
     {
-        $request->validate([
-            'token' => 'required'
-        ]);
+        $request->validate(['email' => 'required|email']);
 
-        try {
-            // 🔐 Decrypt token dari request
-            $plainToken = Crypt::decryptString($request->token);
-        } catch (\Exception $e) {
-            Log::error('Resend OTP failed: Invalid token.', ['token' => $request->token]);
-            return back()->withErrors(['error' => 'Token tidak valid.']);
-        }
-
-        $user = User::where('verification_token', hash('sha256', $plainToken))
-                    ->where('status_id', 8)
-                    ->first();
+        $user = User::where('email', $request->email)->where('status_id', 8)->first();
 
         if (!$user) {
-            Log::error('Resend OTP failed: User not found or already verified.');
+            Log::error('Resend OTP failed: User not found or already verified.', ['email' => $request->email]);
             return back()->withErrors(['error' => 'Akun tidak ditemukan atau sudah terverifikasi.']);
         }
 
-        // 🚦 Batasi request OTP (misalnya 1 menit sekali)
-        if ($user->last_otp_sent_at && $user->last_otp_sent_at->diffInSeconds(now()) < 120) {
-            return back()->withErrors(['error' => 'Anda baru saja meminta OTP. Silakan tunggu 2 menit sebelum mencoba lagi.']);
-        }
-
         try {
-            $otpCode = rand(100000, 999999);
+            $otpCode = random_int(100000, 999999);
+            $user->verification_code = $otpCode;
+            $user->verification_expires_at = now()->addMinutes(15);
+            $user->save();
 
-            $user->update([
-                'verification_code' => $otpCode,
-                'verification_expires_at' => now()->addMinutes(15),
-                'last_otp_sent_at' => now(), // tambahin kolom ini di DB
-            ]);
-
-            // 🔗 Buat ulang link verifikasi terenkripsi
-            $encryptedToken = Crypt::encryptString($plainToken);
-            $verificationUrl = route('verifyOtp', ['token' => $encryptedToken]);
-
-            Mail::to($user->email)->send(new UserVerificationMail(
-                $user->name,
-                $otpCode,
-                $verificationUrl
-            ));
-
+            Mail::to($user->email)->queue(new UserVerificationMail($user->name, $otpCode));
             Log::info('New OTP sent successfully.', ['email' => $user->email]);
 
-            return back()->with('success', 'Kode verifikasi baru telah dikirim ke email Anda.');
+            return back()->with('success', 'Jika email terdaftar, kode verifikasi baru sudah dikirim.');
         } catch (\Exception $e) {
-            Log::error('Failed to send OTP email.', [
-                'email' => $user->email,
-                'error' => $e->getMessage()
-            ]);
-
+            Log::error('Failed to send OTP email.', ['email' => $user->email, 'error' => $e->getMessage()]);
             return back()->withErrors(['error' => 'Gagal mengirim email verifikasi. Silakan coba lagi.']);
         }
     }
-
 
 
     // Halaman login

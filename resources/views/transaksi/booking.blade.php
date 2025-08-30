@@ -608,6 +608,7 @@
                         <hr class="my-4">
 
                         <!-- Bank Information -->
+                        @if($paymentMethod)
                         <div class="bank-info mb-4">
                             <h6 class="mb-3">
                                 <i class="fas fa-university text-primary me-2"></i>
@@ -616,18 +617,20 @@
                             <div class="row">
                                 <div class="col-md-4 mb-3">
                                     <small class="text-muted d-block">Bank</small>
-                                    <strong class="h6 mb-0">BCA</strong>
+                                    <strong class="h6 mb-0">{{ $paymentMethod->bank_name }}</strong>
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <small class="text-muted d-block">No. Rekening</small>
-                                    <strong class="h6 mb-0">1234567890</strong>
-                                    <button class="btn btn-link btn-sm p-0 ms-2" onclick="copyToClipboard('1234567890')" title="Salin nomor rekening">
+                                    <strong class="h6 mb-0">{{ $paymentMethod->account_number }}</strong>
+                                    <button class="btn btn-link btn-sm p-0 ms-2" 
+                                        onclick="copyToClipboard('{{ $paymentMethod->account_number }}')" 
+                                        title="Salin nomor rekening">
                                         <i class="fas fa-copy"></i>
                                     </button>
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <small class="text-muted d-block">Atas Nama</small>
-                                    <strong class="h6 mb-0">LPK Amarta Bangun Indonesia</strong>
+                                    <strong class="h6 mb-0">{{ $paymentMethod->account_name }}</strong>
                                 </div>
                             </div>
                             
@@ -638,6 +641,7 @@
                                 </small>
                             </div>
                         </div>
+                        @endif
 
                         <!-- Upload Section -->
                         <div class="mb-4">
@@ -653,13 +657,17 @@
                                         Bukti pembayaran sudah diunggah. Menunggu verifikasi dari admin.
                                     </div>
 
-                                    <img src="{{ asset('storage/' . $latestProof->photo) }}" alt="Bukti Pembayaran" class="proof-preview mb-3">
+                                    <img src="{{ $latestProof->photo_url }}" 
+                                        alt="Bukti Pembayaran" 
+                                        class="proof-preview mb-3">
 
                                     <div>
-                                        <a href="{{ asset('storage/' . $latestProof->photo) }}" target="_blank" class="btn btn-outline-primary btn-modern me-2">
+                                        <a href="{{ $latestProof->photo_url }}" target="_blank" 
+                                        class="btn btn-outline-primary btn-modern me-2">
                                             <i class="fas fa-eye me-2"></i>Lihat Bukti
                                         </a>
-                                        <a href="{{ asset('storage/' . $latestProof->photo) }}" download class="btn btn-outline-secondary btn-modern">
+                                        <a href="{{ $latestProof->photo_url }}" download 
+                                        class="btn btn-outline-secondary btn-modern">
                                             <i class="fas fa-download me-2"></i>Download
                                         </a>
                                     </div>

@@ -413,99 +413,155 @@ class AnnouncementController extends Controller
      */
     
     public function AnnountmentsUser()
-    {
-        try {
-            // Pastikan user sudah login
-            $user = Auth::user();
-            
-            if (!$user) {
-                return redirect()->route('login');
-            }
-
-            // Ambil status_id user dengan fallback
-            $userStatusId = $user->status_id ?? 1;
-
-            // Ambil semua announcements yang published
-            $allAnnouncements = Announcement::where('status', 'published')
-                ->orderByDesc('priority')
-                ->latest()
-                ->get();
-
-            // Filter sesuai target audience
-            $announcements = collect();
-            
-            if ($allAnnouncements->count() > 0) {
-                $announcements = $allAnnouncements->filter(function ($announcement) use ($userStatusId) {
-                    $isMatch = AnnouncementHelper::isAudienceMatch($announcement->target_audience, $userStatusId);
-                    
-                    // Debug - hapus setelah testing
-                    \Log::info("Checking announcement: {$announcement->title}");
-                    \Log::info("Target audience: '{$announcement->target_audience}'");
-                    \Log::info("User Status: {$userStatusId}");
-                    \Log::info("Match result: " . ($isMatch ? 'YES' : 'NO'));
-                    
-                    return $isMatch;
-                });
-            }
-
-            // Cek apakah user masih punya cicilan
-            $hasOutstanding = \App\Models\FeePayment::whereHas('transaction', function($q) {
-                    $q->where('user_id', auth()->id());
-                })
-                ->where('status', '!=', 'Completed')
-                ->exists();
-
-            // Filter pengumuman berdasarkan kondisi tagihan
-            if ($hasOutstanding) {
-                $announcements = $announcements->filter(function ($item) {
-                    return $item->type === 'auto installment' || $item->type === 'umum';
-                });
-            } else {
-                $announcements = $announcements->filter(function ($item) {
-                    return $item->type === 'auto success' || $item->type === 'umum';
-                });
-            }
-
-            // Debug info - hapus setelah testing
-            \Log::info("User Status ID: {$userStatusId}");
-            \Log::info("Total announcements: " . $allAnnouncements->count());
-            \Log::info("Filtered announcements: " . $announcements->count());
-
-            // Tambahkan debug untuk semua target audience yang ada
-            $allTargetAudiences = $allAnnouncements->pluck('target_audience')->unique();
-            \Log::info("All target audiences in DB: " . $allTargetAudiences->toJson());
-
-            // Pastikan semua variabel dikirim ke view
-            return view('dashboard.users', [
-                'announcements' => $announcements,
-                'userStatusId' => $userStatusId,
-                'user' => $user,
-                'debug' => [
-                    'totalAnnouncements' => $allAnnouncements->count(),
-                    'filteredAnnouncements' => $announcements->count(),
-                    'userStatus' => $userStatusId,
-                    'allTargetAudiences' => $allTargetAudiences->toArray(),
-                    'allAnnouncementsData' => $allAnnouncements->map(function($a) use ($userStatusId) {
-                        return [
-                            'title' => $a->title,
-                            'target_audience' => $a->target_audience,
-                            'is_match' => AnnouncementHelper::isAudienceMatch($a->target_audience, $userStatusId)
-                        ];
-                    })
-                ]
-            ]);
-            
-        } catch (\Exception $e) {
-            // Handle error gracefully
-            \Log::error("Dashboard error: " . $e->getMessage());
-            \Log::error("Stack trace: " . $e->getTraceAsString());
-            
-            return view('dashboard.users', [
-                'announcements' => collect(),
-                'userStatusId' => 1,
-                'user' => Auth::user(),
-                'error' => $e->getMessage()
-            ]);
+{
+    try {
+        $user = Auth::user();
+        if (!$user) {
+            return redirect()->route('login');
         }
+
+        $userStatusId = $user->status_id ?? 1;
+
+        // Mapping status_id ke target_audience
+        $statusToAudience = [
+            1 => ['new registrants', 'all students'], // Registered
+            2 => ['paid students', 'all students'],   // Booking Paid
+            3 => ['meeting joined', 'all students'],  // Meeting Joined
+            5 => ['active students', 'all students'], // Active
+            6 => ['active students', 'all students'], // Pemantapan
+            7 => ['active students', 'all students'], // Pemberangkatan
+        ];
+
+        $allowedAudiences = $statusToAudience[$userStatusId] ?? ['all students'];
+
+        // Mapping status_id ke type announcement
+        $statusTypeMap = [
+            1 => ['auto welcome', 'umum'],                        // Registered
+            2 => ['auto booking success', 'auto welcome','umum'], // Paid Students
+            3 => ['auto dp request', 'umum'],                     // Meeting Joined
+            5 => ['auto installment','auto success','umum'],      // Active
+            6 => ['auto installment','auto success','umum'],      // Pemantapan
+            7 => ['auto installment','auto success','umum'],      // Pemberangkatan
+        ];
+
+        // Fallback filter untuk kondisi hutang
+        $typeFilter = [
+            'withDebt' => ['auto installment', 'auto welcome', 'umum'],
+            'noDebt'   => ['auto success', 'auto welcome', 'umum'],
+        ];
+
+        // Ambil semua pengumuman published
+        $allAnnouncements = Announcement::where('status', 'published')
+            ->orderByDesc('priority')
+            ->latest()
+            ->get();
+
+        // Filter berdasarkan target audience
+        $announcements = $allAnnouncements->filter(function ($a) use ($allowedAudiences) {
+            return in_array($a->target_audience, $allowedAudiences);
+        });
+
+        // Cek apakah user masih punya cicilan
+        $hasOutstanding = \App\Models\FeePayment::whereHas('transaction', function($q) {
+                $q->where('user_id', auth()->id());
+            })
+            ->where('status', '!=', 'Completed')
+            ->exists();
+
+        // Filter berdasarkan type sesuai status_id
+        $announcements = $announcements->filter(function ($item) use ($userStatusId, $statusTypeMap, $hasOutstanding, $typeFilter) {
+            if (isset($statusTypeMap[$userStatusId])) {
+                return in_array($item->type, $statusTypeMap[$userStatusId]);
+            }
+            // fallback ke filter hutang
+            return in_array($item->type, $hasOutstanding ? $typeFilter['withDebt'] : $typeFilter['noDebt']);
+        });
+
+        // 🔥 Tambahkan filter tanggal (baik scheduled_at maupun created_at)
+        $now = \Carbon\Carbon::now();
+        $announcements = $announcements->filter(function ($item) use ($now) {
+            // Gunakan scheduled_at jika ada, kalau tidak fallback ke created_at
+            $date = $item->scheduled_at ?? $item->created_at;
+
+            // Hanya tampilkan jika belum lewat lebih dari 1 hari
+            return \Carbon\Carbon::parse($date)->addDay()->isAfter($now);
+        });
+
+        // Urutkan supaya menampilkan pengumuman terdekat
+        $announcements = $announcements->sortBy(function ($item) {
+            return $item->scheduled_at ?? $item->created_at;
+        })->values();
+
+        // **TAMBAHAN: Ambil data meeting untuk user ini**
+        $meetingData = null;
+        if ($userStatusId == 2) { // Paid students
+            $meetingData = \DB::table('meetings')
+                ->where('user_id', $user->id)
+                ->latest()
+                ->first();
+        }
+
+        // **TAMBAHAN: Enrich announcement dengan data meeting**
+        $announcements = $announcements->map(function ($announcement) use ($meetingData) {
+            if ($meetingData && $announcement->type === 'auto booking success') {
+                $announcement->meeting_platform = $meetingData->platform;
+                $announcement->zoom_meeting_id = $meetingData->zoom_meeting_id;
+                $announcement->zoom_passcode = $meetingData->zoom_passcode;
+
+                if ($meetingData->meet_link) {
+                    $announcement->meet_link = $meetingData->meet_link;
+                }
+                if ($meetingData->schedule_at) {
+                    $announcement->scheduled_at = $meetingData->schedule_at;
+                }
+            }
+            return $announcement;
+        });
+
+        // Debug log
+        \Log::info("User Status ID: {$userStatusId}");
+        \Log::info("Allowed audiences: " . implode(',', $allowedAudiences));
+        \Log::info("Allowed types: " . implode(',', $statusTypeMap[$userStatusId] ?? []));
+        \Log::info("Total announcements: " . $allAnnouncements->count());
+        \Log::info("Filtered announcements: " . $announcements->count());
+
+        return view('dashboard.users', [
+            'announcements' => $announcements,
+            'userStatusId' => $userStatusId,
+            'user' => $user,
+            'meetingData' => $meetingData,
+            'debug' => [
+                'allowedAudiences' => $allowedAudiences,
+                'allowedTypes' => $statusTypeMap[$userStatusId] ?? [],
+                'totalAnnouncements' => $allAnnouncements->count(),
+                'filteredAnnouncements' => $announcements->count(),
+                'allAnnouncementsData' => $allAnnouncements->map(function($a) use ($allowedAudiences, $statusTypeMap, $userStatusId) {
+                    return [
+                        'title' => $a->title,
+                        'target_audience' => $a->target_audience,
+                        'is_match' => in_array($a->target_audience, $allowedAudiences),
+                        'type' => $a->type,
+                        'type_match' => isset($statusTypeMap[$userStatusId]) 
+                            ? in_array($a->type, $statusTypeMap[$userStatusId]) 
+                            : false,
+                    ];
+                })
+            ]
+        ]);
+
+    } catch (\Exception $e) {
+        \Log::error("Dashboard error: " . $e->getMessage());
+        return view('dashboard.users', [
+            'announcements' => collect(),
+            'userStatusId' => 1,
+            'user' => Auth::user(),
+            'meetingData' => null,
+            'error' => $e->getMessage()
+        ]);
     }
+}
+
+
+
+
 }

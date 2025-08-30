@@ -393,13 +393,16 @@
                     <h6 class="card-title">Program Kelas</h6>
                     <div class="amount">Rp {{ number_format($biayaDp, 0, ',', '.') }}</div>
                     <small class="text-muted">
-                        @if($dpTransaction && $dpTransaction->status == 'Completed')
-                            <span class="badge badge-paid">Sudah Dibayar</span>
-                        @elseif($bookingTransaction && $bookingTransaction->status == 'Completed')
+                        @if($dpTransaction && $dpTransaction->status == 'Completed' && $bookingTransaction && $bookingTransaction->status == 'Completed')
+                            <span class="badge badge-paid">Sudah Lunas</span>
+                        @elseif($dpTransaction && $dpTransaction->status == 'Pending')
+                            <span class="badge badge-pending">Belum Lunas</span>
+                        @elseif($bookingTransaction && $bookingTransaction->status == 'Pending')
                             <span class="badge badge-pending">Belum Dibayar</span>
                         @else
                             <span class="badge badge-waiting">Menunggu Booking</span>
                         @endif
+
                     </small>
                 </div>
             </div>
@@ -584,13 +587,17 @@
                                         @endif
                                     </td>
                                     <td>
-                                        @if($dpTransaction && $dpTransaction->status == 'Completed')
+                                        @if($dpTransaction && $dpTransaction->status == 'Completed' && $bookingTransaction && $bookingTransaction->status == 'Completed')
                                             <span class="badge badge-paid"><i class="fas fa-check me-1"></i>Lunas</span>
+                                        @elseif($dpTransaction && $dpTransaction->status == 'Pending')
+                                            <span class="badge badge-pending"><i class="fas fa-hourglass-half me-1"></i>Belum Lunas</span>
+
                                         @elseif($bookingTransaction && $bookingTransaction->status == 'Completed')
                                             <span class="badge badge-pending"><i class="fas fa-clock me-1"></i>Belum Dibayar</span>
                                         @else
                                             <span class="badge badge-waiting"><i class="fas fa-hourglass-half me-1"></i>Menunggu</span>
                                         @endif
+
                                     </td>
                                     <td>
                                         @if($bookingTransaction && $bookingTransaction->status == 'Completed')

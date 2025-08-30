@@ -163,4 +163,5 @@ class Transaction extends Model
             default => ucfirst($this->type)
         };
     }
+
 }

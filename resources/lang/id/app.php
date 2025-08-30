@@ -83,18 +83,19 @@ return [
     'card4_subtitle' => "Pemagang Tiap Tahun",
 
     // Konten 3 Final
-    "kegiatan_title" => "私たちの活動",
-    "kegiatan1" => "日本語の補強授業や就労前の準備授業を行い、参加者が面接や出発に備えられるようにします。",
-    "kegiatan2" => "日本への出発前に健康と規律を維持するため、参加者は定期的に体力トレーニングを行います。",
-    "kegiatan3" => "当校の日本語試験は体系的に実施され、ひらがな、カタカナ、漢字、日常会話の理解力を測定します。これは JLPT 試験の準備に欠かせない重要な活動であり、日本での学習や就労に備える助けとなります。",
-    "kegiatan4" => "当校で行われるオンライン面接練習は、日本でのインターンシップや就労に向けた重要なステップです。参加者は日本企業の基準に沿ったマナーと態度を学び、自信を持って本番の選考に臨めるよう指導されます。",
-    "kegiatan5" => "日本語クラスはインタラクティブかつ快適な雰囲気で行われます。経験豊富な講師が、ひらがな、カタカナ、漢字から日常会話まで丁寧に指導します。落ち着いた環境で学ぶことで、参加者は JLPT の準備や日本での学業・就労に集中できます。",
-    "kegiatan6" => "日本からの担当者と共にオフラインで実施されるスキルテストと面接が当校で行われます。参加者は実力、規律、就労準備を直接評価されます。この過程は渡航前の重要な段階であり、最も優秀な参加者のみが選ばれます。",
-    "kegiatan7" => "日本での就職に合格した参加者は、正式に受け入れ企業と契約を結びます。これは、当校が参加者を合法的かつ公式のルートで日本就労へ導いている証です。",
-    "kegiatan8" => "日本渡航に必要な書類準備は、LPK Amarta の学生にとって重要なステップです。この写真では、プログラム参加者が経験豊富なスタッフのサポートを受けながら、パスポートやビザなどの手続きをカラワン移民局で行っています。これにより完全な合法性が確保され、学生は安心して日本での学業や就労に進むことができます。",
-    "kegiatan9" => "LPK Amarta の学生が日本へ出発する様子です。日本語、技能、そして研修で培った経験を携えて、新たな人生をスタートさせます。彼らの未来がより明るいものになるよう、私たちは常に応援しています。",
-    "galeri_title" => "ギャラリー",
-    "galeri_text" => "LPK アマルタ チビトゥン支部 ブカシでの活動の中で撮影された最高の瞬間を収めた写真と動画のコレクション",
+    "kegiatan_title" => "Kegiatan Kami",
+    "kegiatan1" => "Kami menyelenggarakan kelas tambahan bahasa Jepang dan pelatihan persiapan kerja, agar peserta dapat mempersiapkan diri untuk wawancara dan keberangkatan.",
+    "kegiatan2" => "Sebelum keberangkatan ke Jepang, peserta rutin melakukan latihan fisik untuk menjaga kesehatan dan disiplin.",
+    "kegiatan3" => "Ujian bahasa Jepang di sekolah kami dilakukan secara sistematis, mengukur kemampuan membaca hiragana, katakana, kanji, serta pemahaman percakapan sehari-hari. Ini merupakan kegiatan penting untuk persiapan JLPT dan membantu peserta siap belajar atau bekerja di Jepang.",
+    "kegiatan4" => "Latihan wawancara online yang dilakukan di sekolah kami merupakan langkah penting menuju magang atau pekerjaan di Jepang. Peserta belajar etika dan sikap sesuai standar perusahaan Jepang, sehingga dapat menghadapi seleksi dengan percaya diri.",
+    "kegiatan5" => "Kelas bahasa Jepang diselenggarakan secara interaktif dan nyaman. Pengajar berpengalaman membimbing peserta dari hiragana, katakana, kanji, hingga percakapan sehari-hari. Dengan lingkungan belajar yang tenang, peserta dapat fokus mempersiapkan JLPT serta studi atau kerja di Jepang.",
+    "kegiatan6" => "Tes keterampilan dan wawancara yang dilakukan secara offline bersama perwakilan dari Jepang dilakukan di sekolah kami. Peserta dinilai langsung dari kemampuan, disiplin, dan kesiapan kerja. Proses ini merupakan tahap penting sebelum keberangkatan, dan hanya peserta terbaik yang dipilih.",
+    "kegiatan7" => "Peserta yang diterima bekerja di Jepang secara resmi menandatangani kontrak dengan perusahaan penerima. Ini menunjukkan bahwa sekolah kami memfasilitasi jalur legal dan resmi untuk bekerja di Jepang.",
+    "kegiatan8" => "Persiapan dokumen yang diperlukan untuk keberangkatan ke Jepang merupakan langkah penting bagi siswa LPK Amarta. Dalam foto ini, peserta program didampingi staf berpengalaman saat mengurus paspor dan visa di Kantor Imigrasi Karawang. Hal ini memastikan legalitas lengkap, sehingga siswa dapat belajar dan bekerja di Jepang dengan aman.",
+    "kegiatan9" => "Ini adalah momen keberangkatan siswa LPK Amarta ke Jepang. Mereka membawa kemampuan bahasa Jepang, keterampilan, dan pengalaman dari pelatihan, untuk memulai kehidupan baru. Kami selalu mendukung agar masa depan mereka lebih cerah.",
+    "galeri_title" => "Galeri",
+    "galeri_text" => "Koleksi foto dan video terbaik yang diambil selama kegiatan LPK Amarta cabang Cibitung, Bekasi.",
+
 
 
     // About
@@ -141,7 +142,7 @@ return [
     'title_form' => "Kirim Pesan",
     'text_form' => "Silakan isi form di bawah ini untuk menghubungi kami. Tim LPK Amarta siap membantu Anda menjawab pertanyaan, memberikan informasi program, atau menerima saran dan masukan dari Anda.",
     'button_form' => "Kirim Pesan",
-
+    
     'contact_card' => "Hubungi Kami",
     'contact_title'=> "+6285283123744",
     'email_label' => "lpkamartacibitung@gmail.com",

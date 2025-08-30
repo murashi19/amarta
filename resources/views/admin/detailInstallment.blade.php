@@ -298,17 +298,17 @@
                 <div class="card-body text-center py-4">
                     <div class="mb-4">
                         <img 
-                            src="{{ asset('storage/' . $installment->photo) }}" 
+                            src="{{ $installment->photo_url }}" 
                             alt="Bukti Pembayaran" 
                             class="proof-image rounded shadow"
-                            onclick="window.open('{{ asset('storage/' . $installment->photo) }}', '_blank')"
+                            onclick="window.open('{{ $installment->photo_url }}', '_blank')"
                         >
                     </div>
                     <div class="d-flex justify-content-center flex-wrap">
-                        <a href="{{ asset('storage/' . $installment->photo) }}" target="_blank" class="btn btn-outline-primary me-2 mb-2">
+                        <a href="{{ $installment->photo_url }}" target="_blank" class="btn btn-outline-primary me-2 mb-2">
                             <i class="fas fa-external-link-alt me-1"></i> Buka di Tab Baru
                         </a>
-                        <a href="{{ asset('storage/' . $installment->photo) }}" download class="btn btn-success mb-2">
+                        <a href="{{ $installment->photo_url }}" download class="btn btn-success mb-2">
                             <i class="fas fa-download me-1"></i> Download
                         </a>
                     </div>
@@ -525,7 +525,7 @@
                 <i class="fas fa-cogs me-2"></i>
                 Aksi Verifikasi
             </h6>
-            <form id="verificationForm" method="POST" action="{{ route('admin.verify-payment', $installment->id) }}">
+            <form id="verificationForm" method="POST" action="{{ route('admin.installments.detail', $installment->id) }}">
                 @csrf
                 <div class="mb-3">
                     <label for="admin_notes" class="form-label fw-semibold">Catatan Admin (Opsional)</label>

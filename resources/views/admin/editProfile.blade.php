@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layouts.dashboardAdmin')
 
 @section('title', 'Edit Profil Admin')
 
@@ -6,12 +6,21 @@
 @push('styles')
     <style>
         :root {
-            --primary-color: #0d5ea6;
-            --primary-dark: #4f46e5;
-            --admin-color: #7c3aed;
-            --admin-dark: #5b21b6;
-            --success-color: #10b981;
-            --danger-color: #ef4444;
+            --color-primary: #0d5ea6;
+            --color-secondary: #a6550d;
+            --color-success: #24c224;
+            --color-warning: #e2b11e;
+            --color-danger: #ac2020;
+            --color-info: #297ba3;
+            --color-light: #eff2f6;
+            --color-dark: #162737;
+            --color-hover: #d6eafe;
+            --color-disabletxt: #9e9e9e;
+            --gradient-primary: linear-gradient(135deg, #0d5ea6 0%, #1e7bb8 100%);
+            --gradient-light: linear-gradient(135deg, #d6eafe 0%, #e8f4fd 100%);
+            --shadow-soft: 0 10px 40px rgba(13, 94, 166, 0.1);
+            --shadow-hover: 0 20px 60px rgba(13, 94, 166, 0.2);
+            
             --gray-50: #f9fafb;
             --gray-100: #f3f4f6;
             --gray-200: #e5e7eb;
@@ -19,15 +28,12 @@
             --gray-600: #4b5563;
             --gray-700: #374151;
             --gray-800: #1f2937;
-            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
             --radius: 12px;
             --radius-lg: 16px;
         }
 
         body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background: var(--gradient-light);
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             line-height: 1.6;
         }
@@ -41,13 +47,13 @@
         .edit-card {
             background: white;
             border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-lg);
+            box-shadow: var(--shadow-soft);
             border: 1px solid var(--gray-200);
             overflow: hidden;
         }
 
         .edit-header {
-            background: linear-gradient(135deg, var(--admin-color), var(--admin-dark));
+            background: var(--gradient-primary);
             color: white;
             padding: 2rem;
             text-align: center;
@@ -92,7 +98,7 @@
         .section-title {
             font-size: 1.25rem;
             font-weight: 600;
-            color: var(--gray-800);
+            color: var(--color-dark);
             margin-bottom: 1.5rem;
             display: flex;
             align-items: center;
@@ -102,7 +108,7 @@
         }
 
         .section-icon {
-            color: var(--admin-color);
+            color: var(--color-primary);
         }
 
         .form-grid {
@@ -118,7 +124,7 @@
 
         .form-label {
             font-weight: 600;
-            color: var(--gray-700);
+            color: var(--color-dark);
             margin-bottom: 0.5rem;
             display: block;
             font-size: 0.9rem;
@@ -136,13 +142,14 @@
 
         .form-control:focus {
             outline: none;
-            border-color: var(--admin-color);
-            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(13, 94, 166, 0.1);
             transform: translateY(-1px);
         }
 
         .form-control:hover {
             border-color: var(--gray-400);
+            background: var(--color-hover);
         }
 
         .form-select {
@@ -164,7 +171,7 @@
             height: 120px;
             border-radius: 50%;
             object-fit: cover;
-            border: 4px solid var(--gray-200);
+            border: 4px solid var(--color-primary);
             margin: 0 auto 1rem;
             display: block;
             transition: all 0.3s ease;
@@ -173,20 +180,20 @@
         .photo-placeholder {
             width: 120px;
             height: 120px;
-            background: var(--gray-100);
-            border: 4px solid var(--gray-200);
+            background: var(--color-light);
+            border: 4px solid var(--color-primary);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 1rem;
-            color: var(--gray-500);
+            color: var(--color-primary);
             font-size: 2rem;
         }
 
         .photo-upload-btn {
-            background: var(--gray-100);
-            border: 2px dashed var(--gray-300);
+            background: var(--color-light);
+            border: 2px dashed var(--color-primary);
             border-radius: var(--radius);
             padding: 1rem;
             cursor: pointer;
@@ -196,8 +203,9 @@
         }
 
         .photo-upload-btn:hover {
-            border-color: var(--admin-color);
-            background: rgba(124, 58, 237, 0.05);
+            border-color: var(--color-primary);
+            background: var(--color-hover);
+            box-shadow: var(--shadow-soft);
         }
 
         .photo-upload-btn input[type="file"] {
@@ -213,7 +221,7 @@
 
         .upload-icon {
             font-size: 2rem;
-            color: var(--gray-400);
+            color: var(--color-primary);
             margin-bottom: 0.5rem;
         }
 
@@ -248,26 +256,28 @@
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, var(--admin-color), var(--admin-dark));
+            background: var(--gradient-primary);
             color: white;
-            box-shadow: var(--shadow-sm);
+            box-shadow: var(--shadow-soft);
         }
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
+            box-shadow: var(--shadow-hover);
         }
 
         .btn-secondary {
             background: white;
-            color: var(--gray-700);
+            color: var(--color-dark);
             border: 2px solid var(--gray-300);
+            text-decoration: none;
         }
 
         .btn-secondary:hover {
-            background: var(--gray-50);
-            border-color: var(--gray-400);
+            background: var(--color-light);
+            border-color: var(--color-primary);
             transform: translateY(-1px);
+            box-shadow: var(--shadow-soft);
         }
 
         .form-actions {
@@ -275,7 +285,7 @@
             gap: 1rem;
             justify-content: center;
             padding: 2rem;
-            background: var(--gray-50);
+            background: var(--color-light);
             border-top: 1px solid var(--gray-200);
         }
 
@@ -287,23 +297,23 @@
         }
 
         .alert-danger {
-            background: rgba(239, 68, 68, 0.1);
-            color: #dc2626;
-            border-left: 4px solid #ef4444;
+            background: rgba(172, 32, 32, 0.1);
+            color: var(--color-danger);
+            border-left: 4px solid var(--color-danger);
         }
 
         .invalid-feedback {
-            color: var(--danger-color);
+            color: var(--color-danger);
             font-size: 0.875rem;
             margin-top: 0.25rem;
         }
 
         .form-control.is-invalid {
-            border-color: var(--danger-color);
+            border-color: var(--color-danger);
         }
 
         .form-control.is-invalid:focus {
-            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+            box-shadow: 0 0 0 3px rgba(172, 32, 32, 0.1);
         }
 
         .preview-image {
@@ -311,7 +321,7 @@
             max-height: 120px;
             border-radius: 50%;
             margin-top: 1rem;
-            border: 4px solid var(--admin-color);
+            border: 4px solid var(--color-primary);
         }
 
         @media (max-width: 768px) {
@@ -481,7 +491,7 @@
                                class="form-control @error('birth_date') is-invalid @enderror" 
                                id="birth_date" 
                                name="birth_date" 
-                               value="{{ old('birth_date', $admin->birth_date) }}">
+                               value="{{ old('birth_date', $admin->birth_date ? $admin->birth_date->format('Y-m-d') : '') }}">
                         @error('birth_date')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -493,14 +503,11 @@
                                 id="education_level" 
                                 name="education_level">
                             <option value="">Pilih Pendidikan</option>
-                            <option value="SD" {{ old('education_level', $admin->education_level) == 'SD' ? 'selected' : '' }}>SD</option>
-                            <option value="SMP" {{ old('education_level', $admin->education_level) == 'SMP' ? 'selected' : '' }}>SMP</option>
-                            <option value="SMA" {{ old('education_level', $admin->education_level) == 'SMA' ? 'selected' : '' }}>SMA</option>
-                            <option value="SMK" {{ old('education_level', $admin->education_level) == 'SMK' ? 'selected' : '' }}>SMK</option>
-                            <option value="D3" {{ old('education_level', $admin->education_level) == 'D3' ? 'selected' : '' }}>D3</option>
-                            <option value="S1" {{ old('education_level', $admin->education_level) == 'S1' ? 'selected' : '' }}>S1</option>
-                            <option value="S2" {{ old('education_level', $admin->education_level) == 'S2' ? 'selected' : '' }}>S2</option>
-                            <option value="S3" {{ old('education_level', $admin->education_level) == 'S3' ? 'selected' : '' }}>S3</option>
+                            ,'SMA/SMK/Sederajat','Diploma 3 (D3)','Sarjana (S1)','Lainnya'
+                            <option value="SMP" {{ old('education_level', $admin->education_level) == 'SMP/Sederajat' ? 'selected' : '' }}>SMP/Sederajat</option>
+                            <option value="SMA" {{ old('education_level', $admin->education_level) == 'SMA/SMK/Sederajat' ? 'selected' : '' }}>SMA/SMK/Sederajat</option>
+                            <option value="D3" {{ old('education_level', $admin->education_level) == 'Diploma 3 (D3)' ? 'selected' : '' }}>Diploma 3 (D3)</option>
+                            <option value="S1" {{ old('education_level', $admin->education_level) == 'Sarjana (S1)' ? 'selected' : '' }}>Sarjana (S1)</option>
                         </select>
                         @error('education_level')
                             <div class="invalid-feedback">{{ $message }}</div>

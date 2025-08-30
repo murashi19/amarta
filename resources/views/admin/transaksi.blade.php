@@ -87,6 +87,37 @@
         overflow: hidden;
     }
     
+    /* Ensure action column is always visible */
+    .table-responsive .table {
+        min-width: 100%;
+    }
+    
+    .action-column {
+        min-width: 120px;
+        width: 120px;
+        position: sticky;
+        right: 0;
+        background-color: white;
+        z-index: 10;
+        border-left: 1px solid #dee2e6;
+        box-shadow: -2px 0 5px rgba(0,0,0,0.1);
+    }
+    
+    .action-column th,
+    .action-column td {
+        background-color: white;
+        position: sticky;
+        right: 0;
+        z-index: 10;
+    }
+    
+    .action-column th {
+        background-color: var(--bs-primary);
+        color: white;
+        border-left: 1px solid rgba(255,255,255,0.2);
+        box-shadow: -2px 0 5px rgba(0,0,0,0.1);
+    }
+    
     .table thead th {
         background: var(--bs-primary);
         color: white;
@@ -218,47 +249,464 @@
         transition: width 0.6s ease;
     }
     
-    /* Responsive fixes */
+    /* ========== RESPONSIVE IMPROVEMENTS ========== */
+    
+    /* Large Tablets and Small Desktops */
+    @media (max-width: 992px) {
+        .container, .container-fluid {
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+        
+        .filter-card {
+            margin-left: 10px;
+        }
+        
+        .card-stats h3 {
+            font-size: 1.75rem;
+        }
+        
+        .nav-tabs .nav-link {
+            padding: 0.875rem 1.25rem;
+            margin-right: 0.25rem;
+        }
+    }
+    
+    /* Tablets */
     @media (max-width: 768px) {
+        /* Container and spacing */
+        .container, .container-fluid {
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+        
+        /* Card stats improvements */
+        .card-stats {
+            margin-bottom: 1rem;
+        }
+        
         .card-stats h3 {
             font-size: 1.5rem;
         }
         
-        .table-responsive {
-            font-size: 0.875rem;
+        .card-stats .card-body {
+            padding: 1rem;
         }
         
+        /* Filter card mobile adjustments */
+        .filter-card {
+            margin-left: 0;
+            margin-top: 1rem;
+        }
+        
+        /* Table responsive improvements */
+        .table-responsive {
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .table-responsive .table {
+            min-width: 600px; /* Ensure minimum width for horizontal scroll */
+        }
+        
+        /* Action column mobile adjustments */
+        .action-column {
+            min-width: 100px;
+            width: 100px;
+        }
+        
+        .action-column .btn-group-vertical .btn {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+        }
+        
+        .table thead th {
+            padding: 0.75rem 0.5rem;
+            font-size: 0.75rem;
+        }
+        
+        .table tbody td {
+            padding: 0.75rem 0.5rem;
+            vertical-align: middle;
+        }
+        
+        /* Button groups */
         .btn-group-vertical {
             width: 100%;
         }
         
+        .btn-group {
+            flex-direction: column;
+            width: 100%;
+        }
+        
+        .btn-group .btn {
+            margin-bottom: 0.25rem;
+            border-radius: 8px !important;
+        }
+        
+        /* Status message */
         .status-message {
             right: 10px;
             left: 10px;
             min-width: auto;
+            max-width: none;
         }
         
+        /* Avatar adjustments */
         .avatar {
             width: 35px;
             height: 35px;
             font-size: 0.75rem;
         }
 
+        /* Tab improvements */
+        .nav-tabs {
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            border-bottom: 1px solid #dee2e6;
+            margin-bottom: 1.5rem;
+            -webkit-overflow-scrolling: touch;
+        }
+
         .nav-tabs .nav-link {
             padding: 0.75rem 1rem;
+            font-size: 0.875rem;
+            white-space: nowrap;
+            min-width: max-content;
+        }
+        
+        .nav-tabs .nav-link i {
+            margin-right: 0.25rem;
+        }
+        
+        /* Form elements */
+        .form-control, .form-select {
+            font-size: 1rem; /* Prevent zoom on iOS */
+        }
+        
+        /* Status dropdown */
+        .status-dropdown {
+            min-width: 120px;
+            font-size: 0.8rem;
+            padding: 0.25rem 0.5rem;
+        }
+        
+        /* Progress bars */
+        .installment-progress {
+            padding: 0.5rem;
+        }
+        
+        /* Proof preview */
+        .proof-preview {
+            max-width: 60px;
+            max-height: 60px;
+        }
+        
+        /* Amount displays */
+        .transaction-amount {
+            font-size: 1rem;
+        }
+        
+        .installment-amount {
             font-size: 0.875rem;
         }
     }
     
+    /* Mobile Phones */
     @media (max-width: 576px) {
+        /* Container */
+        .container, .container-fluid {
+            padding-left: 8px;
+            padding-right: 8px;
+        }
+        
+        /* Flexbox improvements for mobile */
         .d-flex.justify-content-between {
             flex-direction: column;
             gap: 1rem;
         }
         
+        .d-flex.align-items-center {
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        
+        /* Card stats mobile */
+        .card-stats {
+            margin-bottom: 0.75rem;
+        }
+        
+        .card-stats h3 {
+            font-size: 1.25rem;
+        }
+        
+        .card-stats .card-body {
+            padding: 0.875rem;
+            text-align: center;
+        }
+        
+        .card-stats p {
+            font-size: 0.8rem;
+            margin-bottom: 0;
+        }
+        
+        /* Table mobile specific */
+        .table {
+            font-size: 0.8rem;
+        }
+        
+        .table-responsive .table {
+            min-width: 500px; /* Smaller minimum width for mobile */
+        }
+        
+        /* Action column mobile specific */
+        .action-column {
+            min-width: 80px;
+            width: 80px;
+        }
+        
+        .action-column .btn {
+            font-size: 0.7rem;
+            padding: 0.2rem 0.4rem;
+        }
+        
+        .table thead th {
+            padding: 0.5rem 0.25rem;
+            font-size: 0.7rem;
+        }
+        
+        .table tbody td {
+            padding: 0.5rem 0.25rem;
+        }
+        
+        /* Hide less important columns on very small screens */
+        .table .d-none-xs {
+            display: none !important;
+        }
+        
+        /* Button improvements */
+        .btn {
+            font-size: 0.875rem;
+            padding: 0.5rem 0.75rem;
+        }
+        
         .btn-group .btn {
-            padding: 0.25rem 0.5rem;
+            padding: 0.375rem 0.5rem;
             font-size: 0.75rem;
+            margin-bottom: 0.25rem;
+            width: 100%;
+        }
+        
+        .btn-sm {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.7rem;
+        }
+        
+        /* Avatar mobile */
+        .avatar {
+            width: 30px;
+            height: 30px;
+            font-size: 0.65rem;
+        }
+        
+        /* Tab mobile specific */
+        .nav-tabs {
+            margin-bottom: 1rem;
+            padding-bottom: 0;
+        }
+        
+        .nav-tabs .nav-link {
+            padding: 0.5rem 0.75rem;
+            font-size: 0.8rem;
+            margin-right: 0.125rem;
+        }
+        
+        .nav-tabs .nav-link i {
+            display: none; /* Hide icons on very small screens */
+        }
+        
+        /* Form elements mobile */
+        .form-control, .form-select {
+            padding: 0.5rem;
+            font-size: 1rem;
+        }
+        
+        .form-label {
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        /* Status message mobile */
+        .status-message {
+            top: 10px;
+            right: 5px;
+            left: 5px;
+            font-size: 0.875rem;
+        }
+        
+        /* Badge mobile */
+        .badge {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.7rem;
+        }
+        
+        /* Amount displays mobile */
+        .transaction-amount {
+            font-size: 0.95rem;
+        }
+        
+        .installment-amount {
+            font-size: 0.8rem;
+        }
+        
+        /* Progress mobile */
+        .progress {
+            height: 6px;
+        }
+        
+        .installment-progress {
+            padding: 0.375rem;
+            font-size: 0.8rem;
+        }
+        
+        /* Proof preview mobile */
+        .proof-preview {
+            max-width: 50px;
+            max-height: 50px;
+        }
+        
+        /* Card mobile spacing */
+        .card {
+            margin-bottom: 1rem;
+        }
+        
+        .card .card-body {
+            padding: 0.75rem;
+        }
+        
+        .card .card-header {
+            padding: 0.5rem 0.75rem;
+            font-size: 0.9rem;
+        }
+        
+        /* Utility classes for mobile */
+        .text-mobile-center {
+            text-align: center !important;
+        }
+        
+        .w-mobile-100 {
+            width: 100% !important;
+        }
+        
+        .mb-mobile-2 {
+            margin-bottom: 0.5rem !important;
+        }
+        
+        .p-mobile-2 {
+            padding: 0.5rem !important;
+        }
+    }
+    
+    /* Extra Small Phones */
+    @media (max-width: 375px) {
+        .container, .container-fluid {
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+        
+        .card-stats h3 {
+            font-size: 1.1rem;
+        }
+        
+        .table {
+            font-size: 0.75rem;
+        }
+        
+        .btn {
+            font-size: 0.8rem;
+            padding: 0.375rem 0.5rem;
+        }
+        
+        .nav-tabs .nav-link {
+            padding: 0.375rem 0.5rem;
+            font-size: 0.75rem;
+        }
+        
+        .avatar {
+            width: 25px;
+            height: 25px;
+            font-size: 0.6rem;
+        }
+    }
+    
+    /* Touch device improvements */
+    @media (hover: none) and (pointer: coarse) {
+        .card-stats:hover {
+            transform: none;
+        }
+        
+        .btn:hover {
+            transform: none;
+        }
+        
+        .proof-preview:hover {
+            transform: none;
+        }
+        
+        /* Increase touch targets */
+        .btn {
+            min-height: 44px;
+            min-width: 44px;
+        }
+        
+        .nav-tabs .nav-link {
+            min-height: 44px;
+        }
+        
+        .form-control, .form-select {
+            min-height: 44px;
+        }
+    }
+    
+    /* High DPI displays */
+    @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+        .avatar {
+            border-width: 1px;
+        }
+        
+        .card-stats {
+            box-shadow: 0 2px 4px -1px rgba(0,0,0,0.1), 0 1px 2px -1px rgba(0,0,0,0.06);
+        }
+    }
+    
+    /* Landscape mobile orientation */
+    @media (max-width: 768px) and (orientation: landscape) {
+        .nav-tabs {
+            margin-bottom: 1rem;
+        }
+        
+        .card-stats {
+            margin-bottom: 0.75rem;
+        }
+        
+        .status-message {
+            top: 5px;
+        }
+    }
+    
+
+    
+    /* Reduced motion for accessibility */
+    @media (prefers-reduced-motion: reduce) {
+        .card-stats, .btn, .proof-preview {
+            transition: none;
+        }
+        
+        .progress-bar {
+            transition: none;
         }
     }
 </style>
@@ -267,7 +715,7 @@
 @section('content')
 <div class="container-fluid px-3 px-lg-4">
     <!-- Header -->
-    <div class="row mb-4">
+    <div class="row mb-4 mt-4">
         <div class="col-12">
             <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
                 <div>
@@ -425,14 +873,14 @@
                                 >
                                     <i class="fas fa-undo me-1"></i> Reset
                                 </a>
-                                <a 
-                                    href="{{ route('admin.transaksi.export', request()->query()) }}" 
+                                <a href="{{ route('admin.transaksi.export', request()->query()) }}"
                                     class="btn btn-success flex-fill flex-lg-grow-0"
-                                    title="Export Excel"
-                                    target="_blank"
-                                >
+                                    title="Export Excel Transaksi"
+                                    target="_blank">
                                     <i class="fas fa-download me-1"></i> Export
                                 </a>
+
+
                             </div>
                         </div>
                     </div>
@@ -489,19 +937,20 @@
                                         </td>
                                         <td class="align-middle">
                                             <div class="d-flex align-items-center">
-                                                @if($transaction->user->photo)
+                                                @if(optional($transaction->user)->photo)
                                                     <img src="{{ asset('storage/' . $transaction->user->photo) }}" 
-                                                         alt="Foto Pengguna" 
-                                                         class="avatar bg-primary me-3" 
-                                                         style="width: 35px; height: 35px; object-fit: cover;">
+                                                        alt="Foto Pengguna" 
+                                                        class="avatar bg-primary me-3" 
+                                                        style="width: 35px; height: 35px; object-fit: cover;">
                                                 @else
                                                     <div class="avatar bg-primary me-3" style="width: 35px; height: 35px; font-size: 0.8rem;">
                                                         {{ strtoupper(substr($transaction->user->name ?? 'U', 0, 2)) }}
                                                     </div>
                                                 @endif
+
                                                 <div class="flex-grow-1">
                                                     <div class="fw-semibold mb-1" style="font-size: 0.9rem;">
-                                                        {{ $transaction->user->name ?? 'N/A' }}
+                                                        {{ $transaction->user->name ?? '0' }}
                                                     </div>
                                                     <small class="text-muted d-block">{{ $transaction->user->email ?? 'N/A' }}</small>
                                                     <small class="text-info">
@@ -564,9 +1013,9 @@
                                             @endif
                                         </td>
                                             <td class="text-center align-middle">
-                                                @if($transaction->feePayments->isNotEmpty() && $transaction->feePayments->first()->photo)
-                                                    <a href="{{ asset('storage/' . $transaction->feePayments->first()->photo) }}" 
-                                                    target="_blank" 
+                                                @if($transaction->feePayments->isNotEmpty() && $transaction->feePayments->first()->photo_url)
+                                                    <a href="{{ $transaction->feePayments->first()->photo_url }}" 
+                                                    target="_blank"
                                                     class="btn btn-sm btn-outline-info">
                                                         <i class="fas fa-image me-1"></i> Lihat
                                                     </a>
@@ -576,6 +1025,7 @@
                                                     </span>
                                                 @endif
                                             </td>
+
                                         <td class="align-middle">
                                             <div class="d-flex flex-column gap-1" role="group">
                                                 <!-- View Detail Button -->
@@ -781,13 +1231,11 @@
                                     >
                                         <i class="fas fa-undo me-1"></i> Reset
                                     </a>
-                                    <a 
-                                        href="{{ route('admin.transaksi.installments.export', request()->query()) }}" 
+                                    <a href="{{ route('admin.installments.export', request()->query()) }}"
                                         class="btn btn-success flex-fill flex-lg-grow-0"
-                                        title="Export Cicilan"
-                                        target="_blank"
-                                    >
-                                        <i class="fas fa-download me-1"></i> Export Cicilan
+                                        title="Export Excel Cicilan"
+                                        target="_blank">
+                                        <i class="fas fa-download me-1"></i> Export
                                     </a>
                                 </div>
                             </div>
@@ -907,7 +1355,7 @@
                                                     {{ $installment->status == 'Verification' ? 'bg-info' : '' }}
                                                     {{ $installment->status == 'Completed' ? 'bg-success' : '' }}
                                                     {{ $installment->status == 'Failed' ? 'bg-danger' : '' }}">
-                                                    <i class="fas fa-{{ $installment->status == 'Pending' ? 'clock' : ($installment->status == 'Verification' ? 'eye' : ($installment->status == 'Completed' ? 'check' : 'times')) }} me-1"></i>
+                                                    <i class="fas fa-{{ $installment->status == 'Pending' ? 'clock' : ($installment->status == 'Verification' ? 'checklist' : ($installment->status == 'Completed' ? 'check' : 'times')) }} me-1"></i>
                                                     {{ $installment->status }}
                                                 </span>
                                             </div>
@@ -920,10 +1368,10 @@
                                             @endif
                                         </td>
                                         <td class="text-center align-middle">
-                                            @if($transaction->feePayments->isNotEmpty() && $transaction->feePayments->first()->photo)
-                                                    <a href="{{ asset('storage/' . $transaction->feePayments->first()->photo) }}"  
-                                                   target="_blank" 
-                                                   class="btn btn-sm btn-outline-info">
+                                            @if($installment->photo_url)
+                                                <a href="{{ $installment->photo_url }}"  
+                                                target="_blank" 
+                                                class="btn btn-sm btn-outline-info">
                                                     <i class="fas fa-image me-1"></i> Lihat
                                                 </a>
                                             @else
@@ -932,6 +1380,7 @@
                                                 </span>
                                             @endif
                                         </td>
+
                                         <td class="align-middle">
                                             <div class="d-flex flex-column gap-1" role="group">
                                                 <!-- Verification Actions -->
@@ -1008,6 +1457,7 @@
                     </h4>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Tutup"></button>
                 </div>
+
                 <div class="modal-body p-4">
                     <div class="alert alert-info d-flex align-items-center mb-4" role="alert">
                         <i class="fas fa-info-circle me-3 fa-lg"></i>
@@ -1062,17 +1512,60 @@
                         </div>
                     </div>
 
-                    <div class="mb-4" id="link-input-wrapper">
-                        <label for="meet_link" class="form-label fw-semibold" id="link-label">
-                            <i class="fab fa-google text-danger me-2" id="link-icon"></i>Link Meeting
+                    <!-- Google Meet Input -->
+                    <div class="mb-4" id="google-meet-fields">
+                        <label for="google_meet_link" class="form-label fw-semibold">
+                            <i class="fab fa-google text-danger me-2"></i>Link Google Meet
                         </label>
                         <input type="url" 
                             name="meet_link" 
-                            id="meet_link"
+                            id="google_meet_link"
                             class="form-control form-control-lg" 
-                            placeholder="https://meet.google.com/abc-defg-hij" 
+                            placeholder="https://meet.google.com/abc-defg-hij"
                             required>
                     </div>
+
+                    <!-- Zoom Input -->
+                    <div class="mb-4 d-none" id="zoom-fields">
+                        <!-- Zoom Link -->
+                        <div class="mb-3">
+                            <label for="zoom_meet_link" class="form-label fw-semibold">
+                                <i class="fas fa-link text-primary me-2"></i>Zoom Link
+                            </label>
+                            <input type="url" 
+                                name="zoom_meet_link" 
+                                id="zoom_meet_link" 
+                                class="form-control form-control-lg" 
+                                placeholder="https://zoom.us/j/1234567890">
+                        </div>
+
+                        <!-- Zoom Meeting ID -->
+                        <div class="mb-3">
+                            <label for="zoom_meeting_id" class="form-label fw-semibold">
+                                <i class="fas fa-video text-primary me-2"></i>Zoom Meeting ID
+                            </label>
+                            <input type="text" 
+                                name="zoom_meeting_id" 
+                                id="zoom_meeting_id"
+                                class="form-control form-control-lg" 
+                                placeholder="123 4567 8901">
+                        </div>
+
+                        <!-- Zoom Passcode -->
+                        <div class="mb-3">
+                            <label for="zoom_passcode" class="form-label fw-semibold">
+                                <i class="fas fa-lock text-primary me-2"></i>Zoom Passcode
+                            </label>
+                            <input type="text" 
+                                name="zoom_passcode" 
+                                id="zoom_passcode"
+                                class="form-control form-control-lg" 
+                                placeholder="abcd1234">
+                        </div>
+                    </div>
+
+                    <!-- Hidden field untuk menyimpan link yang aktif -->
+                    <input type="hidden" name="meet_link" id="active_meet_link">
 
                     <div class="row">
                         <div class="col-md-6">
@@ -1112,6 +1605,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="modal-footer bg-light p-3">
                     <button type="button" class="btn btn-secondary btn-lg" data-bs-dismiss="modal">
                         <i class="fas fa-times me-2"></i>Batal
@@ -1137,7 +1631,9 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Tutup"></button>
                 </div>
                 <div class="modal-body">
-                    Apakah Anda yakin ingin menghapus transaksi milik <strong>{{ $transaction->user->name }}</strong>? Tindakan ini tidak dapat dibatalkan.
+                    Apakah Anda yakin ingin menghapus transaksi milik 
+                    <strong>{{ optional($transaction->user)->name ?? 'User Tidak Ditemukan' }}</strong>? 
+                    Tindakan ini tidak dapat dibatalkan.
                 </div>
                 <div class="modal-footer">
                     <form method="POST" action="{{ route('admin.transaksi.destroy', $transaction->id) }}">
@@ -1153,453 +1649,535 @@
         </div>
     </div>
 @endforeach
+@endsection
+
 @push('scripts')
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // Tab functionality
-        const urlParams = new URLSearchParams(window.location.search);
-        const activeTab = urlParams.get('tab');
-        
-        if (activeTab === 'installments') {
-            // Switch to installments tab
-            const installmentsTab = document.getElementById('installments-tab');
-            const installmentsPane = document.getElementById('installments');
-            const transactionsTab = document.getElementById('transactions-tab');
-            const transactionsPane = document.getElementById('transactions');
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Tab functionality
+            const urlParams = new URLSearchParams(window.location.search);
+            const activeTab = urlParams.get('tab');
             
-            if (installmentsTab && installmentsPane) {
-                transactionsTab.classList.remove('active');
-                transactionsPane.classList.remove('show', 'active');
+            if (activeTab === 'installments') {
+                // Switch to installments tab
+                const installmentsTab = document.getElementById('installments-tab');
+                const installmentsPane = document.getElementById('installments');
+                const transactionsTab = document.getElementById('transactions-tab');
+                const transactionsPane = document.getElementById('transactions');
                 
-                installmentsTab.classList.add('active');
-                installmentsPane.classList.add('show', 'active');
+                if (installmentsTab && installmentsPane) {
+                    transactionsTab.classList.remove('active');
+                    transactionsPane.classList.remove('show', 'active');
+                    
+                    installmentsTab.classList.add('active');
+                    installmentsPane.classList.add('show', 'active');
+                }
             }
-        }
 
-        // Modal setup
-        const modal = document.getElementById('approveModal');
-        if (modal) {
-            modal.addEventListener('show.bs.modal', function (event) {
-                const button = event.relatedTarget;
-                const transactionId = button.getAttribute('data-id');
-                document.getElementById('approveTransactionId').value = transactionId;
-            });
-        }
-
-        // CSRF Token for AJAX requests
-        const csrfToken = document.querySelector('meta[name="csrf-token"]');
-        if (csrfToken) {
-            window.csrfToken = csrfToken.getAttribute('content');
-        }
-
-        // Form preview updates
-        const meetingDate = document.getElementById('meeting_date');
-        const meetingTime = document.getElementById('meeting_time');
-        const meetLink = document.getElementById('meet_link');
-        
-        if (meetingDate) {
-            meetingDate.addEventListener('change', function() {
-                const previewDate = document.getElementById('preview-date');
-                if (previewDate) {
-                    previewDate.textContent = this.value ? new Date(this.value).toLocaleDateString('id-ID') : 'Belum dipilih';
-                }
-            });
-        }
-        
-        if (meetingTime) {
-            meetingTime.addEventListener('change', function() {
-                const previewTime = document.getElementById('preview-time');
-                if (previewTime) {
-                    previewTime.textContent = this.value || 'Belum dipilih';
-                }
-            });
-        }
-        
-        if (meetLink) {
-            meetLink.addEventListener('input', function() {
-                const previewLink = document.getElementById('preview-link');
-                if (previewLink) {
-                    previewLink.textContent = this.value || 'Belum diisi';
-                }
-            });
-        }
-    });
-
-    function updateTransactionStatus(selectElement) {
-        const transactionId = selectElement.getAttribute('data-transaction-id');
-        const currentStatus = selectElement.getAttribute('data-current-status');
-        const newStatus = selectElement.value;
-        const spinner = document.getElementById('spinner-' + transactionId);
-        
-        // If status hasn't changed, do nothing
-        if (currentStatus === newStatus) {
-            return;
-        }
-        
-        // Show confirmation dialog
-        let actionText = '';
-        switch(newStatus) {
-            case 'Completed':
-                actionText = 'menyetujui';
-                break;
-            case 'Failed':
-                actionText = 'menolak';
-                break;
-            case 'Pending':
-                actionText = 'mengubah ke Pending';
-                break;
-            case 'Verification':
-                actionText = 'mengubah ke Verifikasi';
-                break;
-        }
-        
-        if (!confirm(`Apakah Anda yakin ingin ${actionText} transaksi ini?`)) {
-            // Reset to original value
-            selectElement.value = currentStatus;
-            return;
-        }
-        
-        // Show loading spinner
-        if (spinner) {
-            spinner.classList.remove('d-none');
-        }
-        selectElement.disabled = true;
-        
-        // Prepare form data
-        const formData = new FormData();
-        formData.append('_token', window.csrfToken);
-        formData.append('status', newStatus);
-        
-        // Send AJAX request
-        fetch(`/admin/transaksi/${transactionId}/updateStatus`, {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
+            // Modal setup
+            const modal = document.getElementById('approveModal');
+            if (modal) {
+                modal.addEventListener('show.bs.modal', function (event) {
+                    const button = event.relatedTarget;
+                    const transactionId = button.getAttribute('data-id');
+                    document.getElementById('approveTransactionId').value = transactionId;
+                });
             }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Update current status attribute
-                selectElement.setAttribute('data-current-status', newStatus);
-                
-                // Show success message
-                showStatusMessage('success', data.message);
-                
-                // Update paid_at display if status is Completed
-                if (newStatus === 'Completed' && data.paid_at) {
-                    updatePaidAtDisplay(transactionId, data.paid_at);
+
+            // CSRF Token for AJAX requests
+            const csrfToken = document.querySelector('meta[name="csrf-token"]');
+            if (csrfToken) {
+                window.csrfToken = csrfToken.getAttribute('content');
+            }
+
+            // Form elements
+            const meetingDate       = document.getElementById('meeting_date');
+            const meetingTime       = document.getElementById('meeting_time');
+            const googleMeetLink    = document.getElementById('google_meet_link');
+            const zoomMeetLink      = document.getElementById('zoom_meet_link');
+            const zoomMeetingId     = document.getElementById('zoom_meeting_id');
+            const zoomPasscode      = document.getElementById('zoom_passcode');
+            const activeMeetLink    = document.getElementById('active_meet_link');
+
+            // Preview elements
+            const previewDate       = document.getElementById('preview-date');
+            const previewTime       = document.getElementById('preview-time');
+            const previewLink       = document.getElementById('preview-link');
+
+            // Field containers
+            const googleFields      = document.getElementById('google-meet-fields');
+            const zoomFields        = document.getElementById('zoom-fields');
+            const platformRadios    = document.querySelectorAll('input[name="meeting_platform"]');
+
+            // Update field sesuai platform
+            function updateMeetingFields() {
+                const selected = document.querySelector('input[name="meeting_platform"]:checked')?.value;
+                if (!selected) return;
+
+                if (selected === "google_meet") {
+                    // Show Google Meet fields, hide Zoom fields
+                    googleFields.classList.remove("d-none");
+                    zoomFields.classList.add("d-none");
+
+                    // Update required attributes
+                    googleMeetLink.required = true;
+                    zoomMeetLink.required = false;
+                    zoomMeetingId.required = false;
+                    zoomPasscode.required = false;
+
+                    // Update hidden field with Google Meet link
+                    activeMeetLink.value = googleMeetLink.value;
+
+                    // Update preview
+                    previewLink.textContent = googleMeetLink.value || "Belum diisi";
+                } else if (selected === "zoom") {
+                    // Show Zoom fields, hide Google Meet fields
+                    googleFields.classList.add("d-none");
+                    zoomFields.classList.remove("d-none");
+
+                    // Update required attributes
+                    googleMeetLink.required = false;
+                    zoomMeetLink.required = true;
+                    zoomMeetingId.required = true;
+                    zoomPasscode.required = true;
+
+                    // Update hidden field with Zoom link
+                    activeMeetLink.value = zoomMeetLink.value;
+
+                    // Update preview with Zoom info
+                    let previewText = "";
+                    if (zoomMeetingId.value) previewText += "ID: " + zoomMeetingId.value;
+                    if (zoomPasscode.value) previewText += (previewText ? " | " : "") + "Passcode: " + zoomPasscode.value;
+                    previewLink.textContent = previewText || "Belum diisi";
                 }
-                
-                // Update stats if needed
-                updateStatsCards();
-            } else {
+            }
+
+            // Event listeners for platform change
+            platformRadios.forEach(radio => {
+                radio.addEventListener("change", updateMeetingFields);
+            });
+
+            // Event listener for date change
+            if (meetingDate) {
+                meetingDate.addEventListener("change", function () {
+                    previewDate.textContent = this.value 
+                        ? new Date(this.value).toLocaleDateString('id-ID') 
+                        : "Belum dipilih";
+                });
+            }
+
+            // Event listener for time change
+            if (meetingTime) {
+                meetingTime.addEventListener("change", function () {
+                    previewTime.textContent = this.value || "Belum dipilih";
+                });
+            }
+
+            // Event listener for Google Meet link
+            if (googleMeetLink) {
+                googleMeetLink.addEventListener("input", function () {
+                    if (document.querySelector('input[name="meeting_platform"]:checked')?.value === 'google_meet') {
+                        activeMeetLink.value = this.value;
+                        previewLink.textContent = this.value || "Belum diisi";
+                    }
+                });
+            }
+
+            // Event listeners for Zoom fields
+            if (zoomMeetLink) {
+                zoomMeetLink.addEventListener("input", function () {
+                    if (document.querySelector('input[name="meeting_platform"]:checked')?.value === 'zoom') {
+                        activeMeetLink.value = this.value;
+                        updateMeetingFields();
+                    }
+                });
+            }
+
+            if (zoomMeetingId) {
+                zoomMeetingId.addEventListener("input", updateMeetingFields);
+            }
+
+            if (zoomPasscode) {
+                zoomPasscode.addEventListener("input", updateMeetingFields);
+            }
+
+            // Initialize default state
+            updateMeetingFields();
+        });
+
+        function updateTransactionStatus(selectElement) {
+            const transactionId = selectElement.getAttribute('data-transaction-id');
+            const currentStatus = selectElement.getAttribute('data-current-status');
+            const newStatus = selectElement.value;
+            const spinner = document.getElementById('spinner-' + transactionId);
+            
+            // If status hasn't changed, do nothing
+            if (currentStatus === newStatus) {
+                return;
+            }
+            
+            // Show confirmation dialog
+            let actionText = '';
+            switch(newStatus) {
+                case 'Completed':
+                    actionText = 'menyetujui';
+                    break;
+                case 'Failed':
+                    actionText = 'menolak';
+                    break;
+                case 'Pending':
+                    actionText = 'mengubah ke Pending';
+                    break;
+                case 'Verification':
+                    actionText = 'mengubah ke Verifikasi';
+                    break;
+            }
+            
+            if (!confirm(`Apakah Anda yakin ingin ${actionText} transaksi ini?`)) {
                 // Reset to original value
                 selectElement.value = currentStatus;
-                showStatusMessage('error', data.message || 'Gagal mengubah status transaksi');
+                return;
             }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            // Reset to original value
-            selectElement.value = currentStatus;
-            showStatusMessage('error', 'Terjadi kesalahan saat mengubah status transaksi');
-        })
-        .finally(() => {
-            // Hide loading spinner
+            
+            // Show loading spinner
             if (spinner) {
-                spinner.classList.add('d-none');
+                spinner.classList.remove('d-none');
             }
-            selectElement.disabled = false;
-        });
-    }
-
-    function showStatusMessage(type, message) {
-        const alertClass = type === 'success' ? 'alert-success' : 'alert-danger';
-        const iconClass = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle';
-        
-        const alertHTML = `
-            <div class="alert ${alertClass} alert-dismissible fade show status-message" role="alert">
-                <i class="fas ${iconClass} me-2"></i>
-                <strong>${type === 'success' ? 'Berhasil!' : 'Error!'}</strong> ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        `;
-        
-        const container = document.getElementById('statusMessages');
-        if (container) {
-            container.innerHTML = alertHTML;
+            selectElement.disabled = true;
             
-            // Auto remove after 5 seconds
-            setTimeout(() => {
-                const alert = container.querySelector('.alert');
-                if (alert) {
-                    const bsAlert = new bootstrap.Alert(alert);
-                    bsAlert.close();
+            // Prepare form data
+            const formData = new FormData();
+            formData.append('_token', window.csrfToken);
+            formData.append('status', newStatus);
+            
+            // Send AJAX request
+            fetch(`/admin/transaksi/${transactionId}/updateStatus`, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
                 }
-            }, 5000);
-        }
-    }
-
-    function updatePaidAtDisplay(transactionId, paidAt) {
-        // Find the status cell for this transaction
-        const statusCell = document.querySelector(`select[data-transaction-id="${transactionId}"]`)?.closest('td');
-        
-        if (!statusCell) return;
-        
-        // Check if paid_at display already exists
-        let paidDisplay = statusCell.querySelector('.text-success.d-block');
-        
-        if (!paidDisplay) {
-            // Create new paid_at display
-            paidDisplay = document.createElement('small');
-            paidDisplay.className = 'text-success d-block mt-1';
-            statusCell.appendChild(paidDisplay);
-        }
-        
-        // Format the date
-        const date = new Date(paidAt);
-        const formattedDate = date.toLocaleDateString('id-ID', {
-            day: '2-digit',
-            month: '2-digit', 
-            year: 'numeric'
-        }) + ' ' + date.toLocaleTimeString('id-ID', {
-            hour: '2-digit',
-            minute: '2-digit'
-        });
-        
-        paidDisplay.innerHTML = `<i class="fas fa-check-circle me-1"></i>Dibayar: ${formattedDate}`;
-    }
-
-    function updateStatsCards() {
-        // This function could be enhanced to update the stats cards via AJAX
-        // For now, we'll just reload the page after a short delay to show updated stats
-        setTimeout(() => {
-            window.location.reload();
-        }, 1000);
-    }
-
-    // Auto-submit form functionality
-    document.addEventListener('DOMContentLoaded', function() {
-        const forms = document.querySelectorAll('#filterForm, #installmentFilterForm');
-        
-        forms.forEach(form => {
-            const selects = form.querySelectorAll('select');
-            
-            selects.forEach(select => {
-                select.addEventListener('change', function() {
-                    // Add loading state
-                    this.style.opacity = '0.6';
-                    this.disabled = true;
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Update current status attribute
+                    selectElement.setAttribute('data-current-status', newStatus);
                     
-                    // Submit form
-                    form.submit();
-                });
-            });
-        });
-    });
-
-    // Enhanced search functionality
-    document.addEventListener('DOMContentLoaded', function() {
-        const searchInputs = document.querySelectorAll('#searchTransaction, #searchInstallment');
-        
-        searchInputs.forEach(searchInput => {
-            let searchTimeout;
-            
-            if (searchInput) {
-                searchInput.addEventListener('input', function() {
-                    clearTimeout(searchTimeout);
-                    searchTimeout = setTimeout(() => {
-                        if (this.value.length >= 3 || this.value.length === 0) {
-                            const form = this.closest('form');
-                            if (form) {
-                                form.submit();
-                            }
-                        }
-                    }, 500); // 500ms delay
-                });
-            }
-        });
-    });
-
-    // Improved table responsiveness
-    document.addEventListener('DOMContentLoaded', function() {
-        const tables = document.querySelectorAll('#transactionsTable, #installmentsTable');
-        
-        tables.forEach(table => {
-            if (table && window.innerWidth < 768) {
-                // Add mobile-specific classes or modifications
-                table.classList.add('table-sm');
-            }
-        });
-    });
-
-    // Loading state for buttons
-    document.addEventListener('DOMContentLoaded', function() {
-        const forms = document.querySelectorAll('form');
-        forms.forEach(form => {
-            form.addEventListener('submit', function() {
-                const submitBtn = this.querySelector('button[type="submit"]');
-                if (submitBtn && !submitBtn.disabled) {
-                    submitBtn.disabled = true;
-                    const originalText = submitBtn.innerHTML;
-                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Memproses...';
+                    // Show success message
+                    showStatusMessage('success', data.message);
                     
-                    // Reset button after 5 seconds if form hasn't submitted
-                    setTimeout(() => {
-                        if (submitBtn.disabled) {
-                            submitBtn.disabled = false;
-                            submitBtn.innerHTML = originalText;
-                        }
-                    }, 5000);
-                }
-            });
-        });
-    });
-
-    // Tab switching with URL update
-    document.addEventListener('DOMContentLoaded', function() {
-        const tabButtons = document.querySelectorAll('#transactionTabs button[data-bs-toggle="tab"]');
-        
-        tabButtons.forEach(button => {
-            button.addEventListener('shown.bs.tab', function(event) {
-                const targetTab = event.target.getAttribute('data-bs-target');
-                const url = new URL(window.location);
-                
-                if (targetTab === '#installments') {
-                    url.searchParams.set('tab', 'installments');
+                    // Update paid_at display if status is Completed
+                    if (newStatus === 'Completed' && data.paid_at) {
+                        updatePaidAtDisplay(transactionId, data.paid_at);
+                    }
+                    
+                    // Update stats if needed
+                    updateStatsCards();
                 } else {
-                    url.searchParams.delete('tab');
+                    // Reset to original value
+                    selectElement.value = currentStatus;
+                    showStatusMessage('error', data.message || 'Gagal mengubah status transaksi');
                 }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // Reset to original value
+                selectElement.value = currentStatus;
+                showStatusMessage('error', 'Terjadi kesalahan saat mengubah status transaksi');
+            })
+            .finally(() => {
+                // Hide loading spinner
+                if (spinner) {
+                    spinner.classList.add('d-none');
+                }
+                selectElement.disabled = false;
+            });
+        }
+
+        function showStatusMessage(type, message) {
+            const alertClass = type === 'success' ? 'alert-success' : 'alert-danger';
+            const iconClass = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle';
+            
+            const alertHTML = `
+                <div class="alert ${alertClass} alert-dismissible fade show status-message" role="alert">
+                    <i class="fas ${iconClass} me-2"></i>
+                    <strong>${type === 'success' ? 'Berhasil!' : 'Error!'}</strong> ${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            `;
+            
+            const container = document.getElementById('statusMessages');
+            if (container) {
+                container.innerHTML = alertHTML;
                 
-                // Update URL without page reload
-                window.history.pushState({}, '', url);
+                // Auto remove after 5 seconds
+                setTimeout(() => {
+                    const alert = container.querySelector('.alert');
+                    if (alert) {
+                        const bsAlert = new bootstrap.Alert(alert);
+                        bsAlert.close();
+                    }
+                }, 5000);
+            }
+        }
+
+        function updatePaidAtDisplay(transactionId, paidAt) {
+            // Find the status cell for this transaction
+            const statusCell = document.querySelector(`select[data-transaction-id="${transactionId}"]`)?.closest('td');
+            
+            if (!statusCell) return;
+            
+            // Check if paid_at display already exists
+            let paidDisplay = statusCell.querySelector('.text-success.d-block');
+            
+            if (!paidDisplay) {
+                // Create new paid_at display
+                paidDisplay = document.createElement('small');
+                paidDisplay.className = 'text-success d-block mt-1';
+                statusCell.appendChild(paidDisplay);
+            }
+            
+            // Format the date
+            const date = new Date(paidAt);
+            const formattedDate = date.toLocaleDateString('id-ID', {
+                day: '2-digit',
+                month: '2-digit', 
+                year: 'numeric'
+            }) + ' ' + date.toLocaleTimeString('id-ID', {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            paidDisplay.innerHTML = `<i class="fas fa-check-circle me-1"></i>Dibayar: ${formattedDate}`;
+        }
+
+        function updateStatsCards() {
+            // This function could be enhanced to update the stats cards via AJAX
+            // For now, we'll just reload the page after a short delay to show updated stats
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
+        }
+
+        // Auto-submit form functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const forms = document.querySelectorAll('#filterForm, #installmentFilterForm');
+            
+            forms.forEach(form => {
+                const selects = form.querySelectorAll('select');
+                
+                selects.forEach(select => {
+                    select.addEventListener('change', function() {
+                        // Add loading state
+                        this.style.opacity = '0.6';
+                        this.disabled = true;
+                        
+                        // Submit form
+                        form.submit();
+                    });
+                });
             });
         });
-    });
 
-    // SweetAlert Verifikasi Cicilan
-     function confirmApprove(installmentId) {
-        Swal.fire({
-            title: 'Konfirmasi Terima Cicilan',
-            text: "Apakah Anda yakin ingin menyetujui cicilan ini?",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#28a745',
-            cancelButtonColor: '#6c757d',
-            confirmButtonText: 'Ya, Setujui!',
-            cancelButtonText: 'Batal'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // Buat form dinamis untuk mengirim permintaan
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.action = '/installments/' + installmentId + '/verify';
-                form.style.display = 'none';
+        // Enhanced search functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInputs = document.querySelectorAll('#searchTransaction, #searchInstallment');
+            
+            searchInputs.forEach(searchInput => {
+                let searchTimeout;
                 
-                // Tambahkan token CSRF
-                const csrfToken = document.createElement('input');
-                csrfToken.type = 'hidden';
-                csrfToken.name = '_token';
-                csrfToken.value = '{{ csrf_token() }}';
-                form.appendChild(csrfToken);
-
-                // Tambahkan input action
-                const actionInput = document.createElement('input');
-                actionInput.type = 'hidden';
-                actionInput.name = 'action';
-                actionInput.value = 'approve';
-                form.appendChild(actionInput);
-
-                document.body.appendChild(form);
-                form.submit();
-            }
-        });
-    }
-
-    function confirmReject(installmentId) {
-        Swal.fire({
-            title: 'Konfirmasi Tolak Cicilan',
-            text: "Apakah Anda yakin ingin menolak cicilan ini? Status akan berubah menjadi Failed.",
-            icon: 'error',
-            showCancelButton: true,
-            confirmButtonColor: '#dc3545',
-            cancelButtonColor: '#6c757d',
-            confirmButtonText: 'Ya, Tolak!',
-            cancelButtonText: 'Batal'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // Buat form dinamis untuk mengirim permintaan
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.action = '/installments/' + installmentId + '/verify';
-                form.style.display = 'none';
-                
-                // Tambahkan token CSRF
-                const csrfToken = document.createElement('input');
-                csrfToken.type = 'hidden';
-                csrfToken.name = '_token';
-                csrfToken.value = '{{ csrf_token() }}';
-                form.appendChild(csrfToken);
-
-                // Tambahkan input action
-                const actionInput = document.createElement('input');
-                actionInput.type = 'hidden';
-                actionInput.name = 'action';
-                actionInput.value = 'reject';
-                form.appendChild(actionInput);
-
-                document.body.appendChild(form);
-                form.submit();
-            }
-        });
-    }
-
-    // Fungsi pencarian
-    function filterTransactions() {
-        const searchValue = document.getElementById('searchTransaction').value.toLowerCase();
-        const typeValue = document.getElementById('filterType').value.toLowerCase();
-        const statusValue = document.getElementById('filterStatus').value.toLowerCase();
-
-        const table = document.getElementById('transactionsTable'); // pastikan id tabel benar
-        const rows = table.querySelectorAll('tbody tr');
-
-        let visibleCount = 0;
-
-        rows.forEach(row => {
-            const nameCol   = row.querySelector('td:nth-child(2)')?.innerText.toLowerCase()
-            const typeCol   = row.querySelector('td:nth-child(3)')?.innerText.toLowerCase() 
-            const statusCol = row.querySelector('td:nth-child(5)')?.innerText.toLowerCase() 
-
-            const matchesSearch = !searchValue || nameCol.includes(searchValue)
-            const matchesType   = !typeValue || typeCol.includes(typeValue);
-            const matchesStatus = !statusValue || statusCol.includes(statusValue);
-
-            if (matchesSearch && matchesType && matchesStatus) {
-                row.style.display = '';
-                visibleCount++;
-            } else {
-                row.style.display = 'none';
-            }
+                if (searchInput) {
+                    searchInput.addEventListener('input', function() {
+                        clearTimeout(searchTimeout);
+                        searchTimeout = setTimeout(() => {
+                            if (this.value.length >= 3 || this.value.length === 0) {
+                                const form = this.closest('form');
+                                if (form) {
+                                    form.submit();
+                                }
+                            }
+                        }, 500); // 500ms delay
+                    });
+                }
+            });
         });
 
-        // Tampilkan pesan jika tidak ada data
-        const tbody = table.querySelector('tbody');
-        let noDataRow = tbody.querySelector('.no-data-row');
+        // Improved table responsiveness
+        document.addEventListener('DOMContentLoaded', function() {
+            const tables = document.querySelectorAll('#transactionsTable, #installmentsTable');
+            
+            tables.forEach(table => {
+                if (table && window.innerWidth < 768) {
+                    // Add mobile-specific classes or modifications
+                    table.classList.add('table-sm');
+                }
+            });
+        });
 
-        if (visibleCount === 0) {
-            if (!noDataRow) {
-                const tr = document.createElement('tr');
-                tr.classList.add('no-data-row');
-                tr.innerHTML = `<td colspan="8" class="text-center py-4">Tidak ada transaksi ditemukan.</td>`;
-                tbody.appendChild(tr);
-            }
-        } else {
-            if (noDataRow) noDataRow.remove();
+        // Loading state for buttons
+        document.addEventListener('DOMContentLoaded', function() {
+            const forms = document.querySelectorAll('form');
+            forms.forEach(form => {
+                form.addEventListener('submit', function() {
+                    const submitBtn = this.querySelector('button[type="submit"]');
+                    if (submitBtn && !submitBtn.disabled) {
+                        submitBtn.disabled = true;
+                        const originalText = submitBtn.innerHTML;
+                        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Memproses...';
+                        
+                        // Reset button after 5 seconds if form hasn't submitted
+                        setTimeout(() => {
+                            if (submitBtn.disabled) {
+                                submitBtn.disabled = false;
+                                submitBtn.innerHTML = originalText;
+                            }
+                        }, 5000);
+                    }
+                });
+            });
+        });
+
+        // Tab switching with URL update
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabButtons = document.querySelectorAll('#transactionTabs button[data-bs-toggle="tab"]');
+            
+            tabButtons.forEach(button => {
+                button.addEventListener('shown.bs.tab', function(event) {
+                    const targetTab = event.target.getAttribute('data-bs-target');
+                    const url = new URL(window.location);
+                    
+                    if (targetTab === '#installments') {
+                        url.searchParams.set('tab', 'installments');
+                    } else {
+                        url.searchParams.delete('tab');
+                    }
+                    
+                    // Update URL without page reload
+                    window.history.pushState({}, '', url);
+                });
+            });
+        });
+
+        // SweetAlert Verifikasi Cicilan
+        function confirmApprove(installmentId) {
+            Swal.fire({
+                title: 'Konfirmasi Terima Cicilan',
+                text: "Apakah Anda yakin ingin menyetujui cicilan ini?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#28a745',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Ya, Setujui!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Buat form dinamis untuk mengirim permintaan
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = '/installments/' + installmentId + '/verify';
+                    form.style.display = 'none';
+                    
+                    // Tambahkan token CSRF
+                    const csrfToken = document.createElement('input');
+                    csrfToken.type = 'hidden';
+                    csrfToken.name = '_token';
+                    csrfToken.value = '{{ csrf_token() }}';
+                    form.appendChild(csrfToken);
+
+                    // Tambahkan input action
+                    const actionInput = document.createElement('input');
+                    actionInput.type = 'hidden';
+                    actionInput.name = 'action';
+                    actionInput.value = 'approve';
+                    form.appendChild(actionInput);
+
+                    document.body.appendChild(form);
+                    form.submit();
+                }
+            });
         }
-    }
 
-</script>
+        function confirmReject(installmentId) {
+            Swal.fire({
+                title: 'Konfirmasi Tolak Cicilan',
+                text: "Apakah Anda yakin ingin menolak cicilan ini? Status akan berubah menjadi Failed.",
+                icon: 'error',
+                showCancelButton: true,
+                confirmButtonColor: '#dc3545',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Ya, Tolak!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Buat form dinamis untuk mengirim permintaan
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = '/installments/' + installmentId + '/verify';
+                    form.style.display = 'none';
+                    
+                    // Tambahkan token CSRF
+                    const csrfToken = document.createElement('input');
+                    csrfToken.type = 'hidden';
+                    csrfToken.name = '_token';
+                    csrfToken.value = '{{ csrf_token() }}';
+                    form.appendChild(csrfToken);
+
+                    // Tambahkan input action
+                    const actionInput = document.createElement('input');
+                    actionInput.type = 'hidden';
+                    actionInput.name = 'action';
+                    actionInput.value = 'reject';
+                    form.appendChild(actionInput);
+
+                    document.body.appendChild(form);
+                    form.submit();
+                }
+            });
+        }
+
+        // Fungsi pencarian
+        function filterTransactions() {
+            const searchValue = document.getElementById('searchTransaction').value.toLowerCase();
+            const typeValue = document.getElementById('filterType').value.toLowerCase();
+            const statusValue = document.getElementById('filterStatus').value.toLowerCase();
+
+            const table = document.getElementById('transactionsTable'); // pastikan id tabel benar
+            const rows = table.querySelectorAll('tbody tr');
+
+            let visibleCount = 0;
+
+            rows.forEach(row => {
+                const nameCol   = row.querySelector('td:nth-child(2)')?.innerText.toLowerCase()
+                const typeCol   = row.querySelector('td:nth-child(3)')?.innerText.toLowerCase() 
+                const statusCol = row.querySelector('td:nth-child(5)')?.innerText.toLowerCase() 
+
+                const matchesSearch = !searchValue || nameCol.includes(searchValue)
+                const matchesType   = !typeValue || typeCol.includes(typeValue);
+                const matchesStatus = !statusValue || statusCol.includes(statusValue);
+
+                if (matchesSearch && matchesType && matchesStatus) {
+                    row.style.display = '';
+                    visibleCount++;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            // Tampilkan pesan jika tidak ada data
+            const tbody = table.querySelector('tbody');
+            let noDataRow = tbody.querySelector('.no-data-row');
+
+            if (visibleCount === 0) {
+                if (!noDataRow) {
+                    const tr = document.createElement('tr');
+                    tr.classList.add('no-data-row');
+                    tr.innerHTML = `<td colspan="8" class="text-center py-4">Tidak ada transaksi ditemukan.</td>`;
+                    tbody.appendChild(tr);
+                }
+            } else {
+                if (noDataRow) noDataRow.remove();
+            }
+        }
+    </script>
 @endpush
-@endsection

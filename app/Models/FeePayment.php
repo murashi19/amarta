@@ -19,6 +19,7 @@ class FeePayment extends Model
         'photo',
         'notes',
         'reference_number',
+        'installment_number',
         'paid_at',
         'expires_at',
         'admin_notes',
@@ -105,14 +106,21 @@ class FeePayment extends Model
     /**
      * Get photo file URL
      */
-    public function getphotoUrlAttribute()
+    public function getPhotoUrlAttribute()
     {
         if (!$this->photo) {
             return null;
         }
 
-        return Storage::disk('public')->url($this->photo);
+        // Jika transaksi type = dp → pakai proofs
+        if ($this->transaction && $this->transaction->type === 'dp') {
+            return asset('storage/payment_proofs/' . basename($this->photo));
+        }
+
+        // Jika bukan dp (cicilan) → pakai payment_proofs
+        return asset('storage/proofs/' . basename($this->photo));
     }
+
 
     /**
      * Check if payment is expired

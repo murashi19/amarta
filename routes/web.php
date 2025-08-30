@@ -11,8 +11,10 @@ use App\Http\Middleware\OwnsTransaction;
 use App\Http\Middleware\CheckFinanceAccess;
 use App\Http\Middleware\OwnsPaymentOrder;
 use App\Http\Middleware\EnsureUserIsVerified;
+// use App\Http\Controllers\FormController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AnnouncementController;
+use App\Http\Controllers\UserAnnouncementController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\ManageTransactionController;
@@ -26,6 +28,7 @@ Route::get('/', fn() => view('home'));
 Route::get('/program', fn() => view('program'));
 Route::get('/about', fn() => view('about'));
 Route::get('/contact', fn() => view('contact'));
+// Route::post('/contact', [FormController::class, 'send'])->name('form.send');
 Route::get('/daftar', fn() => view('daftar'));
 Route::get('change/{lang}', [LanguageController::class, 'change'])->name('lang.change');
 Route::get('/register', fn() => view('auth/register'));
@@ -37,7 +40,7 @@ Route::get('/register', [AuthController::class, 'showRegister'])->name('register
 Route::post('/register', [AuthController::class, 'register']);
 
 // Rute untuk halaman verifikasi OTP
-Route::get('/verify-otp', [AuthController::class, 'showVerify'])->name('verifyOtp');
+Route::get('/verify-otp/{id}', [AuthController::class, 'showVerify'])->name('verifyOtp')->middleware(['signed', 'throttle:6,1']);
 Route::post('/verify-otp', [AuthController::class, 'processVerification'])->name('verifyOtp.process');
 Route::post('/resend-otp', [AuthController::class, 'resendOtp'])->name('resendOtp');
 
@@ -78,7 +81,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     // Profile
     Route::get('/admin/profile', [UsersController::class, 'adminProfile'])->name('admin.profile');
     Route::get('/admin/editProfile', [UsersController::class, 'editAdminProfile'])->name('admin.editProfile');
-    Route::put('/admin/editProfile', [UsersController::class, 'updateAdminProfile'])->name('admin.editProfile.updateProfile');
+    Route::put('/admin/editProfile', [UsersController::class, 'updateAdminProfile'])->name('admin.updateProfile');
     
     
     // API routes untuk AJAX
@@ -91,13 +94,16 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('/admin/transaksi/verifyWithMeeting', [ManageTransactionController::class, 'verifyWithMeeting'])->name('admin.transaksi.verifyWithMeeting');
     Route::post('/admin/transaksi/{id}/updateStatus', [ManageTransactionController::class, 'updateStatus'])->name('admin.transaksi.updateStatus');
     Route::delete('/admin/transaksi/{id}', [ManageTransactionController::class, 'destroy'])->name('admin.transaksi.destroy');
-    Route::get('/admin/transaksi/export', [ManageTransactionController::class, 'export'])->name('admin.transaksi.export');
+    Route::get('/admin/transaksi/export', [ManageTransactionController::class, 'exportTransactions'])
+    ->name('admin.transaksi.export');
 
     // === CICILAN ===
     Route::get('/cicilan', [ManageTransactionController::class, 'listInstallments'])->name('cicilan');
     Route::post('/installments/{id}/verify', [ManageTransactionController::class, 'verifyInstallment'])->name('admin.installments.verify');
     Route::get('/installments/{id}', [ManageTransactionController::class, 'detailInstallment'])->name('admin.installments.detail');
-    Route::get('/installments/export', [ManageTransactionController::class, 'exportInstallments'])->name('admin.transaksi.installments.export');
+    Route::get('/admin/transaksi/installments/export', [ManageTransactionController::class, 'exportInstallments'])
+    ->name('admin.transaksi.installments.export');
+
 
     // API routes untuk AJAX
     Route::get('/admin/transaksi/data', [ManageTransactionController::class, 'getData'])->name('admin.transaksi.data');
@@ -105,7 +111,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
 // --- Dashboard User ---
 Route::middleware(['auth', 'verifikasi'])->group(function () {
-    Route::get('/dashboard/users', [AnnouncementController::class, 'AnnountmentsUser'])->name('dashboard.users');
+    Route::get('/dashboard/users', [UserAnnouncementController::class, 'index'])
+    ->name('dashboard.users');
 
     // Profile
     Route::get('/users/profile', [UsersController::class, 'profile'])->name('users.profile');
@@ -126,18 +133,13 @@ Route::middleware(['auth', 'verifikasi'])->group(function () {
     Route::post('/transaksi/booking', [TransactionController::class, 'createBooking'])->name('transaksi.booking.createBooking');
     Route::put('/transaksi/booking/{transaction}/upload', [TransactionController::class, 'uploadProof'])->name('transaksi.booking.upload');
 
-    // Transaksi Program Kelas
-    // Route::get('/transaksi/programKelas/{id}', [TransactionController::class, 'showProgramKelas'])->name('transaksi.programKelas');
-    // Route::get('/transaksi/programKelas', [TransactionController::class, 'createProgramKelas'])->name('transaksi.programKelas.createProgramKelas');
-    // Route::post('/transaksi/{id}/programKelas', [TransactionController::class, 'storeInstallment'])->name('transaksi.programKelas.storeInstallment');
-    // Route::get('/transaksi/programKelas/status/{id}', [TransactionController::class, 'checkStatus'])->name('transaksi.programKelas.checkStatus');
     // Program Kelas routes
     Route::get('/keuangan/program-kelas/create', [TransactionController::class, 'createProgramKelas'])
         ->name('transaksi.programKelas.create');
     
     Route::get('/transaksi/program-kelas/{id}', [TransactionController::class, 'showProgramKelas'])
         ->name('transaksi.programKelas');
-    Route::get('/payment-method-details', [TransactionController::class, 'getPaymentMethodDetails']);
+    Route::get('/payment-method-details/{type}', [TransactionController::class, 'getPaymentMethodDetails']);
 
     Route::post('/transaksi/program-kelas/{id}/cicilan', [TransactionController::class, 'storeInstallment'])
         ->name('transaksi.programKelas.storeInstallment');

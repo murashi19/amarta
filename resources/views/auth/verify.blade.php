@@ -630,7 +630,7 @@
                         </p>
                         <div class="email-highlight">
                             <i class="fas fa-envelope me-2" aria-hidden="true"></i>
-                            <strong>{{ $email }}</strong>
+                            <strong>{{ $user->email }}</strong>
                         </div>
                     </div>
                     
@@ -640,8 +640,8 @@
                     
                     <form action="{{ route('verifyOtp.process') }}" method="POST" id="otpForm" novalidate>
                         @csrf
-                        <input type="hidden" name="email" value="{{ $email }}">
-                        
+                        <input type="hidden" name="user_id" value="{{ $user->id }}">
+
                         <div class="otp-container">
                             <label for="verification_code" class="form-label fw-semibold sr-only">
                                 Kode Verifikasi
@@ -684,7 +684,7 @@
                    <div class="text-center">
                         <form action="{{ route('resendOtp') }}" method="POST" style="display: inline;" novalidate>
                             @csrf
-                            <input type="hidden" name="email" value="{{ $email }}">
+                            <input type="hidden" name="user_id" value="{{ $user->id }}">
 
                             <button type="submit" id="resend-btn" class="btn btn-resend" aria-describedby="resend-help">
                                 <i class="fas fa-redo me-2" aria-hidden="true"></i>

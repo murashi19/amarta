@@ -28,7 +28,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            filter: brightness(60%) saturate(150%) hue-rotate(200deg);
+            filter: brightness(50%) saturate(100%);
             transition: filter 0.2s ease-in-out;
         }
 
@@ -697,27 +697,27 @@
                         <p class="mb-4 text-muted">
                             {{__('app.text_form')}}
                         </p>
-                    <form>
+                    <form id="contactForm">
                         <div class="row gx-3 mb-3"> {{-- Menggunakan gx-3 untuk gap horizontal antar kolom --}}
                             <div class="col-md-6">
-                                <input type="text" class="form-control" id="nama" placeholder="Nama">
+                                <input type="text" class="form-control" id="nama" placeholder="Nama" required>
                             </div>
                             <div class="col-md-6">
-                                <input type="email" class="form-control" id="email" placeholder="Email">
+                                <input type="email" class="form-control" id="email" placeholder="Email" required>
                             </div>
                         </div>
                         <div class="row gx-3 mb-3">
                             <div class="col-md-6">
-                                <input type="text" class="form-control" id="nomor-telepon" placeholder="Nomor Telepon">
+                                <input type="text" class="form-control" id="telepon" placeholder="Nomor Telepon" required>
                             </div>
                             <div class="col-md-6">
-                                <input type="text" class="form-control" id="subjek" placeholder="Subjek">
+                                <input type="text" class="form-control" id="subjek" placeholder="Subjek" required>
                             </div>
                         </div>
                         <div class="mb-4"> {{-- mb-4 untuk margin bawah textarea --}}
-                            <textarea class="form-control" id="pesan" rows="5" placeholder="Pesan"></textarea>
+                            <textarea class="form-control" id="pesan" rows="5" placeholder="Pesan" required></textarea>
                         </div>
-                        <button type="submit" class="btn btn-primary button-dark-blue px-4 py-2">"{{__('app.button_form')}}"</button>
+                        <button type="submit" class="btn btn-primary button-dark-blue px-4 py-2">{{__('app.button_form')}}</button>
                     </form>
                 </div>
 
@@ -751,14 +751,13 @@
             <div class="row justify-content-center">
                 {{-- Card 1: WhatsApp --}}
                 <div class="col-md-4 mb-4">
-                    <a href="https://wa.me/6285183123744" target="_blank" class="contact-card whatsapp-card text-decoration-none d-block">
+                    <a href="https://wa.me/6285283123744" target="_blank" class="contact-card whatsapp-card text-decoration-none d-block">
                         <div class="icon-circle whatsapp-green">
                             <i class="fab fa-whatsapp"></i>
                         </div>
                         <h3 class="contact-title">{{__('app.contact_title')}}</h3>
                     </a>
                 </div>
-
                 {{-- Card 2: Email (Generic) --}}
                 <div class="col-md-4 mb-4">
                     <a href="mailto:lpkamartacibitung@gmail.com" class="contact-card email-card text-decoration-none d-block">
@@ -771,7 +770,7 @@
 
                 {{-- Card 3: Telepon (Generic) --}}
                 <div class="col-md-4 mb-4">
-                    <a href="tel:+6282134716388" class="contact-card phone-card text-decoration-none d-block">
+                    <a href="https://wa.me/6282134716388" class="contact-card phone-card text-decoration-none d-block">
                         <div class="icon-circle phone-blue">
                             <i class="fas fa-phone-alt"></i>
                         </div>
@@ -861,6 +860,7 @@
     </section>
 
 @push('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             var myCarousel = document.querySelector('#contactUsCarousel');
@@ -869,6 +869,22 @@
                 wrap: true // Kembali ke slide pertama setelah slide terakhir
             });
         });
+
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const nama = encodeURIComponent(document.getElementById('nama').value);
+            const email = encodeURIComponent(document.getElementById('email').value);
+            const telepon = encodeURIComponent(document.getElementById('telepon').value);
+            const subjek = encodeURIComponent(document.getElementById('subjek').value);
+            const pesan = encodeURIComponent(document.getElementById('pesan').value);  
+            const gmailLink = `https://mail.google.com/mail/?view=cm&fs=1&to=trianapahmi@gmail.com&su=${subjek}&body=Nama:%20${nama}%0AEmail:%20${email}%0ATelepon:%20${telepon}%0APesan:%20${pesan}`;
+
+            // buka Gmail di tab baru
+            window.open(gmailLink, '_blank');
+            // reset form setelah submit
+            this.reset();
+        });
+                
     </script>
 @endpush
 @endsection

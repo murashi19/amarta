@@ -24,12 +24,12 @@ class User extends Authenticatable
         'photo',
         'verification_code',
         'verification_expires_at',
+        'verification_token',
         'status_id',
     ];
 
     protected $hidden = [
         'password',
-        'verification_token',
         'last_otp_sent_at',
     ];
 

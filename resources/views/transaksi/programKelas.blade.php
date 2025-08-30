@@ -2,8 +2,6 @@
 
 @section('title', 'Pembayaran Program Kelas')
 
-
-
 @section('content')
 
 <div class="container py-4">
@@ -280,7 +278,7 @@
                                             </td>
                                             <td>
                                                 @if($installment->photo)
-                                                    <a href="{{ asset('storage/' . $installment->photo) }}" 
+                                                    <a href="{{ $installment->photo_url }}" 
                                                     target="_blank" 
                                                     class="btn btn-sm btn-outline-info">
                                                         <i class="fas fa-eye"></i>
@@ -340,14 +338,14 @@
                             </div>
                         </div>
                         <hr>
-                        <div class="row">
+                        <!-- <div class="row">
                             <div class="col-6">
-                                <strong>Biaya Admin:</strong>
+                                <strong>Biaya Fee:</strong>
                             </div>
                             <div class="col-6 text-end">
-                                <span class="text-success">Gratis</span>
+                                <span class="text-success" >2000</span>
                             </div>
-                        </div>
+                        </div> -->
                         <hr class="my-3">
                         <div class="row">
                             <div class="col-6">
@@ -365,117 +363,37 @@
                     </div>
                 </div>
 
-                <!-- Step 2: Pilih Detail Metode -->
+                <!-- Step 2: Konfirmasi Transfer Bank -->
                 <div class="payment-step" id="methodStep">
-                    <h5 class="mb-4 text-center">Pilih Detail Pembayaran</h5>
+                    <h5 class="mb-4 text-center">Konfirmasi Metode Pembayaran</h5>
                     
-                    <!-- Transfer Bank Options -->
+                    <!-- Transfer Bank/E-wallet Options (Semua ke Mandiri) -->
                     <div id="bankOptions" style="display: none;">
+                        <div class="alert alert-info text-center">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <strong>Informasi:</strong> Semua pembayaran akan diproses melalui transfer Bank Mandiri
+                        </div>
                         <div class="row g-3">
-                            <div class="col-md-6">
-                                <div class="payment-method-card card h-100" data-method="bca">
+                            <div class="col-12">
+                                <div class="payment-method-card card h-100 selected" data-method="mandiri">
                                     <div class="card-body text-center">
                                         <div class="text-primary mb-2">
                                             <i class="fas fa-university fa-2x"></i>
                                         </div>
-                                        <h6 class="card-title">Bank BCA</h6>
-                                        <small class="text-muted">Transfer via ATM/Mobile Banking</small>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="payment-method-card card h-100" data-method="mandiri">
-                                    <div class="card-body text-center">
-                                        <div class="text-primary mb-2">
-                                            <i class="fas fa-university fa-2x"></i>
-                                        </div>
-                                        <h6 class="card-title">Bank Mandiri</h6>
-                                        <small class="text-muted">Transfer via ATM/Mobile Banking</small>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="payment-method-card card h-100" data-method="bri">
-                                    <div class="card-body text-center">
-                                        <div class="text-primary mb-2">
-                                            <i class="fas fa-university fa-2x"></i>
-                                        </div>
-                                        <h6 class="card-title">Bank BRI</h6>
-                                        <small class="text-muted">Transfer via ATM/Mobile Banking</small>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="payment-method-card card h-100" data-method="bni">
-                                    <div class="card-body text-center">
-                                        <div class="text-primary mb-2">
-                                            <i class="fas fa-university fa-2x"></i>
-                                        </div>
-                                        <h6 class="card-title">Bank BNI</h6>
-                                        <small class="text-muted">Transfer via ATM/Mobile Banking</small>
+                                        <h6 class="card-title">Bank MANDIRI</h6>
+                                        <small class="text-muted">Transfer via ATM/Mobile Banking/Internet Banking</small>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- E-Wallet Options -->
-                    <div id="ewalletOptions" style="display: none;">
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <div class="payment-method-card card h-100" data-method="gopay">
-                                    <div class="card-body text-center">
-                                        <div class="text-success mb-2">
-                                            <i class="fas fa-mobile-alt fa-2x"></i>
-                                        </div>
-                                        <h6 class="card-title">GoPay</h6>
-                                        <small class="text-muted">Bayar dengan GoPay</small>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="payment-method-card card h-100" data-method="ovo">
-                                    <div class="card-body text-center">
-                                        <div class="text-warning mb-2">
-                                            <i class="fas fa-mobile-alt fa-2x"></i>
-                                        </div>
-                                        <h6 class="card-title">OVO</h6>
-                                        <small class="text-muted">Bayar dengan OVO</small>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="payment-method-card card h-100" data-method="dana">
-                                    <div class="card-body text-center">
-                                        <div class="text-info mb-2">
-                                            <i class="fas fa-mobile-alt fa-2x"></i>
-                                        </div>
-                                        <h6 class="card-title">DANA</h6>
-                                        <small class="text-muted">Bayar dengan DANA</small>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="payment-method-card card h-100" data-method="shopeepay">
-                                    <div class="card-body text-center">
-                                        <div class="text-danger mb-2">
-                                            <i class="fas fa-mobile-alt fa-2x"></i>
-                                        </div>
-                                        <h6 class="card-title">ShopeePay</h6>
-                                        <small class="text-muted">Bayar dengan ShopeePay</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Cash Options -->
+                    <!-- Cash Options tetap sama -->
                     <div id="cashOptions" style="display: none;">
                         <div class="alert alert-warning">
                             <i class="fas fa-exclamation-triangle me-2"></i>
                             <strong>Pembayaran Tunai</strong><br>
-                            Silakan datang ke kantor kami untuk melakukan pembayaran tunai. 
-                            Alamat: Jl. Contoh No. 123, Bandung, Jawa Barat.
+                            Silakan datang ke kantor kami untuk melakukan pembayaran tunai.
                         </div>
                         <div class="text-center">
                             <i class="fas fa-money-bill-wave fa-4x text-success mb-3"></i>
@@ -598,979 +516,1230 @@
 
 @endsection
 @push('styles')
-<style>
-    .info-item {
-        padding: 0.5rem 0;
-    }
-
-    .progress-bar {
-        background: linear-gradient(90deg, #28a745, #20c997);
-    }
-
-    .card {
-        border: none;
-        border-radius: 12px;
-    }
-
-    .card-header {
-        border-radius: 12px 12px 0 0 !important;
-        font-weight: 600;
-    }
-
-    .btn {
-        border-radius: 8px;
-        font-weight: 500;
-    }
-
-    .form-control, .form-select {
-        border-radius: 8px;
-    }
-
-    .table th {
-        font-weight: 600;
-        border-bottom: 2px solid #dee2e6;
-    }
-
-    .quick-amount:hover {
-        transform: translateY(-1px);
-        transition: all 0.2s ease;
-    }
-
-    /* Payment Processing Modal Styles */
-    .payment-step {
-        display: none;
-    }
-
-    .payment-step.active {
-        display: block;
-    }
-
-    .step-indicator {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-bottom: 2rem;
-    }
-
-    .step-circle {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        background: #e9ecef;
-        color: #6c757d;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: bold;
-        margin: 0 1rem;
-        position: relative;
-    }
-
-    .step-circle.active {
-        background: #007bff;
-        color: white;
-    }
-
-    .step-circle.completed {
-        background: #28a745;
-        color: white;
-    }
-
-    .step-circle::after {
-        content: '';
-        position: absolute;
-        right: -2rem;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 2rem;
-        height: 2px;
-        background: #e9ecef;
-    }
-
-    .step-circle:last-child::after {
-        display: none;
-    }
-
-    .step-circle.completed::after {
-        background: #28a745;
-    }
-
-    .payment-method-card {
-        border: 2px solid #e9ecef;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-
-    .payment-method-card:hover {
-        border-color: #007bff;
-        transform: translateY(-2px);
-    }
-
-    .payment-method-card.selected {
-        border-color: #007bff;
-        background: #f8f9ff;
-    }
-
-    .payment-summary {
-        background: #f8f9fa;
-        border-radius: 8px;
-        padding: 1.5rem;
-    }
-
-    .loading-spinner {
-        display: inline-block;
-        width: 20px;
-        height: 20px;
-        border: 3px solid #f3f3f3;
-        border-top: 3px solid #007bff;
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    }
-
-    .countdown-timer {
-        font-family: 'Courier New', monospace;
-        font-size: 1.5rem;
-        color: #dc3545;
-        text-align: center;
-        padding: 1rem;
-        background: #f8d7da;
-        border-radius: 8px;
-        border: 1px solid #f5c6cb;
-    }
-
-    /* Upload Area Styles */
-    .upload-area {
-        border: 2px dashed #dee2e6;
-        border-radius: 8px;
-        transition: all 0.3s ease;
-        position: relative;
-    }
-
-    .upload-area:hover {
-        border-color: #007bff;
-        background-color: #f8f9ff;
-    }
-
-    .upload-area.dragover {
-        border-color: #007bff;
-        background-color: #e3f2fd;
-        transform: scale(1.02);
-    }
-
-    .upload-placeholder {
-        cursor: pointer;
-    }
-
-    .upload-preview {
-        border: 2px solid #28a745;
-        background-color: #d4edda;
-    }
-
-    .file-error {
-        border-color: #dc3545 !important;
-        background-color: #f8d7da !important;
-    }
-
-    /* Image Preview Styles */
-    .image-preview {
-        max-width: 100%;
-        max-height: 200px;
-        border-radius: 8px;
-        margin-top: 1rem;
-    }
-
-    @media (max-width: 768px) {
-        .container {
-            padding: 1rem;
+    <style>
+        .info-item {
+            padding: 0.5rem 0;
         }
-        
-        .h4 {
-            font-size: 1.1rem;
+
+        .progress-bar {
+            background: linear-gradient(90deg, #28a745, #20c997);
+        }
+
+        .card {
+            border: none;
+            border-radius: 12px;
+        }
+
+        .card-header {
+            border-radius: 12px 12px 0 0 !important;
+            font-weight: 600;
+        }
+
+        .btn {
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        .form-control, .form-select {
+            border-radius: 8px;
+        }
+
+        .table th {
+            font-weight: 600;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .quick-amount:hover {
+            transform: translateY(-1px);
+            transition: all 0.2s ease;
+        }
+
+        /* Payment Processing Modal Styles */
+        .payment-step {
+            display: none;
+        }
+
+        .payment-step.active {
+            display: block;
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 2rem;
         }
 
         .step-circle {
-            width: 35px;
-            height: 35px;
-            margin: 0 0.5rem;
-            font-size: 0.9rem;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #e9ecef;
+            color: #6c757d;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin: 0 1rem;
+            position: relative;
+        }
+
+        .step-circle.active {
+            background: #007bff;
+            color: white;
+        }
+
+        .step-circle.completed {
+            background: #28a745;
+            color: white;
         }
 
         .step-circle::after {
-            width: 1rem;
-            right: -1rem;
+            content: '';
+            position: absolute;
+            right: -2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 2rem;
+            height: 2px;
+            background: #e9ecef;
         }
-    }
-</style>
+
+        .step-circle:last-child::after {
+            display: none;
+        }
+
+        .step-circle.completed::after {
+            background: #28a745;
+        }
+
+        .payment-method-card {
+            border: 2px solid #e9ecef;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .payment-method-card:hover {
+            border-color: #007bff;
+            transform: translateY(-2px);
+        }
+
+        .payment-method-card.selected {
+            border-color: #007bff;
+            background: #f8f9ff;
+        }
+
+        .payment-summary {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #007bff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .countdown-timer {
+            font-family: 'Courier New', monospace;
+            font-size: 1.5rem;
+            color: #dc3545;
+            text-align: center;
+            padding: 1rem;
+            background: #f8d7da;
+            border-radius: 8px;
+            border: 1px solid #f5c6cb;
+        }
+
+        /* Upload Area Styles */
+        .upload-area {
+            border: 2px dashed #dee2e6;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .upload-area:hover {
+            border-color: #007bff;
+            background-color: #f8f9ff;
+        }
+
+        .upload-area.dragover {
+            border-color: #007bff;
+            background-color: #e3f2fd;
+            transform: scale(1.02);
+        }
+
+        .upload-placeholder {
+            cursor: pointer;
+        }
+
+        .upload-preview {
+            border: 2px solid #28a745;
+            background-color: #d4edda;
+        }
+
+        .file-error {
+            border-color: #dc3545 !important;
+            background-color: #f8d7da !important;
+        }
+
+        /* Image Preview Styles */
+        .image-preview {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .h4 {
+                font-size: 1.1rem;
+            }
+
+            .step-circle {
+                width: 35px;
+                height: 35px;
+                margin: 0 0.5rem;
+                font-size: 0.9rem;
+            }
+
+            .step-circle::after {
+                width: 1rem;
+                right: -1rem;
+            }
+        }
+    </style>
 @endpush
 @push('scripts')
-<script>
-    // Updated JavaScript for the frontend
-    document.addEventListener('DOMContentLoaded', function() {
-        let currentStep = 1;
-        let paymentData = {};
+    <script>
+        // Updated JavaScript for the frontend
+        document.addEventListener('DOMContentLoaded', function() {
+            let currentStep = 1;
+            let paymentData = {};
 
-        // Quick amount buttons
-        const quickAmountButtons = document.querySelectorAll('.quick-amount');
-        const amountInput = document.getElementById('amount');
-        
-        quickAmountButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const amount = this.dataset.amount;
-                amountInput.value = amount;
+            // Quick amount buttons
+            const quickAmountButtons = document.querySelectorAll('.quick-amount');
+            const amountInput = document.getElementById('amount');
+            
+            quickAmountButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const amount = this.dataset.amount;
+                    amountInput.value = amount;
+                    
+                    quickAmountButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+            
+            if (amountInput) {
+                amountInput.addEventListener('input', function() {
+                    quickAmountButtons.forEach(btn => btn.classList.remove('active'));
+                });
+            }
+
+            // Payment Process Button
+            document.getElementById('processPaymentBtn').addEventListener('click', function() {
+                const amount = document.getElementById('amount').value;
+                const paymentMethod = document.getElementById('payment_method').value;
                 
-                quickAmountButtons.forEach(btn => btn.classList.remove('active'));
-                this.classList.add('active');
-            });
-        });
-        
-        if (amountInput) {
-            amountInput.addEventListener('input', function() {
-                quickAmountButtons.forEach(btn => btn.classList.remove('active'));
-            });
-        }
-
-        // Payment Process Button
-        document.getElementById('processPaymentBtn').addEventListener('click', function() {
-            const amount = document.getElementById('amount').value;
-            const paymentMethod = document.getElementById('payment_method').value;
-            
-            if (!amount || !paymentMethod) {
-                showAlert('Harap lengkapi semua field yang diperlukan!', 'warning');
-                return;
-            }
-            
-            if (parseInt(amount) < 400000) {
-                showAlert('Jumlah pembayaran minimal Rp 400.000!', 'warning');
-                return;
-            }
-
-            const maxAmount = {{ $trx->amount - $totalPaid }};
-            if (parseInt(amount) > maxAmount) {
-                showAlert('Jumlah pembayaran melebihi sisa tagihan!', 'warning');
-                return;
-            }
-
-            // Store payment data
-            paymentData = {
-                amount: parseInt(amount),
-                paymentMethod: paymentMethod
-            };
-
-            // Show confirmation data
-            document.getElementById('confirmAmount').textContent = 'Rp ' + parseInt(amount).toLocaleString('id-ID');
-            document.getElementById('confirmMethod').textContent = getPaymentMethodName(paymentMethod);
-            document.getElementById('confirmTotal').textContent = 'Rp ' + parseInt(amount).toLocaleString('id-ID');
-
-            // Show modal
-            const modal = new bootstrap.Modal(document.getElementById('paymentProcessModal'));
-            modal.show();
-        });
-
-        // Modal Navigation
-        document.getElementById('nextBtn').addEventListener('click', function() {
-            if (currentStep === 1) {
-                // Move to step 2
-                showStep(2);
-                showPaymentOptions(paymentData.paymentMethod);
-            } else if (currentStep === 2) {
-            // Validate selection for step 2
-                const selectedMethod = document.querySelector('.payment-method-card.selected');
-                if (!selectedMethod && paymentData.paymentMethod !== 'cash') {
-                    showAlert('Silakan pilih metode pembayaran yang diinginkan!', 'warning');
+                if (!amount || !paymentMethod) {
+                    showAlert('Harap lengkapi semua field yang diperlukan!', 'warning');
                     return;
                 }
                 
-                if (selectedMethod) {
-                    paymentData.selectedMethod = selectedMethod.dataset.method;
+                if (parseInt(amount) < 400000) {
+                    showAlert('Jumlah pembayaran minimal Rp 400.000!', 'warning');
+                    return;
                 }
-                
-                // Move to step 3
-                showStep(3);
-                processPayment();
-            }
-        });
 
-        document.getElementById('backBtn').addEventListener('click', function() {
-            if (currentStep === 2) {
-                showStep(1);
-            } else if (currentStep === 3) {
-                showStep(2);
-            }
-        });
-
-        document.getElementById('processBtn').addEventListener('click', function() {
-            // Validate file upload
-            const fileInput = document.getElementById('paymentProof');
-            if (!fileInput.files || fileInput.files.length === 0) {
-                showUploadError('Harap upload bukti pembayaran terlebih dahulu.');
-                return;
-            }
-
-            // Validate file size (5MB)
-            if (fileInput.files[0].size > 5 * 1024 * 1024) {
-                showUploadError('Ukuran file maksimal 5MB.');
-                return;
-            }
-
-            // Submit the form with file
-            submitPaymentWithFile();
-        });
-
-        // File upload handlers
-        const fileInput = document.getElementById('paymentProof');
-        const uploadArea = document.getElementById('uploadArea');
-        const selectFileBtn = document.getElementById('selectFileBtn');
-        const removeFileBtn = document.getElementById('removeFileBtn');
-        const uploadPlaceholder = document.getElementById('uploadPlaceholder');
-        const uploadPreview = document.getElementById('uploadPreview');
-
-        // Click to select file
-        selectFileBtn.addEventListener('click', function() {
-            fileInput.click();
-        });
-
-        uploadPlaceholder.addEventListener('click', function() {
-            fileInput.click();
-        });
-
-        // File selection handler
-        fileInput.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                if (validateFile(file)) {
-                    showFilePreview(file);
-                } else {
-                    clearFileSelection();
+                const maxAmount = {{ $trx->amount - $totalPaid }};
+                if (parseInt(amount) > maxAmount) {
+                    showAlert('Jumlah pembayaran melebihi sisa tagihan!', 'warning');
+                    return;
                 }
-            }
-        });
 
-        // Remove file handler
-        removeFileBtn.addEventListener('click', function() {
-            clearFileSelection();
-        });
+                // Store payment data
+                paymentData = {
+                    amount: parseInt(amount),
+                    paymentMethod: paymentMethod
+                };
 
-        // Drag and drop handlers
-        uploadArea.addEventListener('dragover', function(e) {
-            e.preventDefault();
-            uploadArea.classList.add('dragover');
-        });
+                // Show confirmation data
+                document.getElementById('confirmAmount').textContent = 'Rp ' + parseInt(amount).toLocaleString('id-ID');
+                document.getElementById('confirmMethod').textContent = getPaymentMethodName(paymentMethod);
+                document.getElementById('confirmTotal').textContent = 'Rp ' + parseInt(amount).toLocaleString('id-ID');
 
-        uploadArea.addEventListener('dragleave', function(e) {
-            e.preventDefault();
-            uploadArea.classList.remove('dragover');
-        });
+                // Show modal
+                const modal = new bootstrap.Modal(document.getElementById('paymentProcessModal'));
+                modal.show();
+            });
 
-        uploadArea.addEventListener('drop', function(e) {
-            e.preventDefault();
-            uploadArea.classList.remove('dragover');
-            
-            const files = e.dataTransfer.files;
-            if (files.length > 0) {
-                const file = files[0];
-                if (validateFile(file)) {
-                    fileInput.files = files;
-                    showFilePreview(file);
-                } else {
-                    clearFileSelection();
-                }
-            }
-        });
-
-        // Click to select payment method
-        document.addEventListener('click', function(e) {
-            if (e.target.closest('.payment-method-card')) {
-                // Remove selection from all cards
-                document.querySelectorAll('.payment-method-card').forEach(card => {
-                    card.classList.remove('selected');
-                });
-                
-                // Add selection to clicked card
-                e.target.closest('.payment-method-card').classList.add('selected');
-            }
-        });
-
-        // Utility Functions
-        function validateFile(file) {
-            const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'];
-            const maxSize = 5 * 1024 * 1024; // 5MB
-
-            if (!allowedTypes.includes(file.type)) {
-                showUploadError('Format file tidak didukung. Gunakan JPG, PNG, atau PDF.');
-                return false;
-            }
-
-            if (file.size > maxSize) {
-                showUploadError('Ukuran file maksimal 5MB.');
-                return false;
-            }
-
-            hideUploadError();
-            return true;
-        }
-
-        function showFilePreview(file) {
-            const fileName = document.getElementById('fileName');
-            const fileSize = document.getElementById('fileSize');
-            
-            fileName.textContent = file.name;
-            fileSize.textContent = formatFileSize(file.size);
-            
-            uploadPlaceholder.style.display = 'none';
-            uploadPreview.style.display = 'block';
-            uploadArea.classList.remove('file-error');
-
-            // Show image preview for image files
-            if (file.type.startsWith('image/')) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const existingPreview = uploadPreview.querySelector('.image-preview');
-                    if (existingPreview) {
-                        existingPreview.remove();
+            // Modal Navigation
+            document.getElementById('nextBtn').addEventListener('click', function() {
+                if (currentStep === 1) {
+                    // Move to step 2
+                    showStep(2);
+                    showPaymentOptions(paymentData.paymentMethod);
+                } else if (currentStep === 2) {
+                // Validate selection for step 2
+                    const selectedMethod = document.querySelector('.payment-method-card.selected');
+                    if (!selectedMethod && paymentData.paymentMethod !== 'cash') {
+                        showAlert('Silakan pilih metode pembayaran yang diinginkan!', 'warning');
+                        return;
                     }
                     
-                    const img = document.createElement('img');
-                    img.src = e.target.result;
-                    img.className = 'image-preview';
-                    img.alt = 'Preview bukti pembayaran';
-                    uploadPreview.appendChild(img);
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        function clearFileSelection() {
-            fileInput.value = '';
-            uploadPlaceholder.style.display = 'block';
-            uploadPreview.style.display = 'none';
-            uploadArea.classList.remove('file-error');
-            hideUploadError();
-            
-            // Remove image preview
-            const existingPreview = uploadPreview.querySelector('.image-preview');
-            if (existingPreview) {
-                existingPreview.remove();
-            }
-        }
-
-        function showUploadError(message) {
-            const errorDiv = document.getElementById('uploadError');
-            errorDiv.textContent = message;
-            errorDiv.style.display = 'block';
-            uploadArea.classList.add('file-error');
-        }
-
-        function hideUploadError() {
-            const errorDiv = document.getElementById('uploadError');
-            errorDiv.style.display = 'none';
-            uploadArea.classList.remove('file-error');
-        }
-
-        function formatFileSize(bytes) {
-            if (bytes === 0) return '0 Bytes';
-            const k = 1024;
-            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-            const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-        }
-
-        function showStep(step) {
-            currentStep = step;
-            
-            // Hide all steps
-            document.querySelectorAll('.payment-step').forEach(stepEl => {
-                stepEl.classList.remove('active');
+                    if (selectedMethod) {
+                        paymentData.selectedMethod = selectedMethod.dataset.method;
+                    }
+                    
+                    // Move to step 3
+                    showStep(3);
+                    processPayment();
+                }
             });
-            
-            // Show current step
-            if (step === 1) {
-                document.getElementById('confirmationStep').classList.add('active');
-                document.getElementById('backBtn').style.display = 'none';
-                document.getElementById('nextBtn').style.display = 'inline-block';
-                document.getElementById('processBtn').style.display = 'none';
-                document.getElementById('nextBtn').innerHTML = 'Lanjutkan <i class="fas fa-arrow-right ms-2"></i>';
-            } else if (step === 2) {
-                document.getElementById('methodStep').classList.add('active');
-                document.getElementById('backBtn').style.display = 'inline-block';
-                document.getElementById('nextBtn').style.display = 'inline-block';
-                document.getElementById('processBtn').style.display = 'none';
-                document.getElementById('nextBtn').innerHTML = 'Proses <i class="fas fa-arrow-right ms-2"></i>';
-            } else if (step === 3) {
-                document.getElementById('processingStep').classList.add('active');
-                document.getElementById('backBtn').style.display = 'none';
-                document.getElementById('nextBtn').style.display = 'none';
-                document.getElementById('processBtn').style.display = 'none';
-                document.getElementById('cancelBtn').style.display = 'none';
-            }
-            
-            // Update step indicator
-            updateStepIndicator(step);
-        }
 
-        function updateStepIndicator(step) {
-            for (let i = 1; i <= 3; i++) {
-                const stepEl = document.getElementById('step' + i);
-                stepEl.classList.remove('active', 'completed');
+            document.getElementById('backBtn').addEventListener('click', function() {
+                if (currentStep === 2) {
+                    showStep(1);
+                } else if (currentStep === 3) {
+                    showStep(2);
+                }
+            });
+
+            document.getElementById('processBtn').addEventListener('click', function() {
+                // Validate file upload
+                const fileInput = document.getElementById('paymentProof');
+                if (!fileInput.files || fileInput.files.length === 0) {
+                    showUploadError('Harap upload bukti pembayaran terlebih dahulu.');
+                    return;
+                }
+
+                // Validate file size (5MB)
+                if (fileInput.files[0].size > 5 * 1024 * 1024) {
+                    showUploadError('Ukuran file maksimal 5MB.');
+                    return;
+                }
+
+                // Submit the form with file
+                submitPaymentWithFile();
+            });
+
+            // File upload handlers
+            const fileInput = document.getElementById('paymentProof');
+            const uploadArea = document.getElementById('uploadArea');
+            const selectFileBtn = document.getElementById('selectFileBtn');
+            const removeFileBtn = document.getElementById('removeFileBtn');
+            const uploadPlaceholder = document.getElementById('uploadPlaceholder');
+            const uploadPreview = document.getElementById('uploadPreview');
+
+            // Click to select file
+            selectFileBtn.addEventListener('click', function(e) {
+                e.preventDefault(); // Prevent any default behavior
+                e.stopPropagation(); // Stop event bubbling
+                fileInput.click();
+            });
+
+            // File input change
+            fileInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    if (validateFile(file)) {
+                        showFilePreview(file);
+                    } else {
+                        clearFileSelection();
+                    }
+                }
+            });
+
+            // Remove file handler
+            removeFileBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                clearFileSelection();
+            });
+
+            // Drag and drop handlers
+            uploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                uploadArea.classList.add('dragover');
+            });
+
+            uploadArea.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                uploadArea.classList.remove('dragover');
+            });
+
+            uploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                uploadArea.classList.remove('dragover');
                 
-                if (i < step) {
-                    stepEl.classList.add('completed');
-                    stepEl.innerHTML = '<i class="fas fa-check"></i>';
-                } else if (i === step) {
-                    stepEl.classList.add('active');
-                    stepEl.innerHTML = i;
-                } else {
-                    stepEl.innerHTML = i;
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    const file = files[0];
+                    if (validateFile(file)) {
+                        fileInput.files = files;
+                        showFilePreview(file);
+                    } else {
+                        clearFileSelection();
+                    }
+                }
+            });
+
+            uploadPlaceholder.addEventListener('click', function(e) {
+                // Jika yang diklik bukan tombol, baru trigger file input
+                if (e.target !== selectFileBtn && !selectFileBtn.contains(e.target)) {
+                    fileInput.click();
+                }
+            });
+
+            // Click to select payment method
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('.payment-method-card')) {
+                    // Remove selection from all cards
+                    document.querySelectorAll('.payment-method-card').forEach(card => {
+                        card.classList.remove('selected');
+                    });
+                    
+                    // Add selection to clicked card
+                    e.target.closest('.payment-method-card').classList.add('selected');
+                }
+            });
+
+            // Utility Functions
+            let isProcessing = false;
+            function validateFile(file) {
+                if (isProcessing) return false;
+                isProcessing = true;
+                
+                const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'];
+                const maxSize = 5 * 1024 * 1024; // 5MB
+
+                if (!allowedTypes.includes(file.type)) {
+                    showUploadError('Format file tidak didukung. Gunakan JPG, PNG, atau PDF.');
+                    isProcessing = false;
+                    return false;
+                }
+
+                if (file.size > maxSize) {
+                    showUploadError('Ukuran file maksimal 5MB.');
+                    isProcessing = false;
+                    return false;
+                }
+
+                hideUploadError();
+                setTimeout(() => { isProcessing = false; }, 100); // Reset after 100ms
+                return true;
+            }
+
+            function showFilePreview(file) {
+                const fileName = document.getElementById('fileName');
+                const fileSize = document.getElementById('fileSize');
+                
+                fileName.textContent = file.name;
+                fileSize.textContent = formatFileSize(file.size);
+                
+                uploadPlaceholder.style.display = 'none';
+                uploadPreview.style.display = 'block';
+                uploadArea.classList.remove('file-error');
+
+                // Show image preview for image files
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const existingPreview = uploadPreview.querySelector('.image-preview');
+                        if (existingPreview) {
+                            existingPreview.remove();
+                        }
+                        
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+                        img.className = 'image-preview';
+                        img.alt = 'Preview bukti pembayaran';
+                        img.style.maxWidth = '200px';
+                        img.style.maxHeight = '200px';
+                        img.style.marginTop = '10px';
+                        img.style.borderRadius = '5px';
+                        uploadPreview.appendChild(img);
+                    };
+                    reader.readAsDataURL(file);
                 }
             }
-        }
-
-        function showPaymentOptions(paymentMethod) {
-            // Hide all options
-            document.getElementById('bankOptions').style.display = 'none';
-            document.getElementById('ewalletOptions').style.display = 'none';
-            document.getElementById('cashOptions').style.display = 'none';
-            
-            // Show relevant options
-            if (paymentMethod === 'transfer_bank') {
-                document.getElementById('bankOptions').style.display = 'block';
-            } else if (paymentMethod === 'ewallet') {
-                document.getElementById('ewalletOptions').style.display = 'block';
-            } else if (paymentMethod === 'cash') {
-                document.getElementById('cashOptions').style.display = 'block';
+            function clearFileSelection() {
+                fileInput.value = '';
+                uploadPlaceholder.style.display = 'block';
+                uploadPreview.style.display = 'none';
+                uploadArea.classList.remove('file-error');
+                hideUploadError();
+                
+                // Remove image preview
+                const existingPreview = uploadPreview.querySelector('.image-preview');
+                if (existingPreview) {
+                    existingPreview.remove();
+                }
             }
-        }
 
-        function processPayment() {
-            // Simulate payment processing
-            setTimeout(function() {
-                // Hide loading spinner and show countdown
-                document.querySelector('.loading-spinner').style.display = 'none';
-                document.querySelector('#processingStep h5').textContent = 'Menunggu Pembayaran';
-                document.querySelector('#processingStep .text-muted').textContent = 'Silakan lakukan pembayaran sesuai instruksi di bawah ini.';
+            function showUploadError(message) {
+                const errorDiv = document.getElementById('uploadError');
+                errorDiv.textContent = message;
+                errorDiv.style.display = 'block';
+                uploadArea.classList.add('file-error');
+            }
+
+            function hideUploadError() {
+                const errorDiv = document.getElementById('uploadError');
+                errorDiv.style.display = 'none';
+                uploadArea.classList.remove('file-error');
+            }
+
+            function formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+
+            function showStep(step) {
+                currentStep = step;
                 
-                document.getElementById('countdownSection').style.display = 'block';
+                // Hide all steps
+                document.querySelectorAll('.payment-step').forEach(stepEl => {
+                    stepEl.classList.remove('active');
+                });
                 
-                // Show payment instructions based on selected method
-                showPaymentInstructions();
+                // Show current step
+                if (step === 1) {
+                    document.getElementById('confirmationStep').classList.add('active');
+                    document.getElementById('backBtn').style.display = 'none';
+                    document.getElementById('nextBtn').style.display = 'inline-block';
+                    document.getElementById('processBtn').style.display = 'none';
+                    document.getElementById('nextBtn').innerHTML = 'Lanjutkan <i class="fas fa-arrow-right ms-2"></i>';
+                } else if (step === 2) {
+                    document.getElementById('methodStep').classList.add('active');
+                    document.getElementById('backBtn').style.display = 'inline-block';
+                    document.getElementById('nextBtn').style.display = 'inline-block';
+                    document.getElementById('processBtn').style.display = 'none';
+                    document.getElementById('nextBtn').innerHTML = 'Proses <i class="fas fa-arrow-right ms-2"></i>';
+                } else if (step === 3) {
+                    document.getElementById('processingStep').classList.add('active');
+                    document.getElementById('backBtn').style.display = 'none';
+                    document.getElementById('nextBtn').style.display = 'none';
+                    document.getElementById('processBtn').style.display = 'none';
+                    document.getElementById('cancelBtn').style.display = 'none';
+                }
                 
-                // Start countdown timer
-                startCountdown(15 * 60); // 15 minutes
+                // Update step indicator
+                updateStepIndicator(step);
+            }
+
+            function updateStepIndicator(step) {
+                for (let i = 1; i <= 3; i++) {
+                    const stepEl = document.getElementById('step' + i);
+                    stepEl.classList.remove('active', 'completed');
+                    
+                    if (i < step) {
+                        stepEl.classList.add('completed');
+                        stepEl.innerHTML = '<i class="fas fa-check"></i>';
+                    } else if (i === step) {
+                        stepEl.classList.add('active');
+                        stepEl.innerHTML = i;
+                    } else {
+                        stepEl.innerHTML = i;
+                    }
+                }
+            }
+
+            function showPaymentOptions(paymentMethod) {
+                // Hide all options
+                document.getElementById('bankOptions').style.display = 'none';
+                document.getElementById('ewalletOptions').style.display = 'none';
+                document.getElementById('cashOptions').style.display = 'none';
                 
-                // Show upload section after instructions
+                // Show relevant options
+                if (paymentMethod === 'transfer_bank') {
+                    document.getElementById('bankOptions').style.display = 'block';
+                } else if (paymentMethod === 'ewallet') {
+                    document.getElementById('ewalletOptions').style.display = 'block';
+                } else if (paymentMethod === 'cash') {
+                    document.getElementById('cashOptions').style.display = 'block';
+                }
+            }
+
+            function processPayment() {
+                // Simulate payment processing
                 setTimeout(function() {
-                    document.getElementById('uploadSection').style.display = 'block';
-                }, 1000);
-                
-                // Show process button
-                document.getElementById('processBtn').style.display = 'inline-block';
-                document.getElementById('processBtn').innerHTML = '<i class="fas fa-paper-plane me-2"></i>Kirim Bukti Pembayaran';
-            }, 2000);
-        }
+                    // Hide loading spinner and show countdown
+                    document.querySelector('.loading-spinner').style.display = 'none';
+                    document.querySelector('#processingStep h5').textContent = 'Menunggu Pembayaran';
+                    document.querySelector('#processingStep .text-muted').textContent = 'Silakan lakukan pembayaran sesuai instruksi di bawah ini.';
+                    
+                    document.getElementById('countdownSection').style.display = 'block';
+                    
+                    // Show payment instructions based on selected method
+                    showPaymentInstructions();
+                    
+                    // Start countdown timer
+                    startCountdown(15 * 60); // 15 minutes
+                    
+                    // Show upload section after instructions
+                    setTimeout(function() {
+                        document.getElementById('uploadSection').style.display = 'block';
+                    }, 1000);
+                    
+                    // Show process button
+                    document.getElementById('processBtn').style.display = 'inline-block';
+                    document.getElementById('processBtn').innerHTML = '<i class="fas fa-paper-plane me-2"></i>Kirim Bukti Pembayaran';
+                }, 2000);
+            }
 
-        function showPaymentInstructions() {
-            const instructionsDiv = document.getElementById('paymentInstructions');
-            let instructions = '';
-            
-            if (paymentData.paymentMethod === 'transfer_bank') {
-                // Fetch bank details from backend
-                fetchBankDetails(paymentData.selectedMethod || 'bca').then(bankDetails => {
+            function showPaymentInstructions() {
+                const instructionsDiv = document.getElementById('paymentInstructions');
+                let instructions = '';
+                
+                if (paymentData.paymentMethod === 'transfer_bank') {
+                    // Fetch bank details from backend
+                    fetchBankDetails(paymentData.selectedMethod || 'bca').then(bankDetails => {
+                        instructions = `
+                            <div class="card">
+                                <div class="card-header">
+                                    <h6 class="mb-0"><i class="fas fa-university me-2"></i>Transfer ke Bank ${bankDetails.bank_name}</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row mb-3">
+                                        <div class="col-4"><strong>Bank:</strong></div>
+                                        <div class="col-8">${bankDetails.bank_name}</div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-4"><strong>No. Rekening:</strong></div>
+                                        <div class="col-8">
+                                            <span class="fw-bold text-primary">${bankDetails.account_number}</span>
+                                            <button class="btn btn-sm btn-outline-secondary ms-2" onclick="copyToClipboard('${bankDetails.account_number}')">
+                                                <i class="fas fa-copy"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-4"><strong>Atas Nama:</strong></div>
+                                        <div class="col-8">${bankDetails.account_name}</div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-4"><strong>Jumlah:</strong></div>
+                                        <div class="col-8">
+                                            <span class="fw-bold text-success">Rp ${paymentData.amount.toLocaleString('id-ID')}</span>
+                                            <button class="btn btn-sm btn-outline-secondary ms-2" onclick="copyToClipboard('${paymentData.amount}')">
+                                                <i class="fas fa-copy"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Cara Transfer Bank -->
+                                    <div class="alert alert-primary">
+                                        <h6 class="alert-heading"><i class="fas fa-info-circle me-2"></i>Panduan Transfer Bank</h6>
+                                        <div class="accordion" id="transferGuide">
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header" id="headingATM">
+                                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseATM">
+                                                        <i class="fas fa-credit-card me-2"></i>Via ATM
+                                                    </button>
+                                                </h2>
+                                                <div id="collapseATM" class="accordion-collapse collapse" data-bs-parent="#transferGuide">
+                                                    <div class="accordion-body">
+                                                        <ol class="mb-0">
+                                                            <li>Masukkan kartu ATM dan PIN Anda</li>
+                                                            <li>Pilih menu <strong>"Transfer"</strong></li>
+                                                            <li>Pilih <strong>"Ke Bank Lain"</strong> atau <strong>"Transfer Antar Bank"</strong></li>
+                                                            <li>Masukkan kode bank tujuan:
+                                                                <ul>
+                                                                    <li>BCA: <strong>014</strong></li>
+                                                                    <li>Mandiri: <strong>008</strong></li>
+                                                                    <li>BRI: <strong>002</strong></li>
+                                                                    <li>BNI: <strong>009</strong></li>
+                                                                </ul>
+                                                            </li>
+                                                            <li>Masukkan nomor rekening: <strong>${bankDetails.account_number}</strong></li>
+                                                            <li>Masukkan nominal: <strong>Rp ${paymentData.amount.toLocaleString('id-ID')}</strong></li>
+                                                            <li>Periksa detail transfer, pastikan nama penerima sesuai</li>
+                                                            <li>Konfirmasi dan simpan struk sebagai bukti</li>
+                                                        </ol>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header" id="headingMobile">
+                                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMobile">
+                                                        <i class="fas fa-mobile-alt me-2"></i>Via Mobile Banking
+                                                    </button>
+                                                </h2>
+                                                <div id="collapseMobile" class="accordion-collapse collapse" data-bs-parent="#transferGuide">
+                                                    <div class="accordion-body">
+                                                        <ol class="mb-0">
+                                                            <li>Buka aplikasi mobile banking Anda</li>
+                                                            <li>Login dengan PIN/password/biometrik</li>
+                                                            <li>Pilih menu <strong>"Transfer"</strong> atau <strong>"Kirim Uang"</strong></li>
+                                                            <li>Pilih <strong>"Transfer Antar Bank"</strong> atau <strong>"BI Fast"</strong></li>
+                                                            <li>Pilih bank tujuan: <strong>${bankDetails.bank_name}</strong></li>
+                                                            <li>Masukkan nomor rekening: <strong>${bankDetails.account_number}</strong></li>
+                                                            <li>Masukkan nominal: <strong>Rp ${paymentData.amount.toLocaleString('id-ID')}</strong></li>
+                                                            <li>Tambahkan catatan: "Pembayaran Program Kelas"</li>
+                                                            <li>Periksa detail dan konfirmasi dengan PIN</li>
+                                                            <li>Screenshot bukti transfer untuk upload</li>
+                                                        </ol>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header" id="headingInternet">
+                                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseInternet">
+                                                        <i class="fas fa-laptop me-2"></i>Via Internet Banking
+                                                    </button>
+                                                </h2>
+                                                <div id="collapseInternet" class="accordion-collapse collapse" data-bs-parent="#transferGuide">
+                                                    <div class="accordion-body">
+                                                        <ol class="mb-0">
+                                                            <li>Login ke website internet banking</li>
+                                                            <li>Masukkan user ID dan password</li>
+                                                            <li>Pilih menu <strong>"Transfer Dana"</strong></li>
+                                                            <li>Pilih <strong>"Transfer ke Bank Lain"</strong></li>
+                                                            <li>Masukkan data:
+                                                                <ul>
+                                                                    <li>Bank tujuan: <strong>${bankDetails.bank_name}</strong></li>
+                                                                    <li>No. rekening: <strong>${bankDetails.account_number}</strong></li>
+                                                                    <li>Nama penerima: <strong>${bankDetails.account_name}</strong></li>
+                                                                    <li>Nominal: <strong>Rp ${paymentData.amount.toLocaleString('id-ID')}</strong></li>
+                                                                </ul>
+                                                            </li>
+                                                            <li>Verifikasi dengan SMS token atau m-token</li>
+                                                            <li>Simpan bukti transfer dalam format PDF/JPG</li>
+                                                        </ol>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="alert alert-warning">
+                                        <i class="fas fa-exclamation-triangle me-2"></i>
+                                        <small><strong>Perhatian:</strong> Transfer dengan nominal yang TEPAT untuk mempercepat verifikasi. Biaya admin antar bank ditanggung pengirim.</small>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        instructionsDiv.innerHTML = instructions;
+                    });
+                } else if (paymentData.paymentMethod === 'ewallet') {
+    const walletName = paymentData.wallet === 'gopay' ? 'E-Wallet' : 'E-Wallet';
+    // Generate unique code for e-wallet
+    const uniqueCode = Math.floor(Math.random() * 999 + 1000) + 1;
+    const uniqueAmount = paymentData.amount + uniqueCode;
+    
+    // Data bank dari database (MANDIRI)
+    const bankData = {
+        bankName: 'MANDIRI',
+        accountNumber: '1560003918101',
+        accountName: 'LPK Amarta Bangun Cabang Cibitung'
+    };
+    
+    instructions = `
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0"><i class="fas fa-mobile-alt me-2"></i>Pembayaran ${walletName} ke Bank ${bankData.bankName}</h6>
+            </div>
+            <div class="card-body">
+                <!-- Nominal dengan Kode Unik -->
+                <div class="alert alert-info mb-4">
+                    <h6 class="mb-2 text-center"><i class="fas fa-calculator me-2"></i>Nominal Pembayaran dengan Kode Unik (Fee)</h6>
+                    <div class="row">
+                        <div class="col-6 text-end">Jumlah Tagihan:</div>
+                        <div class="col-6 text-start fw-bold">Rp ${paymentData.amount.toLocaleString('id-ID')}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 text-end">Kode Unik (Fee):</div>
+                        <div class="col-6 text-start fw-bold text-primary">+${uniqueCode}</div>
+                    </div>
+                    <hr class="my-2">
+                    <div class="row">
+                        <div class="col-6 text-end"><strong>Total Transfer:</strong></div>
+                        <div class="col-6 text-start fw-bold text-success fs-4">
+                            Rp ${uniqueAmount.toLocaleString('id-ID')}
+                            <button class="btn btn-sm btn-outline-secondary ms-2" onclick="copyToClipboard('${uniqueAmount}')">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Info Bank Tujuan -->
+                <div class="alert alert-warning mb-4">
+                    <h6 class="alert-heading"><i class="fas fa-university me-2"></i>Rekening Bank Tujuan</h6>
+                    <div class="row align-items-center">
+                        <div class="col-md-3 text-end fw-bold">Bank:</div>
+                        <div class="col-md-9">
+                            <span class="badge bg-primary fs-6">${bankData.bankName}</span>
+                        </div>
+                    </div>
+                    <div class="row align-items-center mt-2">
+                        <div class="col-md-3 text-end fw-bold">No. Rekening:</div>
+                        <div class="col-md-9">
+                            <span class="fw-bold fs-5">${bankData.accountNumber}</span>
+                            <button class="btn btn-sm btn-outline-secondary ms-2" onclick="copyToClipboard('${bankData.accountNumber}')">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row align-items-center mt-2">
+                        <div class="col-md-3 text-end fw-bold">Atas Nama:</div>
+                        <div class="col-md-9">
+                            <span class="fw-bold">${bankData.accountName}</span>
+                            <button class="btn btn-sm btn-outline-secondary ms-2" onclick="copyToClipboard('${bankData.accountName}')">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Panduan Pembayaran E-Wallet ke Bank -->
+                <div class="alert alert-primary">
+                    <h6 class="alert-heading"><i class="fas fa-mobile-alt me-2"></i>Cara Transfer ${walletName} ke Bank ${bankData.bankName}</h6>
+                    <div class="accordion" id="ewalletGuide">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingTransfer">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTransfer">
+                                    <i class="fas fa-exchange-alt me-2"></i>Transfer ke Bank dengan Kode Unik
+                                </button>
+                            </h2>
+                            <div id="collapseTransfer" class="accordion-collapse collapse show" data-bs-parent="#ewalletGuide">
+                                <div class="accordion-body">
+                                    <ol class="mb-0">
+                                        <li>Buka aplikasi <strong>${walletName}</strong> di smartphone Anda</li>
+                                        <li>Pilih menu <strong>"Transfer"</strong> atau <strong>"Kirim Uang"</strong></li>
+                                        <li>Pilih <strong>"Transfer ke Bank"</strong> atau <strong>"Ke Rekening Bank"</strong></li>
+                                        <li>Pilih bank <strong>${bankData.bankName}</strong></li>
+                                        <li>Masukkan nomor rekening: <strong>${bankData.accountNumber}</strong></li>
+                                        <li>Pastikan nama penerima: <strong>${bankData.accountName}</strong></li>
+                                        <li><strong>PENTING:</strong> Masukkan nominal TEPAT: <span class="fw-bold text-success fs-5">Rp ${uniqueAmount.toLocaleString('id-ID')}</span></li>
+                                        <li>Tambahkan catatan: "Program Kelas - Kode ${uniqueCode}"</li>
+                                        <li>Periksa kembali semua data (bank, rekening, nominal)</li>
+                                        <li>Konfirmasi transfer dengan PIN/biometrik</li>
+                                        <li>Screenshot bukti transfer untuk upload</li>
+                                    </ol>
+                                    <div class="mt-3 p-3 bg-warning bg-opacity-10 rounded">
+                                        <i class="fas fa-lightbulb me-2 text-warning"></i>
+                                        <small><strong>Tips:</strong> Pastikan nominal yang ditransfer adalah <strong>Rp ${uniqueAmount.toLocaleString('id-ID')}</strong>. 
+                                        Transfer ke bank biasanya ada biaya admin, jadi pastikan saldo ${walletName} Anda mencukupi!</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingTopup">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTopup">
+                                    <i class="fas fa-plus-circle me-2"></i>Jika Saldo ${walletName} Tidak Cukup
+                                </button>
+                            </h2>
+                            <div id="collapseTopup" class="accordion-collapse collapse" data-bs-parent="#ewalletGuide">
+                                <div class="accordion-body">
+                                    <p class="mb-2"><strong>Cara top up saldo ${walletName}:</strong></p>
+                                    <ol class="mb-3">
+                                        <li>Di aplikasi ${walletName}, pilih <strong>"Top Up"</strong> atau <strong>"Isi Saldo"</strong></li>
+                                        <li>Pilih metode top up:</li>
+                                        <ul>
+                                            <li><strong>Bank Transfer:</strong> Transfer dari rekening bank ke ${walletName}</li>
+                                            <li><strong>ATM:</strong> Setor tunai di ATM yang mendukung</li>
+                                            <li><strong>Minimarket:</strong> Setor di Indomaret, Alfamart, dll</li>
+                                            <li><strong>Kartu Debit:</strong> Link kartu debit untuk auto-debet</li>
+                                        </ul>
+                                        <li>Masukkan nominal minimal <strong>Rp ${uniqueAmount.toLocaleString('id-ID')} + biaya admin</strong></li>
+                                        <li>Ikuti instruksi sesuai metode yang dipilih</li>
+                                        <li>Setelah saldo masuk, lakukan transfer ke bank sesuai langkah di atas</li>
+                                    </ol>
+                                    <div class="alert alert-info">
+                                        <small><i class="fas fa-info-circle me-1"></i> <strong>Catatan:</strong> Transfer dari ${walletName} ke bank ${bankData.bankName} biasanya dikenakan biaya admin Rp 2.500 - Rp 6.500. Pastikan saldo mencukupi untuk nominal transfer + biaya admin.</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingFees">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFees">
+                                    <i class="fas fa-money-bill me-2"></i>Biaya Transfer ke Bank
+                                </button>
+                            </h2>
+                            <div id="collapseFees" class="accordion-collapse collapse" data-bs-parent="#ewalletGuide">
+                                <div class="accordion-body">
+                                    <p><strong>Estimasi biaya admin transfer ${walletName} ke Bank ${bankData.bankName}:</strong></p>
+                                    <ul class="mb-3">
+                                        <li><strong>DANA:</strong> Rp 2.500 - Rp 6.500</li>
+                                        <li><strong>GoPay:</strong> Rp 2.500 - Rp 6.500</li>
+                                        <li><strong>OVO:</strong> Rp 2.500 - Rp 6.500</li>
+                                        <li><strong>ShopeePay:</strong> Rp 2.500 - Rp 6.500</li>
+                                        <li><strong>LinkAja:</strong> Rp 2.500 - Rp 6.500</li>
+                                    </ul>
+                                    <div class="alert alert-warning">
+                                        <small><i class="fas fa-exclamation-triangle me-1"></i> Biaya admin ditanggung oleh pengirim dan akan dipotong otomatis dari saldo ${walletName} Anda.</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <small>
+                        <strong>WAJIB menggunakan kode unik!</strong> 
+                        Transfer dengan nominal <strong>Rp ${uniqueAmount.toLocaleString('id-ID')}</strong> 
+                        ke rekening <strong>${bankData.bankName} ${bankData.accountNumber}</strong>
+                        untuk memudahkan identifikasi pembayaran Anda secara otomatis.
+                    </small>
+                </div>
+            </div>
+        </div>
+    `;
+    instructionsDiv.innerHTML = instructions;
+} else if (paymentData.paymentMethod === 'cash') {
                     instructions = `
                         <div class="card">
                             <div class="card-header">
-                                <h6 class="mb-0"><i class="fas fa-university me-2"></i>Transfer ke Bank ${bankDetails.bank_name}</h6>
+                                <h6 class="mb-0"><i class="fas fa-store me-2"></i>Pembayaran Tunai</h6>
                             </div>
                             <div class="card-body">
-                                <div class="row mb-3">
-                                    <div class="col-4"><strong>Bank:</strong></div>
-                                    <div class="col-8">${bankDetails.bank_name}</div>
-                                </div>
-                                <div class="row mb-3">
-                                    <div class="col-4"><strong>No. Rekening:</strong></div>
-                                    <div class="col-8">
-                                        <span class="fw-bold text-primary">${bankDetails.account_number}</span>
-                                        <button class="btn btn-sm btn-outline-secondary ms-2" onclick="copyToClipboard('${bankDetails.account_number}')">
-                                            <i class="fas fa-copy"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <div class="col-4"><strong>Atas Nama:</strong></div>
-                                    <div class="col-8">${bankDetails.account_name}</div>
-                                </div>
-                                <div class="row mb-3">
-                                    <div class="col-4"><strong>Jumlah:</strong></div>
-                                    <div class="col-8">
-                                        <span class="fw-bold text-success">Rp ${paymentData.amount.toLocaleString('id-ID')}</span>
-                                        <button class="btn btn-sm btn-outline-secondary ms-2" onclick="copyToClipboard('${paymentData.amount}')">
-                                            <i class="fas fa-copy"></i>
-                                        </button>
-                                    </div>
-                                </div>
                                 <div class="alert alert-info">
-                                    <i class="fas fa-info-circle me-2"></i>
-                                    <small>Transfer dengan jumlah yang tepat untuk mempercepat proses verifikasi.</small>
+                                    <i class="fas fa-map-marker-alt me-2"></i>
+                                    <strong>Alamat Kantor:</strong><br>
+                                    Jl. Contoh No. 123, Bandung, Jawa Barat 40123
                                 </div>
+                                <div class="alert alert-success">
+                                    <i class="fas fa-clock me-2"></i>
+                                    <strong>Jam Operasional:</strong><br>
+                                    Senin - Jumat: 08.00 - 17.00 WIB<br>
+                                    Sabtu: 08.00 - 12.00 WIB
+                                </div>
+                                <p class="text-center fw-bold text-primary fs-5">
+                                    Jumlah Bayar: Rp ${paymentData.amount.toLocaleString('id-ID')}
+                                </p>
                             </div>
                         </div>
                     `;
                     instructionsDiv.innerHTML = instructions;
-                });
-            } else if (paymentData.paymentMethod === 'ewallet') {
-                const walletName = paymentData.selectedMethod ? paymentData.selectedMethod.toUpperCase() : 'GOPAY';
-                instructions = `
-                    <div class="card">
-                        <div class="card-header">
-                            <h6 class="mb-0"><i class="fas fa-mobile-alt me-2"></i>Pembayaran ${walletName}</h6>
-                        </div>
-                        <div class="card-body text-center">
-                            <div class="mb-3">
-                                <div style="width: 200px; height: 200px; background: #f8f9fa; border: 2px dashed #dee2e6; margin: 0 auto; display: flex; align-items: center; justify-content: center; border-radius: 8px;">
-                                    <div class="text-muted">
-                                        <i class="fas fa-qrcode fa-4x"></i>
-                                        <div class="mt-2">QR Code</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <p>Scan QR Code di atas dengan aplikasi ${walletName}</p>
-                            <div class="alert alert-warning">
-                                <i class="fas fa-exclamation-triangle me-2"></i>
-                                <small>Pastikan jumlah pembayaran sesuai: <strong>Rp ${paymentData.amount.toLocaleString('id-ID')}</strong></small>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                instructionsDiv.innerHTML = instructions;
-            } else if (paymentData.paymentMethod === 'cash') {
-                instructions = `
-                    <div class="card">
-                        <div class="card-header">
-                            <h6 class="mb-0"><i class="fas fa-store me-2"></i>Pembayaran Tunai</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="alert alert-info">
-                                <i class="fas fa-map-marker-alt me-2"></i>
-                                <strong>Alamat Kantor:</strong><br>
-                                Jl. Contoh No. 123, Bandung, Jawa Barat 40123
-                            </div>
-                            <div class="alert alert-success">
-                                <i class="fas fa-clock me-2"></i>
-                                <strong>Jam Operasional:</strong><br>
-                                Senin - Jumat: 08.00 - 17.00 WIB<br>
-                                Sabtu: 08.00 - 12.00 WIB
-                            </div>
-                            <p class="text-center fw-bold text-primary fs-5">
-                                Jumlah Bayar: Rp ${paymentData.amount.toLocaleString('id-ID')}
-                            </p>
-                        </div>
-                    </div>
-                `;
-                instructionsDiv.innerHTML = instructions;
-            }
-        }
-
-        function fetchBankDetails(bankCode) {
-            // Default bank details if API call fails
-            const defaultBanks = {
-                'bca': {
-                    bank_name: 'BCA',
-                    account_number: '1234567890',
-                    account_name: 'LPK Amarta Bangun Indonesia'
-                },
-                'mandiri': {
-                    bank_name: 'MANDIRI',
-                    account_number: '1380012345678',
-                    account_name: 'LPK Amarta Bangun Indonesia'
-                },
-                'bri': {
-                    bank_name: 'BRI',
-                    account_number: '123456789012345',
-                    account_name: 'LPK Amarta Bangun Indonesia'
-                },
-                'bni': {
-                    bank_name: 'BNI',
-                    account_number: '1234567890',
-                    account_name: 'LPK Amarta Bangun Indonesia'
                 }
-            };
+            }
 
-            return fetch(`/payment-method-details` + bankCode)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        return data.data;
+            function fetchBankDetails(bankCode) {
+                // Default bank details if API call fails
+                const defaultBanks = {
+                    'bca': {
+                        bank_name: 'BCA',
+                        account_number: '1234567890',
+                        account_name: 'LPK Amarta Bangun Indonesia'
+                    },
+                    'mandiri': {
+                        bank_name: 'MANDIRI',
+                        account_number: '1380012345678',
+                        account_name: 'LPK Amarta Bangun Indonesia'
+                    },
+                    'bri': {
+                        bank_name: 'BRI',
+                        account_number: '123456789012345',
+                        account_name: 'LPK Amarta Bangun Indonesia'
+                    },
+                    'bni': {
+                        bank_name: 'BNI',
+                        account_number: '1234567890',
+                        account_name: 'LPK Amarta Bangun Indonesia'
                     }
-                    throw new Error('API Error');
-                })
-                .catch(() => {
-                    return defaultBanks[bankCode] || defaultBanks['bca'];
-                });
-        }
+                };
 
-        function startCountdown(seconds) {
-            const countdownEl = document.getElementById('countdown');
-            
-            const timer = setInterval(function() {
-                const minutes = Math.floor(seconds / 60);
-                const remainingSeconds = seconds % 60;
-                
-                countdownEl.textContent = `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
-                
-                if (seconds <= 0) {
-                    clearInterval(timer);
-                    countdownEl.textContent = '00:00';
-                    // Handle timeout
-                    showAlert('Waktu pembayaran habis. Silakan coba lagi.', 'warning');
-                    const modal = bootstrap.Modal.getInstance(document.getElementById('paymentProcessModal'));
-                    modal.hide();
-                }
-                
-                seconds--;
-            }, 1000);
-        }
-
-        function getPaymentMethodName(method) {
-            const methods = {
-                'transfer_bank': 'Transfer Bank',
-                'ewallet': 'E-Wallet',
-                'cash': 'Tunai'
-            };
-            return methods[method] || method;
-        }
-
-       function submitPaymentWithFile() {
-        // Create FormData for file upload
-        const formData = new FormData();
-        
-        // Add CSRF token
-        formData.append('_token', document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '{{ csrf_token() }}');
-        
-        // Add payment data
-        formData.append('amount', paymentData.amount);
-        formData.append('payment_method', paymentData.paymentMethod);
-        
-        // Add selected method if exists
-        if (paymentData.selectedMethod) {
-            formData.append('selected_method', paymentData.selectedMethod);
-        }
-        
-        // Add file
-        const fileInput = document.getElementById('paymentProof');
-        if (fileInput.files[0]) {
-            formData.append('payment_proof', fileInput.files[0]);
-        }
-        
-        // Add notes
-        const notes = document.getElementById('paymentNotes').value;
-        if (notes) {
-            formData.append('payment_notes', notes);
-        }
-        
-        // Show loading state
-        const processBtn = document.getElementById('processBtn');
-        const transactionId = {{ $trx->id }};
-        const originalText = processBtn.innerHTML;
-        processBtn.innerHTML = '<span class="loading-spinner me-2"></span>Mengirim...';
-        processBtn.disabled = true;
-        
-        // Submit using fetch
-        fetch(`/transaksi/program-kelas/${transactionId}/cicilan`, {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                return fetch(`/payment-method-details` + bankCode)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            return data.data;
+                        }
+                        throw new Error('API Error');
+                    })
+                    .catch(() => {
+                        return defaultBanks[bankCode] || defaultBanks['bca'];
+                    });
             }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Show success message
-                showSuccessMessage(data.data);
-                setTimeout(function() {
-                    window.location.reload();
-                }, 2000);
-            } else {
-                throw new Error(data.message || 'Terjadi kesalahan');
+
+            function startCountdown(seconds) {
+                const countdownEl = document.getElementById('countdown');
+                
+                const timer = setInterval(function() {
+                    const minutes = Math.floor(seconds / 60);
+                    const remainingSeconds = seconds % 60;
+                    
+                    countdownEl.textContent = `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+                    
+                    if (seconds <= 0) {
+                        clearInterval(timer);
+                        countdownEl.textContent = '00:00';
+                        // Handle timeout
+                        showAlert('Waktu pembayaran habis. Silakan coba lagi.', 'warning');
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('paymentProcessModal'));
+                        modal.hide();
+                    }
+                    
+                    seconds--;
+                }, 1000);
             }
-        })
-        .catch(error => {
-            // Restore button state
-            processBtn.innerHTML = originalText;
-            processBtn.disabled = false;
+
+            function getPaymentMethodName(method) {
+                const methods = {
+                    'transfer_bank': 'Transfer Bank',
+                    'ewallet': 'E-Wallet',
+                    'cash': 'Tunai'
+                };
+                return methods[method] || method;
+            }
+
+        function submitPaymentWithFile() {
+            // Create FormData for file upload
+            const formData = new FormData();
             
-            showAlert('Terjadi kesalahan: ' + error.message, 'error');
-        });
-    }
-        function showSuccessMessage(data) {
-            const processingStep = document.getElementById('processingStep');
-            processingStep.innerHTML = `
-                <div class="text-center">
-                    <div class="text-success mb-4">
-                        <i class="fas fa-check-circle fa-5x"></i>
-                    </div>
-                    <h4 class="text-success mb-3">Bukti Pembayaran Berhasil Dikirim!</h4>
-                    <div class="alert alert-info mb-4">
-                        <div class="row">
-                            <div class="col-6"><strong>Nomor Referensi:</strong></div>
-                            <div class="col-6 text-end"><strong>${data.reference_number}</strong></div>
-                        </div>
-                        <div class="row">
-                            <div class="col-6"><strong>Jumlah:</strong></div>
-                            <div class="col-6 text-end"><strong>Rp ${data.amount.toLocaleString('id-ID')}</strong></div>
-                        </div>
-                    </div>
-                    <p class="text-muted mb-4">
-                        Terima kasih! Bukti pembayaran Anda sedang diverifikasi oleh tim kami. 
-                        Anda akan mendapatkan notifikasi setelah pembayaran dikonfirmasi.
-                    </p>
-                    <div class="alert alert-success">
-                        <i class="fas fa-clock me-2"></i>
-                        <strong>Estimasi verifikasi:</strong> 1-3 jam kerja
-                    </div>
-                </div>
-            `;
+            // Add CSRF token
+            formData.append('_token', document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '{{ csrf_token() }}');
             
-            // Hide process button
-            document.getElementById('processBtn').style.display = 'none';
-        }
-
-        function showAlert(message, type = 'info') {
-            // Create alert element
-            const alertTypes = {
-                'success': 'alert-success',
-                'error': 'alert-danger',
-                'warning': 'alert-warning',
-                'info': 'alert-info'
-            };
-
-            const alertClass = alertTypes[type] || 'alert-info';
-            const iconTypes = {
-                'success': 'fa-check-circle',
-                'error': 'fa-exclamation-circle',
-                'warning': 'fa-exclamation-triangle',
-                'info': 'fa-info-circle'
-            };
-            const iconClass = iconTypes[type] || 'fa-info-circle';
-
-            const alertHtml = `
-                <div class="alert ${alertClass} alert-dismissible fade show" role="alert">
-                    <i class="fas ${iconClass} me-2"></i>${message}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            `;
-
-            // Insert alert at the top of the content
-            const container = document.querySelector('.container.py-4');
-            container.insertAdjacentHTML('afterbegin', alertHtml);
-
-            // Auto dismiss after 5 seconds
-            setTimeout(function() {
-                const alert = container.querySelector('.alert');
-                if (alert) {
-                    const bsAlert = new bootstrap.Alert(alert);
-                    bsAlert.close();
+            // Add payment data
+            formData.append('amount', paymentData.amount);
+            formData.append('payment_method', paymentData.paymentMethod);
+            
+            // Add selected method if exists
+            if (paymentData.selectedMethod) {
+                formData.append('selected_method', paymentData.selectedMethod);
+            }
+            
+            // Add file
+            const fileInput = document.getElementById('paymentProof');
+            if (fileInput.files[0]) {
+                formData.append('payment_proof', fileInput.files[0]);
+            }
+            
+            // Add notes
+            const notes = document.getElementById('paymentNotes').value;
+            if (notes) {
+                formData.append('payment_notes', notes);
+            }
+            
+            // Show loading state
+            const processBtn = document.getElementById('processBtn');
+            const transactionId = {{ $trx->id }};
+            const originalText = processBtn.innerHTML;
+            processBtn.innerHTML = '<span class="loading-spinner me-2"></span>Mengirim...';
+            processBtn.disabled = true;
+            
+            // Submit using fetch
+            fetch(`/transaksi/program-kelas/${transactionId}/cicilan`, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
                 }
-            }, 5000);
-        }
-
-        // Reset modal when closed
-        document.getElementById('paymentProcessModal').addEventListener('hidden.bs.modal', function() {
-            currentStep = 1;
-            showStep(1);
-            document.getElementById('cancelBtn').style.display = 'inline-block';
-            
-            // Reset selections
-            document.querySelectorAll('.payment-method-card').forEach(card => {
-                card.classList.remove('selected');
-            });
-            
-            // Reset file upload
-            clearFileSelection();
-            document.getElementById('paymentNotes').value = '';
-            document.getElementById('uploadSection').style.display = 'none';
-        });
-
-        // Copy to clipboard function
-        window.copyToClipboard = function(text) {
-            navigator.clipboard.writeText(text).then(function() {
-                // Show success toast
-                showToast('Teks berhasil disalin ke clipboard!', 'success');
-            }).catch(function() {
-                // Fallback for older browsers
-                const textArea = document.createElement('textarea');
-                textArea.value = text;
-                document.body.appendChild(textArea);
-                textArea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textArea);
-                showToast('Teks berhasil disalin ke clipboard!', 'success');
-            });
-        };
-
-        function showToast(message, type = 'info') {
-            const toast = document.createElement('div');
-            toast.className = 'position-fixed top-0 end-0 p-3';
-            toast.style.zIndex = '9999';
-            
-            const toastTypes = {
-                'success': { bg: 'bg-success', icon: 'fa-check-circle' },
-                'error': { bg: 'bg-danger', icon: 'fa-exclamation-circle' },
-                'warning': { bg: 'bg-warning', icon: 'fa-exclamation-triangle' },
-                'info': { bg: 'bg-info', icon: 'fa-info-circle' }
-            };
-            
-            const toastConfig = toastTypes[type] || toastTypes['info'];
-            
-            toast.innerHTML = `
-                <div class="toast show" role="alert">
-                    <div class="toast-header ${toastConfig.bg} text-white">
-                        <i class="fas ${toastConfig.icon} me-2"></i>
-                        <strong class="me-auto">Notifikasi</strong>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
-                    </div>
-                    <div class="toast-body">
-                        ${message}
-                    </div>
-                </div>
-            `;
-            
-            document.body.appendChild(toast);
-            
-            setTimeout(function() {
-                if (document.body.contains(toast)) {
-                    document.body.removeChild(toast);
-                }
-            }, 3000);
-        }
-
-        // Progress bar animation
-        let targetValue = Math.min(
-            {{ round(($totalPaid / $trx->amount) * 100, 1) }},
-            100
-        ); // maksimal 100%
-        
-        let progressBar = document.querySelector(".progress-bar");
-        let progressText = document.getElementById("progress-text");
-        let currentValue = 0;
-
-        if (progressBar) {
-            let animation = setInterval(function () {
-                if (currentValue >= targetValue) {
-                    clearInterval(animation);
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Show success message
+                    showSuccessMessage(data.data);
+                    setTimeout(function() {
+                        window.location.reload();
+                    }, 2000);
                 } else {
-                    currentValue += 0.5; // kecepatan animasi
-                    progressBar.style.width = currentValue + "%";
-                    progressBar.setAttribute("aria-valuenow", currentValue.toFixed(1));
-                    progressText.textContent = currentValue.toFixed(1) + "%";
+                    throw new Error(data.message || 'Terjadi kesalahan');
                 }
-            }, 15); // semakin kecil semakin cepat
+            })
+            .catch(error => {
+                // Restore button state
+                processBtn.innerHTML = originalText;
+                processBtn.disabled = false;
+                
+                showAlert('Terjadi kesalahan: ' + error.message, 'error');
+            });
         }
-    });
+            function showSuccessMessage(data) {
+                const processingStep = document.getElementById('processingStep');
+                processingStep.innerHTML = `
+                    <div class="text-center">
+                        <div class="text-success mb-4">
+                            <i class="fas fa-check-circle fa-5x"></i>
+                        </div>
+                        <h4 class="text-success mb-3">Bukti Pembayaran Berhasil Dikirim!</h4>
+                        <div class="alert alert-info mb-4">
+                            <div class="row">
+                                <div class="col-6"><strong>Nomor Referensi:</strong></div>
+                                <div class="col-6 text-end"><strong>${data.reference_number}</strong></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6"><strong>Jumlah:</strong></div>
+                                <div class="col-6 text-end"><strong>Rp ${data.amount.toLocaleString('id-ID')}</strong></div>
+                            </div>
+                        </div>
+                        <p class="text-muted mb-4">
+                            Terima kasih! Bukti pembayaran Anda sedang diverifikasi oleh tim kami. 
+                            Anda akan mendapatkan notifikasi setelah pembayaran dikonfirmasi.
+                        </p>
+                        <div class="alert alert-success">
+                            <i class="fas fa-clock me-2"></i>
+                            <strong>Estimasi verifikasi:</strong> 1-3 jam kerja
+                        </div>
+                    </div>
+                `;
+                
+                // Hide process button
+                document.getElementById('processBtn').style.display = 'none';
+            }
 
-</script>
+            function showAlert(message, type = 'info') {
+                // Create alert element
+                const alertTypes = {
+                    'success': 'alert-success',
+                    'error': 'alert-danger',
+                    'warning': 'alert-warning',
+                    'info': 'alert-info'
+                };
+
+                const alertClass = alertTypes[type] || 'alert-info';
+                const iconTypes = {
+                    'success': 'fa-check-circle',
+                    'error': 'fa-exclamation-circle',
+                    'warning': 'fa-exclamation-triangle',
+                    'info': 'fa-info-circle'
+                };
+                const iconClass = iconTypes[type] || 'fa-info-circle';
+
+                const alertHtml = `
+                    <div class="alert ${alertClass} alert-dismissible fade show" role="alert">
+                        <i class="fas ${iconClass} me-2"></i>${message}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                `;
+
+                // Insert alert at the top of the content
+                const container = document.querySelector('.container.py-4');
+                container.insertAdjacentHTML('afterbegin', alertHtml);
+
+                // Auto dismiss after 5 seconds
+                setTimeout(function() {
+                    const alert = container.querySelector('.alert');
+                    if (alert) {
+                        const bsAlert = new bootstrap.Alert(alert);
+                        bsAlert.close();
+                    }
+                }, 5000);
+            }
+
+            // Reset modal when closed
+            document.getElementById('paymentProcessModal').addEventListener('hidden.bs.modal', function() {
+                currentStep = 1;
+                showStep(1);
+                document.getElementById('cancelBtn').style.display = 'inline-block';
+                
+                // Reset selections
+                document.querySelectorAll('.payment-method-card').forEach(card => {
+                    card.classList.remove('selected');
+                });
+                
+                // Reset file upload
+                clearFileSelection();
+                document.getElementById('paymentNotes').value = '';
+                document.getElementById('uploadSection').style.display = 'none';
+            });
+
+            // Copy to clipboard function
+            window.copyToClipboard = function(text) {
+                navigator.clipboard.writeText(text).then(function() {
+                    // Show success toast
+                    showToast('Teks berhasil disalin ke clipboard!', 'success');
+                }).catch(function() {
+                    // Fallback for older browsers
+                    const textArea = document.createElement('textarea');
+                    textArea.value = text;
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textArea);
+                    showToast('Teks berhasil disalin ke clipboard!', 'success');
+                });
+            };
+
+            function showToast(message, type = 'info') {
+                const toast = document.createElement('div');
+                toast.className = 'position-fixed top-0 end-0 p-3';
+                toast.style.zIndex = '9999';
+                
+                const toastTypes = {
+                    'success': { bg: 'bg-success', icon: 'fa-check-circle' },
+                    'error': { bg: 'bg-danger', icon: 'fa-exclamation-circle' },
+                    'warning': { bg: 'bg-warning', icon: 'fa-exclamation-triangle' },
+                    'info': { bg: 'bg-info', icon: 'fa-info-circle' }
+                };
+                
+                const toastConfig = toastTypes[type] || toastTypes['info'];
+                
+                toast.innerHTML = `
+                    <div class="toast show" role="alert">
+                        <div class="toast-header ${toastConfig.bg} text-white">
+                            <i class="fas ${toastConfig.icon} me-2"></i>
+                            <strong class="me-auto">Notifikasi</strong>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+                        </div>
+                        <div class="toast-body">
+                            ${message}
+                        </div>
+                    </div>
+                `;
+                
+                document.body.appendChild(toast);
+                
+                setTimeout(function() {
+                    if (document.body.contains(toast)) {
+                        document.body.removeChild(toast);
+                    }
+                }, 3000);
+            }
+
+            // Progress bar animation
+            let targetValue = Math.min(
+                {{ round(($totalPaid / $trx->amount) * 100, 1) }},
+                100
+            ); // maksimal 100%
+            
+            let progressBar = document.querySelector(".progress-bar");
+            let progressText = document.getElementById("progress-text");
+            let currentValue = 0;
+
+            if (progressBar) {
+                let animation = setInterval(function () {
+                    if (currentValue >= targetValue) {
+                        clearInterval(animation);
+                    } else {
+                        currentValue += 0.5; // kecepatan animasi
+                        progressBar.style.width = currentValue + "%";
+                        progressBar.setAttribute("aria-valuenow", currentValue.toFixed(1));
+                        progressText.textContent = currentValue.toFixed(1) + "%";
+                    }
+                }, 15); // semakin kecil semakin cepat
+            }
+        });
+    </script>
+
 @endpush

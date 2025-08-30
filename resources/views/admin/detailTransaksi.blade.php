@@ -177,9 +177,9 @@
                 </div>
             </div>
 
-            <!-- Payment Proof -->
-            @php
-            $proof = $transaction->feePayments->last()?->photo;
+        <!-- Payment Proof -->
+        @php
+            $proof = $transaction->feePayments->last()?->photo_url;
         @endphp
 
         @if($proof)
@@ -192,18 +192,26 @@
                 </div>
                 <div class="card-body text-center py-4">
                     <div class="mb-4">
-                        <img 
-                            src="{{ asset('storage/' . $proof) }}" 
-                            alt="Bukti Pembayaran" 
-                            class="proof-image rounded shadow"
-                            onclick="window.open('{{ asset('storage/' . $proof) }}', '_blank')"
-                        >
+                        {{-- Jika file adalah gambar --}}
+                        @if(Str::endsWith($proof, ['.jpg', '.jpeg', '.png', '.gif']))
+                            <img 
+                                src="{{ $proof }}" 
+                                alt="Bukti Pembayaran" 
+                                class="proof-image rounded shadow"
+                                onclick="window.open('{{ $proof }}', '_blank')"
+                            >
+                        @else
+                            {{-- Kalau bukan gambar (PDF dll) tampilkan ikon/tombol --}}
+                            <i class="fas fa-file-pdf fa-4x text-danger mb-3"></i>
+                            <p class="fw-semibold">Bukti pembayaran dalam format dokumen</p>
+                        @endif
                     </div>
+
                     <div class="d-flex justify-content-center gap-2 flex-wrap">
-                        <a href="{{ asset('storage/' . $proof) }}" target="_blank" class="btn btn-outline-primary">
+                        <a href="{{ $proof }}" target="_blank" class="btn btn-outline-primary">
                             <i class="fas fa-external-link-alt me-1"></i> Buka di Tab Baru
                         </a>
-                        <a href="{{ asset('storage/' . $proof) }}" download class="btn btn-success">
+                        <a href="{{ $proof }}" download class="btn btn-success">
                             <i class="fas fa-download me-1"></i> Download
                         </a>
                     </div>
@@ -218,6 +226,7 @@
                 </div>
             </div>
         @endif
+
         </div>
 
         <!-- User Information -->

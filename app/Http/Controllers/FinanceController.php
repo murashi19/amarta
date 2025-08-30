@@ -17,6 +17,9 @@ class FinanceController extends Controller
 {
     public function index()
     {
+        // Bersihkan transaksi yang user-nya sudah tidak ada
+        Transaction::whereDoesntHave('user')->delete();
+
         $user = auth()->user();
 
         $userClass = $user->userClasses()
@@ -60,7 +63,7 @@ class FinanceController extends Controller
                 'amount' => $biayaDp,
             ]);
         }
-
+        
         // Pemantapan
         $pemantapanTransaction = $user->transactions()
             ->where('type', 'pemantapan')
@@ -91,7 +94,6 @@ class FinanceController extends Controller
             ]);
         }
 
-
         $pemantapanPaid = $pemantapanTransaction && $pemantapanTransaction->status === 'Completed';
         $pemberangkatanPaid = $pemberangkatanTransaction && $pemberangkatanTransaction->status === 'Completed';
 
@@ -101,7 +103,6 @@ class FinanceController extends Controller
             ? $biayaBooking + $biayaDp + $biayaPemantapan + $biayaPemberangkatan
             : $biayaBooking + $biayaDp;
 
-        // Jika user belum punya kelas, beri error
         if (!$userClass || !$userClass->classProgram) {
             return view('users.keuangan', compact(
                 'user',
@@ -136,5 +137,6 @@ class FinanceController extends Controller
             'pemberangkatanPaid'
         ));
     }
+
 
 }

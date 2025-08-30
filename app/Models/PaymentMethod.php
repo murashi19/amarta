@@ -15,6 +15,11 @@ class PaymentMethod extends Model
         'account_name',
         'type',
     ];
+    
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+    ];
 
     /**
      * Get payment methods by type

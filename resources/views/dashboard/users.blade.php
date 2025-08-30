@@ -1,8 +1,6 @@
 @extends('layouts.dashboard')
 @section('title', 'Dashboard')
 
-
-
 @push('styles')
 <style>
     :root {
@@ -1086,6 +1084,7 @@
     }
 </style>
 @endpush
+
 @section('content')
 {{-- Toast Container untuk Flash Messages dari Middleware --}}
 @if(session('success') || session('error') || session('warning') || session('info'))
@@ -1225,7 +1224,9 @@
                                     <strong>DP Paid</strong>
                                     <span>Kelas Anda akan segera diaktifkan</span>
                                     @break
-                                @case(5 <= 7) 
+                                @case(5)
+                                @case(6)
+                                @case(7) 
                                     <strong>Active Student</strong>
                                     <span>Selamat belajar dan semangat!</span>
                                     @break
@@ -1251,282 +1252,352 @@
         @if(isset($userStatusId))
         <div class="progress-section">
             <div class="progress-track">
-                <div class="progress-fill" style="width: {{ ($userStatusId / 5) * 100 }}%"></div>
+                <div class="progress-fill" style="width: {{ min(($userStatusId / 7) * 100, 100) }}%"></div>
             </div>
             <div class="progress-steps">
-                @for($i = 1; $i <= 5; $i++)
+                @for($i = 1; $i <= 7; $i++)
                     <div class="progress-step {{ $i <= $userStatusId ? 'active' : '' }}">
                         <div class="step-circle">{{ $i }}</div>
                     </div>
                 @endfor
             </div>
-    </div>
-    @endif
-</div>
-
-    
-
-<!-- Announcements Section -->
-<div class="announcements-section">
-    <div class="section-header">
-        <div class="header-content">
-            <h2 class="section-title">
-                <i class="fas fa-bullhorn"></i>
-                Pengumuman
-            </h2>
-            <p class="section-subtitle">Informasi terbaru untuk Anda</p>
         </div>
-        <div class="header-badge">
-            <span class="count-badge">{{ $announcements->count() ?? 0 }}</span>
-        </div>
+        @endif
     </div>
 
-    <!-- Announcements Content -->
-    <div class="announcements-content">
-        @if($announcements->count())
-        <div class="announcements-list">
-        @foreach($announcements as $index => $announcement)
-            <!-- Konten 1 -->
-            <div class="announcement-card 
-                    target_audience-{{ str_replace(' ', '_', strtolower($announcement->target_audience)) }} 
-                    priority-{{ strtolower($announcement->priority) }}" 
-                style="animation-delay: {{ $index * 0.1 }}s">                            
-                <!-- Priority Indicator -->
-                <div class="priority-bar"></div>
+    <!-- Announcements Section -->
+    <div class="announcements-section">
+        <div class="section-header">
+            <div class="header-content">
+                <h2 class="section-title">
+                    <i class="fas fa-bullhorn"></i>
+                    Pengumuman
+                </h2>
+                <p class="section-subtitle">Informasi terbaru untuk Anda</p>
+            </div>
+            <div class="header-badge">
+                <span class="count-badge">{{ $announcements->count() ?? 0 }}</span>
+            </div>
+        </div>
 
-                <!-- Announcement Header -->
-                <div class="announcement-header">
-                    <div class="announcement-icon">
-                        @if($announcement->target_audience == 'new registrants')
-                            <i class="fas fa-exclamation-triangle"></i>
-                        @elseif($announcement->target_audience == 'paid students' && $announcement->target_audience == 'active students')
-                            <i class="fas fa-check"></i>
-                        @elseif($announcement->target_audience == 'all students')
-                            <i class="fas fa-info-circle"></i>
-                        @else
-                            <i class="fas fa-info-circle"></i>
-                        @endif
-                    </div>
+        <!-- Announcements Content -->
+        <div class="announcements-content">
+            @if($announcements && $announcements->count())
+                <div class="announcements-list">
+                    @foreach($announcements as $index => $announcement)
+                        <div class="announcement-card 
+                                target_audience-{{ str_replace(' ', '_', strtolower($announcement->target_audience)) }} 
+                                priority-{{ strtolower($announcement->priority) }}" 
+                            style="animation-delay: {{ $index * 0.1 }}s">
+                            
+                            <!-- Priority Indicator -->
+                            <div class="priority-bar"></div>
 
-                    <!-- Announcement Title -->
-                    <div class="announcement-title-section">
-                        <h4 class="announcement-title">{{ $announcement->title }}</h4>
-                        <div class="announcement-meta">
-                            <span class="target-audience">
-                                <i class="fas fa-users"></i>
-                                {{ ucfirst($announcement->target_audience) }}
-                            </span>
-                            <span class="announcement-time">
-                                <i class="fas fa-clock"></i>
-                                {{ $announcement->created_at->diffForHumans() }}
-                            </span>
-                        </div>
-                    </div>
-                    
-                    <div class="priority-badge">
-                        <span class="badge-text">{{ ucfirst($announcement->priority) }}</span>
-                    </div>
-                </div>
+                            <!-- Announcement Header -->
+                            <div class="announcement-header">
+                                <div class="announcement-icon">
+                                    @switch($announcement->target_audience)
+                                        @case('new registrants')
+                                            <i class="fas fa-exclamation-triangle"></i>
+                                            @break
+                                        @case('paid students')
+                                        @case('active students')
+                                            <i class="fas fa-check-circle"></i>
+                                            @break
+                                        @case('all students')
+                                            <i class="fas fa-info-circle"></i>
+                                            @break
+                                        @default
+                                            <i class="fas fa-bullhorn"></i>
+                                    @endswitch
+                                </div>
 
-                <div class="announcement-body">
-                    <p class="announcement-content">{{ $announcement->content }}</p>
-                </div>
+                                <div class="announcement-title-section">
+                                    <h4 class="announcement-title">{{ $announcement->title }}</h4>
+                                    <div class="announcement-meta">
+                                        <span class="target-audience">
+                                            <i class="fas fa-users"></i>
+                                            {{ ucfirst($announcement->target_audience) }}
+                                        </span>
+                                        <span class="announcement-time">
+                                            <i class="fas fa-clock"></i>
+                                            @if($announcement->scheduled_at && $announcement->status === 'scheduled')
+                                                {{ \Carbon\Carbon::parse($announcement->scheduled_at)->diffForHumans() }}
+                                            @else
+                                                {{ $announcement->created_at->diffForHumans() }}
+                                            @endif
+                                        </span>
+                                    </div>
+                                </div>
+                                
+                                <div class="priority-badge">
+                                    <span class="badge-text">{{ ucfirst($announcement->priority) }}</span>
+                                </div>
+                            </div>
 
-                <!-- Action Section -->
-                @php
-                    $pendingBooking = \App\Models\Transaction::where('user_id', Auth::id())
-                        ->where('type', 'booking')
-                        ->whereIn('status', ['Pending', 'Verification'])
-                        ->latest()
-                        ->first();
+                            <div class="announcement-body">
+                                <p class="announcement-content">{{ $announcement->content }}</p>
+                            </div>
 
-                    $userStatus = $userStatusId ?? 1;
-                @endphp
+                            <!-- Dynamic Action Section Based on User Status and Announcement Type -->
+                            @php
+                                $pendingBooking = \App\Models\Transaction::where('user_id', Auth::id())
+                                    ->where('type', 'booking')
+                                    ->whereIn('status', ['Pending', 'Verification'])
+                                    ->latest()
+                                    ->first();
 
-                @if(session('success'))
-                    <div class="alert alert-success">{{ session('success') }}</div>
-                @endif
+                                $userStatus = $userStatusId ?? 1;
+                                $hasOutstanding = \App\Models\FeePayment::whereHas('transaction', function($q) {
+                                        $q->where('user_id', Auth::id());
+                                    })
+                                    ->where('status', '!=', 'Completed')
+                                    ->exists();
+                            @endphp
 
-                <!-- Kondisi berdasarkan status user -->
-                @if($userStatus == 1)
-                    {{-- Status: New Registrant - Tampilkan form booking --}}
-                    <div class="card mb-3">
-                        <div class="card-body">
-                            <h5 class="text-warning">
-                                <i class="fas fa-credit-card me-2"></i>
-                                Booking Kelas
-                            </h5>
+                            @if($announcement->type !== 'umum')
+                                @switch($announcement->type)
+                                    @case('auto welcome')
+                                        @if($userStatus == 1)
+                                            <div class="announcement-action">
+                                                <div class="card border-warning">
+                                                    <div class="card-body">
+                                                        <h5 class="text-warning">
+                                                            <i class="fas fa-credit-card me-2"></i>
+                                                            Booking Kelas
+                                                        </h5>
 
-                            @if($pendingBooking)
-                                @if($pendingBooking->status === 'Pending')
-                                    <p class="text-muted">Kamu sudah membuat transaksi booking yang belum dibayar.</p>
-                                    <a href="{{ route('transaksi.booking', $pendingBooking) }}" class="btn btn-warning">
-                                        <i class="fas fa-clock me-2"></i>
-                                        Lanjutkan Pembayaran Booking
-                                    </a>
-                                @elseif($pendingBooking->status === 'Verification')
-                                    <p class="text-muted">Pembayaran booking Anda sedang diverifikasi.</p>
-                                    <a href="{{ route('transaksi.booking', $pendingBooking) }}" class="btn btn-warning">
-                                        <i class="fas fa-spinner fa-spin me-2"></i>
-                                        Lihat Status Pembayaran
-                                    </a>
-                                @endif
-                            @else
-                                <p class="text-muted mb-3">Silakan lakukan pembayaran booking untuk melanjutkan proses pendaftaran.</p>
-                                <form method="POST" action="{{ route('transaksi.booking.createBooking') }}">
-                                    @csrf
-                                    <button type="submit" class="btn btn-primary">
-                                        <i class="fas fa-money-bill-wave me-2"></i>
-                                        Bayar Booking Rp500.000
-                                    </button>
-                                </form>
+                                                        @if($pendingBooking)
+                                                            @if($pendingBooking->status === 'Pending')
+                                                                <p class="text-muted">Kamu sudah membuat transaksi booking yang belum dibayar.</p>
+                                                                <a href="{{ route('transaksi.booking', $pendingBooking) }}" class="btn btn-warning">
+                                                                    <i class="fas fa-clock me-2"></i>
+                                                                    Lanjutkan Pembayaran Booking
+                                                                </a>
+                                                            @elseif($pendingBooking->status === 'Verification')
+                                                                <p class="text-muted">Pembayaran booking Anda sedang diverifikasi.</p>
+                                                                <a href="{{ route('transaksi.booking', $pendingBooking) }}" class="btn btn-warning">
+                                                                    <i class="fas fa-spinner fa-spin me-2"></i>
+                                                                    Lihat Status Pembayaran
+                                                                </a>
+                                                            @endif
+                                                        @else
+                                                            <p class="text-muted mb-3">Silakan lakukan pembayaran booking untuk melanjutkan proses pendaftaran.</p>
+                                                            <form method="POST" action="{{ route('transaksi.booking.createBooking') }}">
+                                                                @csrf
+                                                                <button type="submit" class="btn btn-primary">
+                                                                    <i class="fas fa-money-bill-wave me-2"></i>
+                                                                    Bayar Booking Rp500.000
+                                                                </button>
+                                                            </form>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
+                                        @break
+
+                                    @case('auto booking success')
+                                        @if($userStatus == 2)
+                                            <div class="announcement-action">
+                                                <div class="card border-info">
+                                                    <div class="card-body">
+                                                        <h5 class="text-info">
+                                                            <i class="fas fa-video me-2"></i>
+                                                            Link Meeting Kelas
+                                                        </h5>
+
+                                                        @if($announcement->meet_link)
+                                                            <p class="text-muted mb-3">
+                                                                Pembayaran booking Anda sudah berhasil. Silakan bergabung dengan meeting kelas sesuai jadwal berikut:
+                                                            </p>
+
+                                                            @if($announcement->scheduled_at)
+                                                                <p>
+                                                                    <i class="fas fa-calendar-alt me-2"></i>
+                                                                    {{ \Carbon\Carbon::parse($announcement->scheduled_at)->translatedFormat('l, d F Y') }}
+                                                                    <br>
+                                                                    <i class="fas fa-clock me-2"></i>
+                                                                    {{ \Carbon\Carbon::parse($announcement->scheduled_at)->format('H:i') }} WIB
+                                                                </p>
+                                                            @endif
+
+                                                            @if($announcement->meeting_platform === 'zoom')
+                                                                <div class="bg-light p-3 rounded mb-3">
+                                                                    <h6 class="mb-2">
+                                                                        <i class="fas fa-video text-primary me-2"></i>
+                                                                        Informasi Zoom Meeting
+                                                                    </h6>
+                                                                    
+                                                                    @if($announcement->zoom_meeting_id)
+                                                                        <p class="mb-1">
+                                                                            <strong>Meeting ID:</strong> 
+                                                                            <span class="badge bg-secondary">{{ $announcement->zoom_meeting_id }}</span>
+                                                                            <button class="btn btn-sm btn-outline-secondary ms-1" onclick="copyToClipboard('{{ $announcement->zoom_meeting_id }}')">
+                                                                                <i class="fas fa-copy"></i>
+                                                                            </button>
+                                                                        </p>
+                                                                    @endif
+                                                                    
+                                                                    @if($announcement->zoom_passcode)
+                                                                        <p class="mb-1">
+                                                                            <strong>Passcode:</strong> 
+                                                                            <span class="badge bg-secondary">{{ $announcement->zoom_passcode }}</span>
+                                                                            <button class="btn btn-sm btn-outline-secondary ms-1" onclick="copyToClipboard('{{ $announcement->zoom_passcode }}')">
+                                                                                <i class="fas fa-copy"></i>
+                                                                            </button>
+                                                                        </p>
+                                                                    @endif
+                                                                </div>
+                                                            @endif
+
+                                                            <div class="d-grid gap-2">
+                                                                <a href="{{ $announcement->meet_link }}" target="_blank" class="btn btn-info">
+                                                                    @if($announcement->meeting_platform === 'zoom')
+                                                                        <i class="fas fa-video me-2"></i>
+                                                                        Gabung Zoom Meeting
+                                                                    @else
+                                                                        <i class="fab fa-google me-2"></i>
+                                                                        Gabung Google Meet
+                                                                    @endif
+                                                                </a>
+                                                            </div>
+
+                                                            <small class="text-muted d-block mt-2">
+                                                                <i class="fas fa-info-circle me-1"></i>
+                                                                Link akan membuka di tab baru. 
+                                                                @if($announcement->meeting_platform === 'zoom')
+                                                                    Pastikan Anda sudah menginstall aplikasi Zoom atau menggunakan browser yang mendukung.
+                                                                    @if($announcement->zoom_meeting_id)
+                                                                        <br>Anda juga bisa join manual menggunakan Meeting ID dan Passcode di atas.
+                                                                    @endif
+                                                                @else
+                                                                    Pastikan Anda sudah login ke akun Google atau menggunakan browser yang mendukung Google Meet.
+                                                                @endif
+                                                            </small>
+                                                        @else
+                                                            <div class="alert alert-warning" role="alert">
+                                                                <i class="fas fa-clock me-2"></i>
+                                                                Link meeting belum tersedia. Admin akan segera memberikan link meeting.
+                                                            </div>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
+                                        @break
+
+                                    @case('auto dp request')
+                                        @if($userStatus == 3)
+                                            <div class="announcement-action">
+                                                <div class="card border-success">
+                                                    <div class="card-body">
+                                                        <h5 class="text-success">
+                                                            <i class="fas fa-calculator me-2"></i>
+                                                            Pembayaran DP
+                                                        </h5>
+                                                        <p class="text-muted mb-3">
+                                                            Anda sudah bergabung dalam meeting. Silakan lanjutkan dengan pembayaran DP melalui halaman keuangan.
+                                                        </p>
+                                                        <div class="d-grid gap-2">
+                                                            <a href="{{ route('users.keuangan') }}" class="btn btn-success">
+                                                                <i class="fas fa-money-check-alt me-2"></i>
+                                                                Buka Halaman Keuangan
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
+                                        @break
+
+                                    @case('auto installment')
+                                        @if(in_array($userStatus, [5, 6, 7]) && $hasOutstanding)
+                                            <div class="announcement-action">
+                                                <div class="card border-success">
+                                                    <div class="card-body">
+                                                        <h5 class="text-success">
+                                                            <i class="fas fa-calculator me-2"></i>
+                                                            Pembayaran Cicilan
+                                                        </h5>
+                                                        <p class="text-muted mb-3">
+                                                            Anda memiliki tagihan yang belum diselesaikan. Silakan lengkapi pembayaran melalui halaman keuangan.
+                                                        </p>
+                                                        <div class="d-grid gap-2">
+                                                            <a href="{{ route('users.keuangan') }}" class="btn btn-success">
+                                                                <i class="fas fa-money-check-alt me-2"></i>
+                                                                Buka Halaman Keuangan
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
+                                        @break
+
+                                    @case('auto success')
+                                        @if(in_array($userStatus, [5, 6, 7]) && !$hasOutstanding)
+                                            <div class="announcement-action">
+                                                <div class="card border-success">
+                                                    <div class="card-body">
+                                                        <h5 class="text-success">
+                                                            <i class="fas fa-check-circle me-2"></i>
+                                                            Status Pembayaran
+                                                        </h5>
+                                                        <p class="text-muted mb-3">
+                                                            Selamat! Anda sudah melunasi biaya program. Status kelas Anda aktif dan semua pembayaran telah selesai.
+                                                        </p>
+                                                        <small class="text-success d-block mt-2">
+                                                            <i class="fas fa-check-circle me-1"></i>
+                                                            Tidak ada tagihan yang tersisa.
+                                                        </small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
+                                        @break
+                                @endswitch
                             @endif
-                        </div>
-                    </div>
 
-                @elseif($userStatus == 2)
-                    {{-- Status: Paid Student - Tampilkan link Meeting --}}
-                    <div class="card mb-3 border-info">
-                        <div class="card-body">
-                            <h5 class="text-info">
-                                <i class="fas fa-video me-2"></i>
-                                Link Meeting Kelas
-                            </h5>
-                                @if(isset($announcement) && !empty($announcement->meet_link))
-                                    <p class="text-muted mb-3">
-                                        Pembayaran booking Anda sudah berhasil. Silakan bergabung dengan meeting kelas sesuai jadwal berikut:
-                                    </p>
-
-                                    @if(!empty($announcement->scheduled_at))
-                                        <p>
-                                            <i class="fas fa-calendar-alt me-2"></i>
-                                            {{ \Carbon\Carbon::parse($announcement->scheduled_at)->translatedFormat('l, d F Y') }}
-                                            <br>
-                                            <i class="fas fa-clock me-2"></i>
-                                            {{ \Carbon\Carbon::parse($announcement->scheduled_at)->format('H:i') }} WIB
-                                        </p>
+                            <!-- Footer -->
+                            <div class="announcement-footer">
+                                <div class="footer-info">
+                                    <span class="created-date">
+                                        @if($announcement->scheduled_at && $announcement->status === 'scheduled')
+                                            {{ \Carbon\Carbon::parse($announcement->scheduled_at)->format('d M Y, H:i') }}
+                                        @else
+                                            {{ $announcement->created_at->format('d M Y, H:i') }}
+                                        @endif
+                                    </span>
+                                    @if($announcement->type !== 'umum')
+                                        <span class="auto-type">
+                                            <i class="fas fa-robot"></i>
+                                            Auto: {{ ucfirst(str_replace('auto ', '', $announcement->type)) }}
+                                        </span>
                                     @endif
-
-                                    <div class="d-grid gap-2">
-                                        <a href="{{ $announcement->meet_link }}" target="_blank" class="btn btn-info">
-                                            <i class="fas fa-external-link-alt me-2"></i>
-                                            Gabung Meeting
-                                        </a>
-                                    </div>
-                                    <small class="text-muted d-block mt-2">
-                                        <i class="fas fa-info-circle me-1"></i>
-                                        Link akan membuka di tab baru. Pastikan Anda sudah menginstall Google Meet atau menggunakan browser yang mendukung.
-                                    </small>
-                                @else
-                                    <div class="alert alert-warning" role="alert">
-                                        <i class="fas fa-clock me-2"></i>
-                                        Link Google Meet belum tersedia. Admin akan segera memberikan link meeting.
-                                    </div>
-                                @endif
-
-                        </div>
-                    </div>
-
-                {{-- Status: Meeting Joined sampai Ready to Depart --}}
-                @elseif($userStatus >= 3 && $userStatus <= 7)
-                    @if(isset($announcement) && in_array($announcement->type, ['auto dp request','auto installment','auto success']))
-                        <div class="card mb-3 border-success">
-                            <div class="card-body">
-                                <h5 class="text-success">
-                                    <i class="fas fa-calculator me-2"></i>
-                                    Pembayaran Keuangan
-                                </h5>
-
-                                @if($userStatus == 3 && $announcement->type === 'auto dp request')
-                                    <p class="text-muted mb-3">
-                                        Anda sudah bergabung dalam meeting. Silakan lanjutkan dengan pembayaran DP melalui halaman keuangan.
-                                    </p>
-
-                                    <div class="d-grid gap-2">
-                                        <a href="{{ route('users.keuangan') }}" class="btn btn-success">
-                                            <i class="fas fa-money-check-alt me-2"></i>
-                                            Buka Halaman Keuangan
-                                        </a>
-                                    </div>
-
-                                @elseif($userStatus == 5 && $announcement->type === 'auto installment')
-                                    <p class="text-muted mb-3">
-                                        DP Anda sudah dibayar. Silakan lengkapi pembayaran sisanya melalui halaman keuangan.
-                                    </p>
-
-                                    <div class="d-grid gap-2">
-                                        <a href="{{ route('users.keuangan') }}" class="btn btn-success">
-                                            <i class="fas fa-money-check-alt me-2"></i>
-                                            Buka Halaman Keuangan
-                                        </a>
-                                    </div>
-
-                                @elseif($userStatus == 5 && $announcement->type === 'auto success')
-                                    <p class="text-muted mb-3">
-                                        Selamat! Anda sudah melunasi biaya program. Status kelas Anda aktif dan semua pembayaran telah selesai.
-                                    </p>
-                                    <small class="text-muted d-block mt-2">
-                                        <i class="fas fa-check-circle me-1"></i>
-                                        Tidak ada tagihan yang tersisa.
-                                    </small>
-                                @endif
-
+                                </div>
                             </div>
                         </div>
-                    @endif
-
-                    @else
-                    {{-- Status tidak dikenali --}}
-                    <div class="card mb-3 border-secondary">
-                        <div class="card-body">
-                            <h5 class="text-secondary">
-                                <i class="fas fa-question-circle me-2"></i>
-                                Status Tidak Dikenali
-                            </h5>
-                            <p class="text-muted mb-3">
-                                Status Anda tidak dapat diidentifikasi. Silakan hubungi administrator untuk mendapatkan bantuan.
-                            </p>
-                            <div class="d-grid gap-2">
-                                <a href="{{ route('contact.admin') }}" class="btn btn-secondary">
-                                    <i class="fas fa-headset me-2"></i>
-                                    Hubungi Administrator
-                                </a>
-                            </div>
-                        </div>
+                    @endforeach
+                </div>
+            @else
+                <div class="empty-state">
+                    <div class="empty-illustration">
+                        <i class="fas fa-inbox"></i>
                     </div>
-                @endif
-
-                <!-- Footer -->
-                <div class="announcement-footer">
-                    <div class="footer-info">
-                        <span class="created-date">{{ $announcement->created_at->format('d M Y, H:i') }}</span>
-                        @if($announcement->type != 'umum')
-                            <span class="auto-type">
-                                <i class="fas fa-robot"></i>
-                                Auto: {{ ucfirst(str_replace('auto ', '', $announcement->type)) }}
-                            </span>
-                        @endif
+                    <div class="empty-content">
+                        <h3 class="empty-title">Belum Ada Pengumuman</h3>
+                        <p class="empty-subtitle">Pengumuman dan informasi terbaru akan muncul di sini</p>
                     </div>
                 </div>
-            </div>
-        @endforeach
-    </div>
-    @else
-        <div class="empty-state">
-            <div class="empty-illustration">
-                <i class="fas fa-inbox"></i>
-            </div>
-            <div class="empty-content">
-                <h3 class="empty-title">Belum Ada Pengumuman</h3>
-                <p class="empty-subtitle">Pengumuman dan informasi terbaru akan muncul di sini</p>
-            </div>
+            @endif
         </div>
-    @endif
+    </div>
 </div>
 
 @push('scripts')
 <script>
-    // {{-- JavaScript untuk Initialize Toast --}}
+    // Initialize Toast and other JavaScript functionality
     document.addEventListener('DOMContentLoaded', function() {
         // Initialize all toasts
         const toastElList = [].slice.call(document.querySelectorAll('.toast'));
@@ -1542,59 +1613,39 @@
             toast.show();
         });
 
-        // Add sound notification for error messages (optional)
-        const errorToast = document.querySelector('.text-bg-danger');
-        if (errorToast) {
-            // You can add sound here if needed
-            console.log('Error notification displayed');
-        }
-    });
-
-    document.addEventListener('DOMContentLoaded', function() {
-        // Handle action button clicks
-        document.querySelectorAll('.announcement-action-button').forEach(button => {
-            button.addEventListener('click', function(e) {
-                e.preventDefault();
-
-                const action = this.dataset.action;
-                const url = this.dataset.actionUrl;
-
-                // Add loading state
-                const originalContent = this.innerHTML;
-                this.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Loading...';
-                this.disabled = true;
-
-                setTimeout(() => {
-                    switch (action) {
-                        case 'payment_booking':
-                            const form = document.createElement('form');
-                            form.method = 'POST';
-                            form.action = url;
-
-                            const token = document.createElement('input');
-                            token.type = 'hidden';
-                            token.name = '_token';
-                            token.value = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
-                            form.appendChild(token);
-                            document.body.appendChild(form);
-                            form.submit();
-                            break;
-
-                        case 'show_meet_link':
-                        case 'payment_dp':
-                        case 'info_class_active':
-                            window.location.href = url;
-                            break;
-
-                        default:
-                            console.warn('Unknown action:', action);
-                            this.innerHTML = originalContent;
-                            this.disabled = false;
-                    }
-                }, 500);
+        // Copy to clipboard function
+        window.copyToClipboard = function(text) {
+            navigator.clipboard.writeText(text).then(function() {
+                // Show success toast
+                const toastHTML = `
+                    <div class="toast align-items-center text-bg-success border-0" role="alert">
+                        <div class="d-flex">
+                            <div class="toast-body">
+                                <i class="fas fa-check me-2"></i>Berhasil disalin!
+                            </div>
+                            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                        </div>
+                    </div>
+                `;
+                
+                const toastContainer = document.querySelector('.toast-container') || document.body;
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = toastHTML;
+                const toastElement = tempDiv.firstElementChild;
+                toastContainer.appendChild(toastElement);
+                
+                const toast = new bootstrap.Toast(toastElement);
+                toast.show();
+                
+                // Remove after hide
+                toastElement.addEventListener('hidden.bs.toast', function() {
+                    toastElement.remove();
+                });
+            }).catch(function(err) {
+                console.error('Could not copy text: ', err);
+                alert('Text berhasil disalin: ' + text);
             });
-        });
+        };
 
         // Animate progress bar on load
         setTimeout(() => {
@@ -1607,53 +1658,6 @@
                 }, 300);
             }
         }, 500);
-
-        // Auto-refresh announcements every 5 minutes
-        let refreshInterval;
-        
-        function startAutoRefresh() {
-            refreshInterval = setInterval(function() {
-                // Add visual indicator for refresh
-                const countBadge = document.querySelector('.count-badge');
-                if (countBadge) {
-                    const originalText = countBadge.textContent;
-                    countBadge.innerHTML = '<i class="fas fa-sync-alt fa-spin"></i>';
-                    
-                    // Simulate refresh (in real app, you'd fetch new data)
-                    setTimeout(() => {
-                        countBadge.textContent = originalText;
-                    }, 2000);
-                }
-                
-                console.log('Auto-refresh announcements');
-            }, 300000); // 5 minutes
-        }
-
-        // Start auto-refresh
-        startAutoRefresh();
-
-        // Pause auto-refresh when page is not visible
-        document.addEventListener('visibilitychange', function() {
-            if (document.hidden) {
-                clearInterval(refreshInterval);
-            } else {
-                startAutoRefresh();
-            }
-        });
-
-        // Add smooth scroll behavior for any anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
 
         // Add intersection observer for animation triggers
         const observerOptions = {
@@ -1677,8 +1681,8 @@
         // Add click effect to cards
         document.querySelectorAll('.announcement-card').forEach(card => {
             card.addEventListener('click', function(e) {
-                // Don't trigger if clicking on button
-                if (e.target.closest('.action-btn')) return;
+                // Don't trigger if clicking on button or link
+                if (e.target.closest('.btn, a')) return;
                 
                 // Add ripple effect
                 const ripple = document.createElement('div');
