@@ -570,10 +570,10 @@
                             <span class="info-label">Bergabung Sejak</span>
                             <span class="info-value">{{ $admin->created_at->format('d F Y') }}</span>
                         </div>
-                        <div class="info-item">
+                        <!-- <div class="info-item">
                             <span class="info-label">Terakhir Login</span>
                             <span class="info-value">{{ $admin->updated_at->diffForHumans() }}</span>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
@@ -589,7 +589,7 @@
                 <h5 class="modal-title">Ubah Password</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <form id="passwordForm" method="POST" action="#">
+            <form id="passwordForm">
                 @csrf
                 <div class="modal-body">
                     <div class="mb-3">
@@ -610,6 +610,11 @@
                     <button type="submit" class="btn btn-primary">Ubah Password</button>
                 </div>
             </form>
+
+            <!-- Tempat pesan -->
+            <div id="passwordAlert" class="mt-2"></div>
+
+
         </div>
     </div>
 </div>
@@ -694,22 +699,53 @@
             modal.show();
         }
 
-        // Form validation for password change
         document.getElementById('passwordForm').addEventListener('submit', function(e) {
-            const password = document.querySelector('input[name="password"]').value;
-            const passwordConfirmation = document.querySelector('input[name="password_confirmation"]').value;
-            
-            if (password !== passwordConfirmation) {
-                e.preventDefault();
-                alert('Password baru dan konfirmasi password tidak cocok!');
-                return false;
-            }
-            
-            if (password.length < 8) {
-                e.preventDefault();
-                alert('Password minimal 8 karakter!');
-                return false;
-            }
+            e.preventDefault();
+
+            const form = e.target;
+            const formData = new FormData(form);
+
+            fetch("{{ route('password.update') }}", {
+                method: "POST",
+                headers: {
+                    "X-CSRF-TOKEN": form.querySelector('input[name="_token"]').value,
+                    "Accept": "application/json"
+                },
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil!',
+                        text: data.message,
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+
+                    form.reset();
+
+                    // Tutup modal otomatis
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('passwordModal'));
+                    modal.hide();
+
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal!',
+                        text: data.message,
+                    });
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Terjadi kesalahan, coba lagi!',
+                });
+            });
         });
     </script>
 @endpush

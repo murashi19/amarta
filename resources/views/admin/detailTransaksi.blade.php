@@ -5,16 +5,25 @@
 @section('content')
 <div class="container-fluid">
     <!-- Breadcrumb & Header -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-4 mt-4">
         <div>
             <nav aria-label="breadcrumb">
-                <ol class="breadcrumb mb-2">
-                    <li class="breadcrumb-item">
-                        <a href="{{ route('admin.transaksi') }}" class="text-decoration-none text-primary">
-                            <i class="fas fa-credit-card me-1"></i> Manajemen Transaksi
+                <ol class="breadcrumb mb-2" itemscope itemtype="https://schema.org/BreadcrumbList">
+                    <li class="breadcrumb-item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+                        <a href="{{ route('admin.transaksi') }}" 
+                        class="text-decoration-none text-primary"
+                        itemprop="item">
+                            <span itemprop="name">
+                                <i class="fas fa-credit-card me-1"></i> Manajemen Transaksi
+                            </span>
                         </a>
+                        <meta itemprop="position" content="1" />
                     </li>
-                    <li class="breadcrumb-item active text-dark fw-semibold">Detail Transaksi #{{ $transaction->id }}</li>
+                    <li class="breadcrumb-item active text-dark fw-semibold" 
+                        itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+                        <span itemprop="name">Detail Transaksi #{{ $transaction->id }}</span>
+                        <meta itemprop="position" content="2" />
+                    </li>
                 </ol>
             </nav>
             <h2 class="mb-0 text-dark">
@@ -70,9 +79,9 @@
                     <div>
                         <div class="fw-bold text-dark">Status</div>
                         <div>
-                            @if($transaction->status == 'completed')
+                            @if($transaction->status == 'Completed')
                                 <span class="badge bg-success">{{ $transaction->status_name ?? 'Selesai' }}</span>
-                            @elseif($transaction->status == 'pending')
+                            @elseif($transaction->status == 'Pending')
                                 <span class="badge bg-warning text-dark">{{ $transaction->status_name ?? 'Pending' }}</span>
                             @else
                                 <span class="badge bg-danger">{{ $transaction->status_name ?? 'Gagal' }}</span>

@@ -475,7 +475,7 @@
                         <i class="fas fa-edit"></i>
                         Edit Profil
                     </a>
-                    <a href="#" class="btn-modern btn-secondary-modern">
+                   <a href="#" class="btn-modern btn-secondary-modern" onclick="showPasswordModal()">
                         <i class="fas fa-lock"></i>
                         Password
                     </a>
@@ -659,11 +659,26 @@
                             </div>
                         </div>
                         @if($meeting->meet_link)
-                        <a href="{{ $meeting->meet_link }}" target="_blank" class="meeting-link">
-                            <i class="fas fa-external-link-alt"></i>
-                            Gabung Meeting
-                        </a>
+                            @if($meeting->is_attended)
+                                {{-- Sudah hadir, disable tombol --}}
+                                <button class="btn btn-secondary" disabled>
+                                    <i class="fas fa-check"></i> Anda sudah hadir
+                                </button>
+                            @else
+                                {{-- Belum hadir, tombol aktif --}}
+                                <form action="{{ route('meetings.attendance', $meeting->id) }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="btn btn-info">
+                                        @if(!empty($meeting->platform) && $meeting->platform === 'zoom')
+                                            <i class="fas fa-video me-2"></i> Gabung Zoom Meeting
+                                        @else
+                                            <i class="fab fa-google me-2"></i> Gabung Google Meet
+                                        @endif
+                                    </button>
+                                </form>
+                            @endif
                         @endif
+
                     </div>
                     @endforeach
                     
@@ -724,6 +739,43 @@
 </div>
 @endif
 
+<!-- Change Password Modal -->
+<div class="modal fade" id="passwordModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Ubah Password</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="passwordForm">
+                @csrf
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Password Saat Ini</label>
+                        <input type="password" class="form-control" name="current_password" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Password Baru</label>
+                        <input type="password" class="form-control" name="password" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Konfirmasi Password Baru</label>
+                        <input type="password" class="form-control" name="password_confirmation" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary">Ubah Password</button>
+                </div>
+            </form>
+
+            <!-- Tempat pesan -->
+            <div id="passwordAlert" class="mt-2"></div>
+
+        </div>
+    </div>
+</div>
+
 @push('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -762,6 +814,59 @@
                             icon.className = originalIcon;
                         }, 2000);
                     }
+                });
+            });
+        });
+
+        function showPasswordModal() {
+            const modal = new bootstrap.Modal(document.getElementById('passwordModal'));
+            modal.show();
+        }
+        document.getElementById('passwordForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const form = e.target;
+            const formData = new FormData(form);
+
+            fetch("{{ route('password.update') }}", {
+                method: "POST",
+                headers: {
+                    "X-CSRF-TOKEN": form.querySelector('input[name="_token"]').value,
+                    "Accept": "application/json"
+                },
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil!',
+                        text: data.message,
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+
+                    form.reset();
+
+                    // Tutup modal otomatis
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('passwordModal'));
+                    modal.hide();
+
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal!',
+                        text: data.message,
+                    });
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Terjadi kesalahan, coba lagi!',
                 });
             });
         });

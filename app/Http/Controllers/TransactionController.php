@@ -441,54 +441,114 @@ class TransactionController extends Controller
     // ======================== SINGLE PAYMENT ========================
     public function uploadSinglePaymentProof(Request $request, $id)
     {
+        // Debug: Log semua input yang diterima
+        Log::info('UploadSinglePaymentProof - Input received', [
+            'all_input' => $request->all(),
+            'files' => $request->allFiles(),
+            'has_file_proof' => $request->hasFile('proof'),
+            'content_type' => $request->header('Content-Type'),
+            'method' => $request->method()
+        ]);
+
         $trx = Transaction::findOrFail($id);
 
         if ($trx->user_id !== Auth::id()) {
-            return response()->json(['success' => false,'message' => 'Akses tidak diizinkan.'], 403);
+            Log::warning('UploadSinglePaymentProof - Akses ditolak', [
+                'transaction_id' => $trx->id,
+                'user_id' => Auth::id()
+            ]);
+            return back()->with('error', 'Akses tidak diizinkan.');
         }
 
         if (!in_array($trx->type, ['pemantapan', 'pemberangkatan'])) {
-            return response()->json(['success' => false,'message' => 'Transaksi ini bukan pembayaran Pemantapan/Pemberangkatan.'], 400);
+            Log::warning('UploadSinglePaymentProof - Jenis transaksi tidak valid', [
+                'transaction_id' => $trx->id,
+                'type' => $trx->type
+            ]);
+            return back()->with('error', 'Transaksi ini bukan pembayaran Pemantapan/Pemberangkatan.');
         }
 
         if (!in_array($trx->status, ['Pending', 'Verification'])) {
-            return response()->json(['success' => false,'message' => 'Transaksi ini tidak bisa diubah.'], 400);
+            Log::warning('UploadSinglePaymentProof - Status tidak bisa diubah', [
+                'transaction_id' => $trx->id,
+                'status' => $trx->status
+            ]);
+            return back()->with('error', 'Transaksi ini tidak bisa diubah.');
         }
 
         if ($trx->expires_at && now()->greaterThan($trx->expires_at)) {
             $trx->update(['status' => 'Failed']);
-            return response()->json(['success' => false,'message' => 'Waktu pembayaran sudah habis.'], 400);
+            Log::info('UploadSinglePaymentProof - Transaksi kadaluarsa', [
+                'transaction_id' => $trx->id,
+                'expires_at' => $trx->expires_at
+            ]);
+            return back()->with('error', 'Waktu pembayaran sudah habis.');
         }
 
-        $request->validate([
-            'proof' => 'required|mimes:jpg,jpeg,png,pdf|max:5120',
-            'payment_method' => 'required|string|in:bank_transfer,ewallet,cash',
-            'selected_method' => 'nullable|string|max:50',
-            'payment_notes'   => 'nullable|string|max:500',
-        ]);
+        try {
+            // Debug sebelum validasi
+            Log::info('UploadSinglePaymentProof - Before validation', [
+                'has_proof_file' => $request->hasFile('proof'),
+                'proof_file_details' => $request->hasFile('proof') ? [
+                    'original_name' => $request->file('proof')->getClientOriginalName(),
+                    'size' => $request->file('proof')->getSize(),
+                    'mime_type' => $request->file('proof')->getMimeType(),
+                ] : null
+            ]);
 
-        $file = $request->file('proof');
-        $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-        $file->storeAs('proofs', $fileName, 'public');
+            $request->validate([
+                'proof' => 'required|mimes:jpg,jpeg,png,pdf|max:5120',
+                'payment_method' => 'required|string|in:bank_transfer,ewallet,cash',
+                'selected_method' => 'nullable|string|max:50',
+                'payment_notes'   => 'nullable|string|max:500',
+            ]);
 
-        FeePayment::create([
-            'transaction_id'  => $trx->id,
-            'amount'          => $trx->amount,
-            'payment_method'  => $request->payment_method,
-            'selected_method' => $request->selected_method,
-            'photo'           => $fileName, // konsisten filename
-            'notes'           => $request->payment_notes,
-            'reference_number'=> strtoupper($trx->type) . '-' . uniqid(),
-            'paid_at'         => now(),
-            'status'          => 'Verification',
-        ]);
+            $file = $request->file('proof');
+            $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $file->storeAs('proofs', $fileName, 'public');
 
-        $trx->update(['status' => 'Verification']);
+            FeePayment::create([
+                'transaction_id'  => $trx->id,
+                'amount'          => $trx->amount,
+                'payment_method'  => $request->payment_method,
+                'selected_method' => $request->selected_method,
+                'photo'           => $fileName,
+                'notes'           => $request->payment_notes,
+                'reference_number'=> strtoupper($trx->type) . '-' . uniqid(),
+                'paid_at'         => now(),
+                'status'          => 'Verification',
+            ]);
 
-        return redirect()->route('transaksi.showSinglePayment', ['id' => $trx->id])
-            ->with('success', 'Bukti pembayaran berhasil dikirim. Menunggu verifikasi admin.');
+            $trx->update(['status' => 'Verification']);
+
+            Log::info('UploadSinglePaymentProof - Bukti pembayaran berhasil diupload', [
+                'transaction_id' => $trx->id,
+                'user_id' => Auth::id(),
+                'file' => $fileName
+            ]);
+
+            return redirect()->route('users.keuangan')
+                ->with('success', 'Bukti pembayaran berhasil dikirim. Menunggu verifikasi admin.');
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Log validation errors secara detail
+            Log::error('UploadSinglePaymentProof - Validation Error', [
+                'transaction_id' => $trx->id ?? null,
+                'user_id' => Auth::id(),
+                'validation_errors' => $e->errors(),
+                'input_data' => $request->all()
+            ]);
+            return back()->withErrors($e->errors())->withInput();
+        } catch (\Exception $e) {
+            Log::error('UploadSinglePaymentProof - Error saat upload', [
+                'transaction_id' => $trx->id ?? null,
+                'user_id' => Auth::id(),
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            return back()->with('error', 'Terjadi kesalahan saat upload bukti pembayaran.');
+        }
     }
-
 
 
 }

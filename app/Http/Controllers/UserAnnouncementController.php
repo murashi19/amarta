@@ -30,7 +30,7 @@ class UserAnnouncementController extends Controller
             // Enrich pengumuman dengan meeting data kalau perlu
             $announcements = $this->enrichAnnouncementsWithMeeting($announcements, $meetingData);
 
-            return view('dashboard.users.announcements', [
+            return view('dashboard.users', [
                 'user' => $user,
                 'userStatusId' => $userStatusId,
                 'announcements' => $announcements,
@@ -40,7 +40,7 @@ class UserAnnouncementController extends Controller
         } catch (\Exception $e) {
             \Log::error("User Announcement Error: " . $e->getMessage());
 
-            return view('dashboard.users.announcements', [
+            return view('dashboard.users', [
                 'user' => Auth::user(),
                 'announcements' => collect(),
                 'userStatusId' => 1,

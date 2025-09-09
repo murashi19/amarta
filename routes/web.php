@@ -40,7 +40,7 @@ Route::get('/register', [AuthController::class, 'showRegister'])->name('register
 Route::post('/register', [AuthController::class, 'register']);
 
 // Rute untuk halaman verifikasi OTP
-Route::get('/verify-otp/{id}', [AuthController::class, 'showVerify'])->name('verifyOtp')->middleware(['signed', 'throttle:6,1']);
+Route::get('/verify-otp/{id}', [AuthController::class, 'showVerify'])->name('verifyOtp');
 Route::post('/verify-otp', [AuthController::class, 'processVerification'])->name('verifyOtp.process');
 Route::post('/resend-otp', [AuthController::class, 'resendOtp'])->name('resendOtp');
 
@@ -60,7 +60,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::put('/admin/pengumuman/{id}', [AnnouncementController::class, 'update'])->name('admin.pengumuman.update');
     Route::get('/admin/pengumuman/{id}/edit', [AnnouncementController::class, 'edit'])->name('admin.pengumuman.edit');
     Route::delete('/admin/pengumuman/{id}', [AnnouncementController::class, 'destroy'])->name('admin.pengumuman.destroy');
-    Route::get('admin/pengumuman/{id}/show', [AnnouncementController::class, 'show'])
+    Route::get('/admin/pengumuman/{id}/show', [AnnouncementController::class, 'show'])
     ->name('admin.pengumuman.show');
 
     // Manajemen User
@@ -77,12 +77,16 @@ Route::middleware(['auth', 'admin'])->group(function () {
     // Additional user routes
     Route::get('/admin/userDetail/{user}', [UsersController::class, 'show'])->name('admin.userDetail');
     Route::delete('/admin/usersManage/{user}', [UsersController::class, 'deleteUser'])->name('admin.usersManage.deleteUser');
+    Route::put('/admin/users/{id}/update-status', [UserController::class, 'updateStatus'])
+     ->name('admin.users.updateStatus');
+
 
     // Profile
     Route::get('/admin/profile', [UsersController::class, 'adminProfile'])->name('admin.profile');
     Route::get('/admin/editProfile', [UsersController::class, 'editAdminProfile'])->name('admin.editProfile');
-    Route::put('/admin/editProfile', [UsersController::class, 'updateAdminProfile'])->name('admin.updateProfile');
-    
+    Route::put('/admin/updateProfile', [UsersController::class, 'updateAdminProfile'])->name('admin.updateProfile');
+    Route::post('/change-password', [UsersController::class, 'updatePassword'])->name('password.update');
+
     
     // API routes untuk AJAX
     Route::get('/admin/users/data', [UsersController::class, 'getData'])->name('admin.users.data');
@@ -102,7 +106,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('/installments/{id}/verify', [ManageTransactionController::class, 'verifyInstallment'])->name('admin.installments.verify');
     Route::get('/installments/{id}', [ManageTransactionController::class, 'detailInstallment'])->name('admin.installments.detail');
     Route::get('/admin/transaksi/installments/export', [ManageTransactionController::class, 'exportInstallments'])
-    ->name('admin.transaksi.installments.export');
+    ->name('admin.installments.export');
 
 
     // API routes untuk AJAX
@@ -111,13 +115,16 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
 // --- Dashboard User ---
 Route::middleware(['auth', 'verifikasi'])->group(function () {
-    Route::get('/dashboard/users', [UserAnnouncementController::class, 'index'])
+    Route::get('/dashboard/users', [AnnouncementController::class, 'AnnountmentsUser'])
     ->name('dashboard.users');
+    Route::post('/meetings/{id}/attendance', [AnnouncementController::class, 'markAttendance'])
+        ->name('meetings.attendance');
 
     // Profile
     Route::get('/users/profile', [UsersController::class, 'profile'])->name('users.profile');
     Route::get('/users/editProfile', [UsersController::class, 'editProfile'])->name('users.editProfile');
     Route::put('/users/editProfile', [UsersController::class, 'updateProfile'])->name('users.editProfile.updateProfile');
+    Route::post('/change-password', [UsersController::class, 'updatePassword'])->name('password.update');
 
     // Keuangan
     Route::middleware(['auth', 'CheckFinanceAccess'])->group(function () {
@@ -146,6 +153,6 @@ Route::middleware(['auth', 'verifikasi'])->group(function () {
 
     Route::get('/transaksi/payment/type/{type}', [TransactionController::class, 'showSinglePayment'])
         ->name('transaksi.showSinglePayment');
-    Route::post('/transaksi/payment/{id}/upload', [TransactionController::class, 'uploadSinglePaymentProof'])->name('transaksi.uploadSinglePaymentProof');
+    Route::post('/transaksi/payment/{id}/upload-proof', [TransactionController::class, 'uploadSinglePaymentProof'])->name('transaksi.uploadSinglePaymentProof');
 });
 

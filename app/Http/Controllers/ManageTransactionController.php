@@ -51,6 +51,8 @@ class ManageTransactionController extends Controller
 
         // Hitung jumlah transaksi
         $transactionsCount = $transactions->total();
+        
+
 
         // Filter transaksi setelah diambil
         $transactions->getCollection()->transform(function ($transaction) {
@@ -89,8 +91,19 @@ class ManageTransactionController extends Controller
         $installments = $installmentQuery->latest()->paginate(15, ['*'], 'installments_page');
 
         $totalRevenue = Transaction::where('status', 'Completed')->sum('amount');
+        $completedCount = Transaction::where('status', 'Completed')->count();
+        $pendingCount = Transaction::whereIn('status', ['Pending', 'Verification'])->count();
+        $totalTransactions = Transaction::count();
 
-        return view('admin.transaksi', compact('transactions', 'installments', 'totalRevenue'));
+        return view('admin.transaksi', compact(
+            'transactions',
+            'installments',
+            'totalRevenue',
+            'transactionsCount',
+            'completedCount',
+            'pendingCount',
+            'totalTransactions'
+        ));
     }
 
     public function listInstallments(Request $request)
@@ -268,11 +281,7 @@ class ManageTransactionController extends Controller
 
         try {
             $transaction = Transaction::with('user')->findOrFail($request->transaction_id);
-            $feepayment = FeePayment::with('transaction_id')->findOrFail($transaction->id);
-
-            if (!in_array($transaction->status, ['Pending', 'Verification'])) {
-                return redirect()->back()->with('error', 'Transaksi tidak dalam status Pending atau Verification.');
-            }
+            $feepayment = FeePayment::where('transaction_id', $transaction->id)->firstOrFail();
 
             // ✅ Update transaksi
             $transaction->update([
@@ -350,7 +359,7 @@ class ManageTransactionController extends Controller
             return redirect()->back()->with('error', 'Gagal menyetujui transaksi.');
         }
     }
-
+    
     private function updateUserStatus($transaction)
     {
         try {

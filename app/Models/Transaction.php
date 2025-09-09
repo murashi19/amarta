@@ -59,10 +59,10 @@ class Transaction extends Model
     public function getStatusNameAttribute()
     {
         $statuses = [
-            'pending' => 'Pending',
-            'verification' => 'Verifikasi',
-            'completed' => 'Selesai',
-            'failed' => 'Gagal'
+            'Pending' => 'Pending',
+            'Verification' => 'Verifikasi',
+            'Completed' => 'Selesai',
+            'Failed' => 'Gagal'
         ];
 
         return $statuses[$this->status] ?? $this->status;
@@ -71,22 +71,22 @@ class Transaction extends Model
     // Scopes
     public function scopeCompleted($query)
     {
-        return $query->where('status', 'completed');
+        return $query->where('status', 'Completed');
     }
 
     public function scopeVerification($query)
     {
-        return $query->where('status', 'verification');
+        return $query->where('status', 'Verification');
     }
 
     public function scopePending($query)
     {
-        return $query->where('status', 'pending');
+        return $query->where('status', 'Pending');
     }
 
     public function scopeFailed($query)
     {
-        return $query->where('status', 'failed');
+        return $query->where('status', 'Failed');
     }
 
    // Scope berdasarkan tipe
@@ -121,7 +121,7 @@ class Transaction extends Model
     {
         return [
             'total' => self::count(),
-            'completed' => self::completed()->count(),
+            'Completed' => self::completed()->count(),
             'verification' => self::verification()->count(),
             'pending' => self::pending()->count(),
             'failed' => self::failed()->count(),

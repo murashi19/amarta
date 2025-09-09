@@ -99,7 +99,7 @@ class AdminDashboardController extends Controller
         // 5. Aktivitas Terbaru
         $recentActivities = Transaction::with(['user', 'feePayments'])
         ->orderBy('created_at', 'desc')
-        ->paginate(10);
+        ->paginate(5);
 
 
         // 6. Data Chart - Pendapatan Bulanan

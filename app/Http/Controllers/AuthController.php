@@ -90,7 +90,6 @@ class AuthController extends Controller
                 $verificationUrl
             ));
 
-
             return redirect()->route('login')
             ->with('success', 'Registrasi berhasil! Silakan cek email untuk kode verifikasi.');
 

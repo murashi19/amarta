@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Role;
 use App\Models\Status;
 use App\Models\Transaction;
+use App\Models\Meeting;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -282,8 +283,6 @@ class UsersController extends Controller
             'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:5120',
             'notes' => 'nullable|string',
             'status_id' => 'nullable|exists:statuses,id',
-            'roles' => 'required|array',
-            'roles.*' => 'exists:roles,id',
         ]);
 
        
@@ -322,7 +321,6 @@ class UsersController extends Controller
             }
 
             $user->update($updateData);
-            $user->roles()->sync($request->roles);
 
             if ($request->ajax() || $request->wantsJson()) {
                 return response()->json([
@@ -452,10 +450,7 @@ class UsersController extends Controller
 
         // Filter sesuai aturan
         $filtered = $transactions->filter(function($trx) use ($user) {
-            // Selalu tampilkan Completed
             if ($trx->status === 'Completed') return true;
-
-            // Selalu tampilkan DP (supaya bisa lihat cicilan)
             if ($trx->type === 'dp') return true;
 
             switch ($user->status->name) {
@@ -473,11 +468,18 @@ class UsersController extends Controller
             }
         });
 
+        // 👉 Tambahin ambil meeting terbaru user
+        $meeting = Meeting::where('user_id', $user->id)
+            ->latest('schedule_at')
+            ->first();
+
         return view('users.profile', [
             'user' => $user,
-            'transactions' => $filtered
+            'transactions' => $filtered,
+            'meeting' => $meeting // <--- kirim ke blade
         ]);
     }
+
 
 
     // Tampilkan form edit profil
@@ -588,10 +590,16 @@ class UsersController extends Controller
                 Rule::unique('users')->ignore($admin->id),
             ],
             'phone_number'    => 'nullable|string|max:20',
-            'gender'          => 'nullable|in:Laki-laki,Perempuan',
+            'gender'          => [
+                'nullable',
+                Rule::in(['Laki-laki', 'Perempuan']), // sesuai enum DB
+            ],
             'birth_place'     => 'nullable|string|max:100',
             'birth_date'      => 'nullable|date',
-            'education_level' => 'nullable|string|max:50',
+            'education_level' => [
+                'nullable',
+                Rule::in(['SMP/Sederajat','SMA/SMK/Sederajat','Diploma 3 (D3)','Sarjana (S1)','Lainnya']), // sesuai enum DB
+            ],
             'address'         => 'nullable|string|max:500',
             'photo'           => 'nullable|image|mimes:jpg,jpeg,png|max:5120',
         ]);
@@ -601,14 +609,17 @@ class UsersController extends Controller
             try {
                 $photo = $request->file('photo');
 
+                // Pastikan folder photos ada
                 if (!Storage::disk('public')->exists('photos')) {
                     Storage::disk('public')->makeDirectory('photos');
                 }
 
+                // Hapus foto lama jika ada
                 if ($admin->photo && Storage::disk('public')->exists($admin->photo)) {
                     Storage::disk('public')->delete($admin->photo);
                 }
 
+                // Simpan foto baru dengan nama unik
                 $filename = time() . '_' . uniqid() . '.' . $photo->getClientOriginalExtension();
                 $photoPath = $photo->storeAs('photos', $filename, 'public');
 
@@ -626,4 +637,42 @@ class UsersController extends Controller
 
         return redirect()->route('admin.profile')->with('success', 'Profil admin berhasil diperbarui.');
     }
+
+    public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => ['required'],
+            'password' => ['required', 'confirmed', 'min:8'],
+        ]);
+
+        $user = Auth::user();
+
+        if (!Hash::check($request->current_password, $user->password)) {
+            return response()->json(['status' => 'error', 'message' => 'Password saat ini salah!'], 422);
+        }
+
+        $user->password = Hash::make($request->password);
+        $user->save();
+
+        return response()->json(['status' => 'success', 'message' => 'Password berhasil diubah!']);
+    }
+
+    public function updateStatus(Request $request, $id)
+    {
+        // Validasi input
+        $request->validate([
+            'status_id' => 'required|in:1,2,3,4,5,6,7',
+        ]);
+
+        // Cari user
+        $user = User::findOrFail($id);
+
+        // Update status
+        $user->status_id = $request->status_id;
+        $user->save();
+
+        // Redirect dengan pesan sukses
+        return redirect()->back()->with('success', 'Status user berhasil diperbarui.');
+    }
+
 }

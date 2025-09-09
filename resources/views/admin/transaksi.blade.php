@@ -789,7 +789,7 @@
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
                                     @php
-                                        $pendingCount = $transactions->whereIn('status', ['Pending', 'verification'])->count();
+                                        $pendingCount = $transactions->whereIn('status', ['Pending', 'Verification'])->count();
                                     @endphp
                                     <h3 class="mb-1">{{ $pendingCount }}</h3>
                                     <p class="mb-0 small opacity-90">Menunggu Verifikasi</p>
@@ -848,6 +848,8 @@
                                 <option value="">Semua Tipe</option>
                                 <option value="booking">Booking</option>
                                 <option value="dp">DP</option>
+                                <option value="pemantapan">Pemantapan</option>
+                                <option value="pemberangkatan">Pemberangkatan</option>
                             </select>
                         </div>
 

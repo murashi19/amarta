@@ -304,9 +304,9 @@
                     <li class="breadcrumb-item"><a href="{{ route('users.keuangan') }}">Transaksi</a></li>
                     <li class="breadcrumb-item active" aria-current="page">Pembayaran</li>
                     <div class="ms-auto">
-                        <button type="button" class="btn btn-custom btn-pay btn-sm " onclick="history.back()">
-                        kembali
-                    </button>
+                        <button type="button" class="btn btn-custom btn-pay btn-sm ">
+                            <a href="{{ route('users.keuangan') }}" class="text-decoration-none text-white">Kembali</a>
+                        </button>
                     </div>
                 </ol>
             </nav>
@@ -458,8 +458,8 @@
                             <div class="row g-3">
                                 <div class="col-md-4">
                                     <div class="payment-method">
-                                        <input type="radio" name="payment_method" id="transfer_bank" value="transfer_bank" required>
-                                        <label class="payment-method-card" for="transfer_bank">
+                                        <input type="radio" name="payment_method" id="bank_transfer" value="bank_transfer" required>
+                                        <label class="payment-method-card" for="bank_transfer">
                                             <i class="fas fa-university payment-icon"></i>
                                             <div class="fw-bold mb-1">Transfer Bank</div>
                                             <small class="text-muted">BCA, BNI, BRI, Mandiri</small>
@@ -525,10 +525,10 @@
                                 <i class="fas fa-cloud-upload-alt upload-icon"></i>
                                 <h6 class="fw-semibold mb-2">Drag & drop file di sini</h6>
                                 <p class="text-muted mb-3">atau klik untuk memilih file</p>
-                                <button type="button" class="btn btn-outline-primary" onclick="document.getElementById('proof').click()">
+                                <div class="btn btn-outline-primary">
                                     <i class="fas fa-plus me-1"></i>
                                     Pilih File
-                                </button>
+                                </div>
                                 <input type="file" 
                                        name="proof" 
                                        id="proof" 
@@ -539,9 +539,6 @@
                             <div class="form-text">
                                 Format yang didukung: JPG, PNG, PDF • Maksimal 5MB
                             </div>
-                            @error('proof')
-                            <div class="text-danger small mt-1">{{ $message }}</div>
-                            @enderror
                             
                             <!-- File Preview -->
                             <div id="filePreview" class="file-preview">
@@ -629,350 +626,288 @@
 </div>
 
 @push('scripts')
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const paymentForm = document.getElementById('paymentForm');
-    const methodRadios = document.querySelectorAll('input[name="payment_method"]');
-    const fileInput = document.getElementById('proof');
-    const filePreview = document.getElementById('filePreview');
-    const fileName = document.getElementById('fileName');
-    const fileSize = document.getElementById('fileSize');
-    const removeFileBtn = document.getElementById('removeFile');
-    const submitBtn = document.getElementById('submitBtn');
-    const uploadArea = document.getElementById('uploadArea');
-    const instructionsContainer = document.getElementById('instructionsContainer');
+   // Ganti seluruh JavaScript di blade dengan kode ini:
+    document.addEventListener('DOMContentLoaded', function() {
+        const paymentForm = document.getElementById('paymentForm');
+        const methodRadios = document.querySelectorAll('input[name="payment_method"]');
+        const fileInput = document.getElementById('proof');
+        const filePreview = document.getElementById('filePreview');
+        const fileName = document.getElementById('fileName');
+        const fileSize = document.getElementById('fileSize');
+        const removeFileBtn = document.getElementById('removeFile');
+        const submitBtn = document.getElementById('submitBtn');
+        const uploadArea = document.getElementById('uploadArea');
+        const instructionsContainer = document.getElementById('instructionsContainer');
 
-    // Initialize fade-in animations
-    const fadeElements = document.querySelectorAll('.fade-in');
-    fadeElements.forEach((el, index) => {
-        setTimeout(() => {
-            el.classList.add('show');
-        }, index * 100);
-    });
-
-    // Payment method change handler
-    methodRadios.forEach(radio => {
-        radio.addEventListener('change', function() {
-            if (this.checked) {
-                showPaymentInstructions(this.value);
-            }
-        });
-    });
-
-    function showPaymentInstructions(method) {
-        const instructions = {
-            transfer_bank: {
-                title: 'Cara Transfer Bank',
-                icon: 'fas fa-university',
-                steps: [
-                    'Buka aplikasi mobile banking atau internet banking Anda',
-                    'Pilih menu transfer ke bank lain',
-                    'Masukkan nomor rekening Mandiri: <strong>{{ $bank->account_number }}</strong>',
-                    'Masukkan nominal: <strong>Rp {{ number_format($trx->amount, 0, ",", ".") }}</strong>',
-                    'Konfirmasi dan lakukan transfer',
-                    'Simpan bukti transfer dan upload di form ini'
-                ]
-            },
-            ewallet: {
-                title: 'Cara Bayar via E-Wallet',
-                icon: 'fas fa-mobile-alt',
-                steps: [
-                    'Buka aplikasi e-wallet Anda (DANA, OVO, GoPay, ShopeePay)',
-                    'Pilih menu "Transfer ke Bank" atau "Kirim Uang"',
-                    'Pilih Bank Mandiri dan masukkan nomor: <strong>{{ $bank->account_number }}</strong>',
-                    'Masukkan nominal: <strong>Rp {{ number_format($trx->amount, 0, ",", ".") }}</strong>',
-                    'Konfirmasi dan lakukan transfer',
-                    'Screenshot bukti transfer dan upload di form ini'
-                ]
-            },
-            cash: {
-                title: 'Cara Bayar Tunai',
-                icon: 'fas fa-money-bill-wave',
-                steps: [
-                    'Datang langsung ke kantor kami, atau',
-                    'Setor tunai ke rekening Bank Mandiri: <strong>{{ $bank->account_number }}</strong>',
-                    'Nominal: <strong>Rp {{ number_format($trx->amount, 0, ",", ".") }}</strong>',
-                    'Ambil bukti setor dari teller',
-                    'Foto/scan bukti setor dan upload di form ini'
-                ]
-            }
-        };
-
-        const instruction = instructions[method];
-        if (!instruction) return;
-
-        const instructionHTML = `
-            <div class="instructions-card" id="paymentInstructions">
-                <h6 class="fw-semibold mb-3 d-flex align-items-center gap-2 text-primary">
-                    <i class="${instruction.icon}"></i>
-                    ${instruction.title}
-                </h6>
-                <div class="step-list">
-                    ${instruction.steps.map((step, index) => `
-                        <div class="instruction-step">
-                            <div class="step-number">${index + 1}</div>
-                            <div class="flex-grow-1">
-                                <small class="text-muted">${step}</small>
-                            </div>
-                        </div>
-                    `).join('')}
-                </div>
-            </div>
-        `;
-
-        instructionsContainer.innerHTML = instructionHTML;
-        
-        setTimeout(() => {
-            const instructionsCard = document.getElementById('paymentInstructions');
-            if (instructionsCard) {
-                instructionsCard.classList.add('show');
-            }
-        }, 100);
-    }
-
-    // File upload handlers
-    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-        uploadArea.addEventListener(eventName, preventDefaults, false);
-    });
-
-    function preventDefaults(e) {
-        e.preventDefault();
-        e.stopPropagation();
-    }
-
-    ['dragenter', 'dragover'].forEach(eventName => {
-        uploadArea.addEventListener(eventName, () => {
-            uploadArea.classList.add('dragover');
-        });
-    });
-
-    ['dragleave', 'drop'].forEach(eventName => {
-        uploadArea.addEventListener(eventName, () => {
-            uploadArea.classList.remove('dragover');
-        });
-    });
-
-    uploadArea.addEventListener('drop', (e) => {
-        const files = e.dataTransfer.files;
-        if (files.length > 0) {
-            handleFileSelect(files[0]);
-        }
-    });
-
-    uploadArea.addEventListener('click', (e) => {
-        if (e.target === uploadArea || e.target.closest('.btn-outline-primary')) {
-            fileInput.click();
-        }
-    });
-
-    fileInput.addEventListener('change', function() {
-        const file = this.files[0];
-        if (file) {
-            handleFileSelect(file);
-        }
-    });
-
-    function handleFileSelect(file) {
-        // Validate file type
-        const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'];
-        if (!validTypes.includes(file.type)) {
-            showAlert('Format file tidak didukung. Gunakan JPG, PNG, atau PDF.', 'danger');
-            fileInput.value = '';
-            return;
-        }
-        
-        // Validate file size (5MB)
-        if (file.size > 5 * 1024 * 1024) {
-            showAlert('Ukuran file terlalu besar. Maksimal 5MB.', 'danger');
-            fileInput.value = '';
-            return;
-        }
-        
-        // Update file info
-        fileName.textContent = file.name;
-        fileSize.textContent = formatFileSize(file.size);
-        
-        // Show file preview
-        filePreview.style.display = 'block';
-        
-        // Update upload area
-        uploadArea.classList.add('has-file');
-        uploadArea.innerHTML = `
-            <i class="fas fa-check-circle upload-icon text-success"></i>
-            <h6 class="fw-semibold mb-2">File berhasil dipilih!</h6>
-            <p class="text-muted mb-0">${file.name}</p>
-        `;
-    }
-
-    // Remove file handler
-    if (removeFileBtn) {
-        removeFileBtn.addEventListener('click', function() {
-            fileInput.value = '';
-            filePreview.style.display = 'none';
-            
-            // Restore upload area
-            uploadArea.classList.remove('has-file');
-            uploadArea.innerHTML = `
-                <i class="fas fa-cloud-upload-alt upload-icon"></i>
-                <h6 class="fw-semibold mb-2">Drag & drop file di sini</h6>
-                <p class="text-muted mb-3">atau klik untuk memilih file</p>
-                <button type="button" class="btn btn-outline-primary" onclick="document.getElementById('proof').click()">
-                    <i class="fas fa-plus me-1"></i>
-                    Pilih File
-                </button>
-            `;
-        });
-    }
-
-    // Form submission handler
-    if (paymentForm) {
-        paymentForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Validate payment method
-            const paymentMethodSelected = document.querySelector('input[name="payment_method"]:checked');
-            if (!paymentMethodSelected) {
-                showAlert('Silakan pilih metode pembayaran terlebih dahulu.', 'warning');
-                return;
-            }
-            
-            // Validate file upload
-            if (!fileInput.files.length) {
-                showAlert('Silakan upload bukti pembayaran terlebih dahulu.', 'warning');
-                return;
-            }
-            
-            // Show loading state
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Mengirim...';
-            submitBtn.disabled = true;
-            
-            // Submit form
-            this.submit();
-        });
-    }
-
-    // Utility functions
-    function formatFileSize(bytes) {
-        if (bytes === 0) return '0 Bytes';
-        const k = 1024;
-        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-        const i = Math.floor(Math.log(bytes) / Math.log(k));
-        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-    }
-
-    function showAlert(message, type = 'info') {
-        // Remove existing alerts
-        const existingAlert = document.querySelector('.temp-alert');
-        if (existingAlert) {
-            existingAlert.remove();
-        }
-        
-        // Create new alert
-        const alertClass = `alert-${type}`;
-        const iconClass = type === 'danger' || type === 'warning' ? 'exclamation-triangle' : 
-                         type === 'success' ? 'check-circle' : 'info-circle';
-        
-        const alertHTML = `
-            <div class="alert ${alertClass} alert-dismissible fade show temp-alert" role="alert">
-                <i class="fas fa-${iconClass} me-2"></i>
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        `;
-        
-        // Insert at top of form
-        const form = document.getElementById('paymentForm');
-        if (form) {
-            form.insertAdjacentHTML('afterbegin', alertHTML);
-            
-            // Auto remove after 5 seconds
+        // Initialize fade-in animations
+        const fadeElements = document.querySelectorAll('.fade-in');
+        fadeElements.forEach((el, index) => {
             setTimeout(() => {
-                const alert = document.querySelector('.temp-alert');
-                if (alert) {
-                    const bsAlert = new bootstrap.Alert(alert);
-                    bsAlert.close();
-                }
-            }, 5000);
-        }
-    }
-
-    // Initialize tooltips if available
-    if (typeof bootstrap !== 'undefined') {
-        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-        tooltipTriggerList.map(function (tooltipTriggerEl) {
-            return new bootstrap.Tooltip(tooltipTriggerEl);
+                el.classList.add('show');
+            }, index * 100);
         });
-    }
 
-    // Smooth scroll for better UX
-    if (window.location.hash) {
-        document.querySelector(window.location.hash)?.scrollIntoView({
-            behavior: 'smooth'
-        });
-    }
-
-    // Auto-focus first radio button for accessibility
-    setTimeout(() => {
-        const firstRadio = document.querySelector('input[name="payment_method"]');
-        if (firstRadio && window.innerWidth > 768) {
-            firstRadio.focus();
-        }
-    }, 500);
-
-    // Add loading state on page unload
-    window.addEventListener('beforeunload', function() {
-        if (submitBtn && !submitBtn.disabled) {
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Loading...';
-            submitBtn.disabled = true;
-        }
-    });
-
-    // Performance optimization: Lazy load heavy content
-    if ('IntersectionObserver' in window) {
-        const lazyElements = document.querySelectorAll('.lazy-load');
-        const lazyObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('loaded');
-                    lazyObserver.unobserve(entry.target);
+        // Payment method change handler
+        methodRadios.forEach(radio => {
+            radio.addEventListener('change', function() {
+                if (this.checked) {
+                    showPaymentInstructions(this.value);
                 }
             });
         });
 
-        lazyElements.forEach(el => lazyObserver.observe(el));
-    }
-});
-
-// Service Worker for offline capability (optional)
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function() {
-        navigator.serviceWorker.register('/sw.js')
-        .then(function(registration) {
-            console.log('ServiceWorker registration successful');
-        })
-        .catch(function(err) {
-            console.log('ServiceWorker registration failed');
+        // File upload handlers - PERBAIKAN UTAMA
+        uploadArea.addEventListener('click', function() {
+            fileInput.click();
         });
+
+        // Drag and drop handlers
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, () => {
+                uploadArea.classList.add('dragover');
+            });
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, () => {
+                uploadArea.classList.remove('dragover');
+            });
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                // PENTING: Set file ke input file
+                fileInput.files = files;
+                handleFileSelect(files[0]);
+            }
+        });
+
+        // File input change handler - DIPERBAIKI
+        fileInput.addEventListener('change', function(e) {
+            console.log('File input changed:', this.files); // DEBUG
+            if (this.files && this.files.length > 0) {
+                handleFileSelect(this.files[0]);
+            }
+        });
+
+        function handleFileSelect(file) {
+            console.log('Handling file:', file); // DEBUG
+            
+            // Validate file type
+            const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'];
+            if (!validTypes.includes(file.type)) {
+                showAlert('Format file tidak didukung. Gunakan JPG, PNG, atau PDF.', 'danger');
+                fileInput.value = '';
+                return;
+            }
+            
+            // Validate file size (5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                showAlert('Ukuran file terlalu besar. Maksimal 5MB.', 'danger');
+                fileInput.value = '';
+                return;
+            }
+            
+            // Update file info
+            if (fileName) fileName.textContent = file.name;
+            if (fileSize) fileSize.textContent = formatFileSize(file.size);
+            
+            // Show file preview
+            if (filePreview) filePreview.style.display = 'block';
+            
+            // Update upload area
+            uploadArea.classList.add('has-file');
+            uploadArea.innerHTML = `
+                <i class="fas fa-check-circle upload-icon text-success"></i>
+                <h6 class="fw-semibold mb-2">File berhasil dipilih!</h6>
+                <p class="text-muted mb-0">${file.name}</p>
+                <small class="text-success">${formatFileSize(file.size)}</small>
+            `;
+        }
+
+        // Remove file handler
+        if (removeFileBtn) {
+            removeFileBtn.addEventListener('click', function() {
+                fileInput.value = '';
+                if (filePreview) filePreview.style.display = 'none';
+                
+                // Restore upload area
+                uploadArea.classList.remove('has-file');
+                uploadArea.innerHTML = `
+                    <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                    <h6 class="fw-semibold mb-2">Drag & drop file di sini</h6>
+                    <p class="text-muted mb-3">atau klik untuk memilih file</p>
+                    <button type="button" class="btn btn-outline-primary">
+                        <i class="fas fa-plus me-1"></i>
+                        Pilih File
+                    </button>
+                `;
+            });
+        }
+
+        // Form submission handler - DIPERBAIKI
+        if (paymentForm) {
+            paymentForm.addEventListener('submit', function(e) {
+                console.log('Form submission started'); // DEBUG
+                console.log('File input files:', fileInput.files); // DEBUG
+                console.log('File input value:', fileInput.value); // DEBUG
+                
+                // Validate payment method
+                const paymentMethodSelected = document.querySelector('input[name="payment_method"]:checked');
+                if (!paymentMethodSelected) {
+                    e.preventDefault();
+                    showAlert('Silakan pilih metode pembayaran terlebih dahulu.', 'warning');
+                    return false;
+                }
+                
+                // Validate file upload
+                if (!fileInput.files || fileInput.files.length === 0) {
+                    e.preventDefault();
+                    showAlert('Silakan upload bukti pembayaran terlebih dahulu.', 'warning');
+                    return false;
+                }
+                
+                console.log('All validations passed'); // DEBUG
+                
+                // Show loading state
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Mengirim...';
+                submitBtn.disabled = true;
+                
+                // JANGAN preventDefault() - biarkan form submit normal
+                return true;
+            });
+        }
+
+        // Payment instructions function
+        function showPaymentInstructions(method) {
+            const instructions = {
+                bank_transfer: {
+                    title: 'Cara Transfer Bank',
+                    icon: 'fas fa-university',
+                    steps: [
+                        'Buka aplikasi mobile banking atau internet banking Anda',
+                        'Pilih menu transfer ke bank lain',
+                        'Masukkan nomor rekening Mandiri: <strong>{{ $bank->account_number }}</strong>',
+                        'Masukkan nominal: <strong>Rp {{ number_format($trx->amount, 0, ",", ".") }}</strong>',
+                        'Konfirmasi dan lakukan transfer',
+                        'Simpan bukti transfer dan upload di form ini'
+                    ]
+                },
+                ewallet: {
+                    title: 'Cara Bayar via E-Wallet',
+                    icon: 'fas fa-mobile-alt',
+                    steps: [
+                        'Buka aplikasi e-wallet Anda (DANA, OVO, GoPay, ShopeePay)',
+                        'Pilih menu "Transfer ke Bank" atau "Kirim Uang"',
+                        'Pilih Bank Mandiri dan masukkan nomor: <strong>{{ $bank->account_number }}</strong>',
+                        'Masukkan nominal: <strong>Rp {{ number_format($trx->amount, 0, ",", ".") }}</strong>',
+                        'Konfirmasi dan lakukan transfer',
+                        'Screenshot bukti transfer dan upload di form ini'
+                    ]
+                },
+                cash: {
+                    title: 'Cara Bayar Tunai',
+                    icon: 'fas fa-money-bill-wave',
+                    steps: [
+                        'Datang langsung ke kantor kami, atau',
+                        'Setor tunai ke rekening Bank Mandiri: <strong>{{ $bank->account_number }}</strong>',
+                        'Nominal: <strong>Rp {{ number_format($trx->amount, 0, ",", ".") }}</strong>',
+                        'Ambil bukti setor dari teller',
+                        'Foto/scan bukti setor dan upload di form ini'
+                    ]
+                }
+            };
+
+            const instruction = instructions[method];
+            if (!instruction) return;
+
+            const instructionHTML = `
+                <div class="instructions-card" id="paymentInstructions">
+                    <h6 class="fw-semibold mb-3 d-flex align-items-center gap-2 text-primary">
+                        <i class="${instruction.icon}"></i>
+                        ${instruction.title}
+                    </h6>
+                    <div class="step-list">
+                        ${instruction.steps.map((step, index) => `
+                            <div class="instruction-step">
+                                <div class="step-number">${index + 1}</div>
+                                <div class="flex-grow-1">
+                                    <small class="text-muted">${step}</small>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+
+            if (instructionsContainer) {
+                instructionsContainer.innerHTML = instructionHTML;
+                
+                setTimeout(() => {
+                    const instructionsCard = document.getElementById('paymentInstructions');
+                    if (instructionsCard) {
+                        instructionsCard.classList.add('show');
+                    }
+                }, 100);
+            }
+        }
+
+        // Utility functions
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        function showAlert(message, type = 'info') {
+            // Remove existing alerts
+            const existingAlert = document.querySelector('.temp-alert');
+            if (existingAlert) {
+                existingAlert.remove();
+            }
+            
+            // Create new alert
+            const alertClass = `alert-${type}`;
+            const iconClass = type === 'danger' || type === 'warning' ? 'exclamation-triangle' : 
+                            type === 'success' ? 'check-circle' : 'info-circle';
+            
+            const alertHTML = `
+                <div class="alert ${alertClass} alert-dismissible fade show temp-alert" role="alert">
+                    <i class="fas fa-${iconClass} me-2"></i>
+                    ${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            `;
+            
+            // Insert at top of form
+            const form = document.getElementById('paymentForm');
+            if (form) {
+                form.insertAdjacentHTML('afterbegin', alertHTML);
+                
+                // Auto remove after 5 seconds
+                setTimeout(() => {
+                    const alert = document.querySelector('.temp-alert');
+                    if (alert && typeof bootstrap !== 'undefined') {
+                        const bsAlert = new bootstrap.Alert(alert);
+                        bsAlert.close();
+                    }
+                }, 5000);
+            }
+        }
     });
-}
-
-// Analytics tracking (if needed)
-function trackEvent(action, category = 'Payment', label = '') {
-    if (typeof gtag !== 'undefined') {
-        gtag('event', action, {
-            event_category: category,
-            event_label: label
-        });
-    }
-}
-
-// Track payment method selection
-document.addEventListener('change', function(e) {
-    if (e.target.name === 'payment_method') {
-        trackEvent('payment_method_selected', 'Payment', e.target.value);
-    }
-});
 </script>
 @endpush
 @endsection

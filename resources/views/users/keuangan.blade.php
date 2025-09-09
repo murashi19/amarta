@@ -418,7 +418,7 @@
                         {{ $isProgramPaid ? 'Rp ' . number_format($biayaPemantapan, 0, ',', '.') : 'Rp -' }}
                     </div>
                     <small class="text-muted">
-                        {{ $isProgramPaid ? 'Wajib dibayar sebelum keberangkatan' : 'Tampilkan saat status: Pemantapan' }}
+                        {{ $isProgramPaid ? 'Wajib dibayar sebelum keberangkatan' : 'Tunggu saat status: Pemantapan' }}
                     </small>
                 </div>
             </div>
@@ -534,7 +534,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <!-- 1. Booking Class -->
+                                {{-- 1. Booking Class --}}
                                 <tr>
                                     <td><span class="badge bg-primary">1</span></td>
                                     <td>
@@ -551,8 +551,10 @@
                                     <td>
                                         @if($bookingTransaction && $bookingTransaction->status == 'Completed')
                                             <span class="badge badge-paid"><i class="fas fa-check me-1"></i>Lunas</span>
-                                        @else
+                                        @elseif($bookingTransaction && $bookingTransaction->status == 'Pending')
                                             <span class="badge badge-pending"><i class="fas fa-clock me-1"></i>Belum Dibayar</span>
+                                        @else
+                                            <span class="badge badge-waiting"><i class="fas fa-hourglass-half me-1"></i>Menunggu</span>
                                         @endif
                                     </td>
                                     <td>
@@ -568,7 +570,7 @@
                                     </td>
                                 </tr>
 
-                                <!-- 2. Program Kelas -->
+                                {{-- 2. Program Kelas --}}
                                 <tr>
                                     <td><span class="badge bg-info">2</span></td>
                                     <td>
@@ -591,22 +593,16 @@
                                             <span class="badge badge-paid"><i class="fas fa-check me-1"></i>Lunas</span>
                                         @elseif($dpTransaction && $dpTransaction->status == 'Pending')
                                             <span class="badge badge-pending"><i class="fas fa-hourglass-half me-1"></i>Belum Lunas</span>
-
-                                        @elseif($bookingTransaction && $bookingTransaction->status == 'Completed')
+                                        @elseif(($bookingTransaction && $bookingTransaction->status == 'Completed') && (!$dpTransaction || $dpTransaction->status != 'Completed'))
                                             <span class="badge badge-pending"><i class="fas fa-clock me-1"></i>Belum Dibayar</span>
                                         @else
                                             <span class="badge badge-waiting"><i class="fas fa-hourglass-half me-1"></i>Menunggu</span>
                                         @endif
-
                                     </td>
                                     <td>
                                         @if($bookingTransaction && $bookingTransaction->status == 'Completed')
                                             @if($dpTransaction && $dpTransaction->status != 'Completed')
                                                 <a href="{{ route('transaksi.programKelas', ['id' => $dpTransaction->id]) }}" class="btn btn-custom btn-pay btn-sm">
-                                                    <i class="fas fa-credit-card me-1"></i>Bayar
-                                                </a>
-                                            @elseif(!$dpTransaction)
-                                                <a href="{{ route('transaksi.programKelas.createProgramKelas') }}" class="btn btn-custom btn-pay btn-sm">
                                                     <i class="fas fa-credit-card me-1"></i>Bayar
                                                 </a>
                                             @else
@@ -622,7 +618,7 @@
                                     </td>
                                 </tr>
 
-                                <!-- 3. Biaya Pemantapan -->
+                                {{-- 3. Biaya Pemantapan --}}
                                 <tr>
                                     <td><span class="badge bg-secondary">3</span></td>
                                     <td>
@@ -658,8 +654,8 @@
                                         @endif
                                     </td>
                                     <td>
-                                        @if($dpTransaction && $dpTransaction->status == 'Completed' && !$pemantapanPaid)
-                                            <a href="{{ route('transaksi.showSinglePayment', 'pemantapan') }}"  class="btn btn-custom btn-pay btn-sm">
+                                        @if(($user->status->name ?? '') === 'Pemantapan' && $dpTransaction && $dpTransaction->status == 'Completed' && !$pemantapanPaid)
+                                            <a href="{{ route('transaksi.showSinglePayment', 'pemantapan') }}" class="btn btn-custom btn-pay btn-sm">
                                                 <i class="fas fa-credit-card me-1"></i>Bayar
                                             </a>
                                         @elseif($pemantapanPaid)
@@ -674,7 +670,7 @@
                                     </td>
                                 </tr>
 
-                                <!-- 4. Biaya Pemberangkatan -->
+                                {{-- 4. Biaya Pemberangkatan --}}
                                 <tr>
                                     <td><span class="badge bg-warning">4</span></td>
                                     <td>
@@ -710,7 +706,7 @@
                                         @endif
                                     </td>
                                     <td>
-                                        @if($pemantapanPaid && !$pemberangkatanPaid)
+                                        @if(($user->status->name ?? '') === 'Pemberangkatan' && $pemantapanPaid && !$pemberangkatanPaid)
                                             <a href="{{ route('transaksi.showSinglePayment', 'pemberangkatan') }}" class="btn btn-custom btn-pay btn-sm">
                                                 <i class="fas fa-credit-card me-1"></i>Bayar
                                             </a>
@@ -730,7 +726,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- Konten Program Kelas Tab -->
             <div class="tab-pane fade" id="programkelas" role="tabpanel">
                 <div class="row">
@@ -815,9 +811,7 @@
                                         </td>
                                         <td>
                                             @if(!$dpTransaction || $dpTransaction->status != 'Completed')
-                                                <a href="{{ $dpTransaction && $dpTransaction->id 
-                                                    ? route('transaksi.programKelas', ['id' => $dpTransaction->id]) 
-                                                    : route('transaksi.programKelas.createProgramKelas') }}" 
+                                                <a href="{{ route('transaksi.programKelas', ['id' => $dpTransaction->id]) }}" 
                                                     class="btn btn-custom btn-pay btn-sm">
                                                     <i class="fas fa-credit-card me-1"></i>Bayar
                                                 </a>

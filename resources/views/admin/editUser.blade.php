@@ -4,7 +4,7 @@
 @section('title', 'Edit Pengguna')
 
 @section('content')
-<div class="container">
+<div class="container mt-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2><i class="fas fa-user-edit me-2"></i> Edit Pengguna: {{ $user->name }}</h2>
         <a href="{{ route('admin.usersManage') }}" class="btn btn-secondary">
@@ -201,7 +201,7 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="mt-3">
+                        <!-- <div class="mt-3">
                             <label class="form-label">Role User <span class="text-danger">*</span></label>
                             <div class="row">
                                 @foreach($roles as $role)
@@ -221,7 +221,7 @@
                             @else
                                 <div class="invalid-feedback d-block" id="roles-error" style="display: none;"></div>
                             @enderror
-                        </div>
+                        </div> -->
                     </div>
                 </div>
 

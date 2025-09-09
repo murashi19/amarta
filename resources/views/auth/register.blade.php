@@ -342,213 +342,283 @@
 </section>
 
 @push('scripts')
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        let currentStep = 1;
-        const totalSteps = 4;
-        
-        // Multi-step form functionality
-        function updateProgress() {
-            const progress = (currentStep / totalSteps) * 100;
-            const progressBar = document.getElementById('form-progress');
-            if (progressBar) {
-                progressBar.style.width = progress + '%';
-            }
-        }
-        
-        function showStep(step) {
-            document.querySelectorAll('.form-step').forEach(el => {
-                el.style.display = 'none';
-                el.classList.remove('active');
-            });
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.7.20/sweetalert2.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            let currentStep = 1;
+            const totalSteps = 4;
             
-            const targetStep = document.getElementById('step-' + step);
-            if (targetStep) {
-                targetStep.style.display = 'block';
-                targetStep.classList.add('active');
+            // Multi-step form functionality
+            function updateProgress() {
+                const progress = (currentStep / totalSteps) * 100;
+                const progressBar = document.getElementById('form-progress');
+                if (progressBar) {
+                    progressBar.style.width = progress + '%';
+                }
             }
             
-            updateProgress();
-        }
-        
-        // Simple validation for current step (extended)
-        function validateCurrentStep() {
-            const currentStepEl = document.getElementById('step-' + currentStep);
-            const requiredFields = currentStepEl.querySelectorAll('input[required], select[required], textarea[required]');
-            let isValid = true;
-
-            // Reset previous invalid styles
-            requiredFields.forEach(field => {
-                field.classList.remove('is-invalid');
-            });
-
-            // Cek setiap field
-            for (const field of requiredFields) {
-                // Check empty
-                if (!field.value.trim()) {
-                    field.classList.add('is-invalid');
-                    isValid = false;
-                    continue; // lanjut cek field lain
+            function showStep(step) {
+                document.querySelectorAll('.form-step').forEach(el => {
+                    el.style.display = 'none';
+                    el.classList.remove('active');
+                });
+                
+                const targetStep = document.getElementById('step-' + step);
+                if (targetStep) {
+                    targetStep.style.display = 'block';
+                    targetStep.classList.add('active');
                 }
-                // Khusus validasi email
-                if (field.type === 'email') {
-                    if (!field.checkValidity()) {
+                
+                updateProgress();
+            }
+            
+            // Simple validation for current step (extended)
+            function validateCurrentStep() {
+                const currentStepEl = document.getElementById('step-' + currentStep);
+                const requiredFields = currentStepEl.querySelectorAll('input[required], select[required], textarea[required]');
+                let isValid = true;
+
+                // Reset previous invalid styles
+                requiredFields.forEach(field => {
+                    field.classList.remove('is-invalid');
+                });
+
+                // Cek setiap field
+                for (const field of requiredFields) {
+                    // Check empty
+                    if (!field.value.trim()) {
                         field.classList.add('is-invalid');
-                        alert('Harap isi email dengan format yang benar.');
-                        field.focus();
-                        return false; // stop validasi, langsung return false
+                        isValid = false;
+                        continue; // lanjut cek field lain
+                    }
+                    // Khusus validasi email
+                    if (field.type === 'email') {
+                        if (!field.checkValidity()) {
+                            field.classList.add('is-invalid');
+                            alert('Harap isi email dengan format yang benar.');
+                            field.focus();
+                            return false; // stop validasi, langsung return false
+                        }
+                    }
+                    // Khusus validasi nomor telepon dengan pattern manual
+                    if (field.name === 'phone_number') {
+                        const phonePattern = /^[0-9]{10,15}$/;
+                        if (!phonePattern.test(field.value.trim())) {
+                            field.classList.add('is-invalid');
+                            alert('Nomor telepon harus berupa angka dan memiliki panjang 11sampai 13 digit.');
+                            field.focus();
+                            return false; // stop validasi, langsung return false
+                        }
                     }
                 }
-                // Khusus validasi nomor telepon dengan pattern manual
-                if (field.name === 'phone_number') {
-                    const phonePattern = /^[0-9]{10,15}$/;
-                    if (!phonePattern.test(field.value.trim())) {
-                        field.classList.add('is-invalid');
-                        alert('Nomor telepon harus berupa angka dan memiliki panjang 11sampai 13 digit.');
-                        field.focus();
-                        return false; // stop validasi, langsung return false
-                    }
+
+                if (!isValid) {
+                    // Tampilkan toast jika ada field kosong
+                    showToast('Mohon lengkapi semua field yang wajib diisi.');
                 }
+
+                return isValid;
             }
 
-            if (!isValid) {
-                // Tampilkan toast jika ada field kosong
-                showToast('Mohon lengkapi semua field yang wajib diisi.');
-            }
+            // Fungsi toast
+            function showToast(message) {
+                const existingToast = document.querySelector('.toast-container');
+                if (existingToast) existingToast.remove();
 
-            return isValid;
-        }
-
-        // Fungsi toast
-        function showToast(message) {
-            const existingToast = document.querySelector('.toast-container');
-            if (existingToast) existingToast.remove();
-
-            const toast = document.createElement('div');
-            toast.className = 'toast-container position-fixed top-0 end-0 p-3';
-            toast.innerHTML = `
-                <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
-                    <div class="toast-header" style="background-color: var(--color-warning); color: var(--color-dark);">
-                        <i class="fas fa-exclamation-triangle me-2"></i>
-                        <strong class="me-auto">Perhatian</strong>
-                        <button type="button" class="btn-close" aria-label="Close"></button>
+                const toast = document.createElement('div');
+                toast.className = 'toast-container position-fixed top-0 end-0 p-3';
+                toast.innerHTML = `
+                    <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+                        <div class="toast-header" style="background-color: var(--color-warning); color: var(--color-dark);">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            <strong class="me-auto">Perhatian</strong>
+                            <button type="button" class="btn-close" aria-label="Close"></button>
+                        </div>
+                        <div class="toast-body">${message}</div>
                     </div>
-                    <div class="toast-body">${message}</div>
-                </div>
-            `;
-            document.body.appendChild(toast);
+                `;
+                document.body.appendChild(toast);
 
-            // Close button handler
-            toast.querySelector('.btn-close').addEventListener('click', () => {
-                toast.remove();
+                // Close button handler
+                toast.querySelector('.btn-close').addEventListener('click', () => {
+                    toast.remove();
+                });
+
+                setTimeout(() => {
+                    toast.remove();
+                }, 4000);
+            }
+
+            
+            
+            // Next step buttons
+            document.querySelectorAll('.next-step').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    if (validateCurrentStep()) {
+                        if (currentStep < totalSteps) {
+                            currentStep++;
+                            showStep(currentStep);
+                        }
+                    }
+                });
             });
-
-            setTimeout(() => {
-                toast.remove();
-            }, 4000);
-        }
-
-        
-        
-        // Next step buttons
-        document.querySelectorAll('.next-step').forEach(btn => {
-            btn.addEventListener('click', function() {
-                if (validateCurrentStep()) {
-                    if (currentStep < totalSteps) {
-                        currentStep++;
+            
+            // Previous step buttons
+            document.querySelectorAll('.prev-step').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    if (currentStep > 1) {
+                        currentStep--;
                         showStep(currentStep);
                     }
-                }
+                });
             });
-        });
-        
-        // Previous step buttons
-        document.querySelectorAll('.prev-step').forEach(btn => {
-            btn.addEventListener('click', function() {
-                if (currentStep > 1) {
-                    currentStep--;
-                    showStep(currentStep);
-                }
-            });
-        });
 
-        
-        // Password toggle functionality (tidak diubah)
-        document.querySelectorAll('.toggle-password').forEach(button => {
-            button.addEventListener('click', function () {
-                const target = document.querySelector(this.dataset.target);
-                const icon = this.querySelector('i');
-                
-                if (target.type === 'password') {
-                    target.type = 'text';
-                    icon.classList.remove('fa-eye');
-                    icon.classList.add('fa-eye-slash');
-                } else {
-                    target.type = 'password';
-                    icon.classList.remove('fa-eye-slash');
-                    icon.classList.add('fa-eye');
-                }
+            
+            // Password toggle functionality (tidak diubah)
+            document.querySelectorAll('.toggle-password').forEach(button => {
+                button.addEventListener('click', function () {
+                    const target = document.querySelector(this.dataset.target);
+                    const icon = this.querySelector('i');
+                    
+                    if (target.type === 'password') {
+                        target.type = 'text';
+                        icon.classList.remove('fa-eye');
+                        icon.classList.add('fa-eye-slash');
+                    } else {
+                        target.type = 'password';
+                        icon.classList.remove('fa-eye-slash');
+                        icon.classList.add('fa-eye');
+                    }
+                });
             });
-        });
-        
-        // Phone number formatting
-        const phoneInput = document.getElementById('phone_number');
-        if (phoneInput) {
-            phoneInput.addEventListener('input', function(e) {
-                let value = e.target.value.replace(/\D/g, '');
-                if (value.startsWith('08')) {
-                    e.target.value = value;
-                } else if (value.startsWith('8')) {
-                    e.target.value = '0' + value;
-                } else {
-                    e.target.value = value;
-                }
-            });
-        }
-        
-        // Initialize first step
-        showStep(currentStep);
-
-        // Semua input di dalam form-step simpan dan load otomatis
-        function saveInputToLocalStorage(input) {
-            if (!input.name) return; // pastikan ada atribut name
-            localStorage.setItem('formInput_' + input.name, input.value);
-        }
-
-        function loadInputFromLocalStorage(input) {
-            if (!input.name) return;
-            const savedValue = localStorage.getItem('formInput_' + input.name);
-            if (savedValue !== null) {
-                input.value = savedValue;
+            
+            // Phone number formatting
+            const phoneInput = document.getElementById('phone_number');
+            if (phoneInput) {
+                phoneInput.addEventListener('input', function(e) {
+                    let value = e.target.value.replace(/\D/g, '');
+                    if (value.startsWith('08')) {
+                        e.target.value = value;
+                    } else if (value.startsWith('8')) {
+                        e.target.value = '0' + value;
+                    } else {
+                        e.target.value = value;
+                    }
+                });
             }
-        }
+            
+            // Initialize first step
+            showStep(currentStep);
 
-        // Ambil semua input di seluruh step
-        const allInputs = document.querySelectorAll('.form-step input, .form-step select, .form-step textarea');
+            // Semua input di dalam form-step simpan dan load otomatis
+            function saveInputToLocalStorage(input) {
+                if (!input.name) return; // pastikan ada atribut name
+                localStorage.setItem('formInput_' + input.name, input.value);
+            }
 
-        // Load data dari localStorage saat halaman load
-        allInputs.forEach(input => {
-            loadInputFromLocalStorage(input);
+            function loadInputFromLocalStorage(input) {
+                if (!input.name) return;
+                const savedValue = localStorage.getItem('formInput_' + input.name);
+                if (savedValue !== null) {
+                    input.value = savedValue;
+                }
+            }
 
-            // Simpan otomatis setiap ada perubahan
-            input.addEventListener('input', function() {
-                saveInputToLocalStorage(input);
+            // Ambil semua input di seluruh step
+            const allInputs = document.querySelectorAll('.form-step input, .form-step select, .form-step textarea');
+
+            // Load data dari localStorage saat halaman load
+            allInputs.forEach(input => {
+                loadInputFromLocalStorage(input);
+
+                // Simpan otomatis setiap ada perubahan
+                input.addEventListener('input', function() {
+                    saveInputToLocalStorage(input);
+                });
             });
-        });
 
-        const submitBtn = document.getElementById('submit');
-            if(submitBtn) {
-                submitBtn.addEventListener('click', function() {
-                    allInputs.forEach(input => {
-                        if(input.name) {
-                            localStorage.removeItem('formInput_' + input.name);
+            // Form submission with SweetAlert
+            document.getElementById('registrationForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                if (!validateCurrentStep()) {
+                    return;
+                }
+
+                // Simulate form submission (replace with actual form submission)
+                const submitButton = document.getElementById('submit');
+                const originalText = submitButton.innerHTML;
+                
+                // Show loading state
+                submitButton.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Memproses...';
+                submitButton.disabled = true;
+
+                // Simulate processing time
+                setTimeout(function() {
+                    // Show success alert
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Registrasi Berhasil!',
+                        html: `
+                            <div class="text-center">
+                                <i class="fas fa-check-circle text-success mb-3" style="font-size: 3rem;"></i>
+                                <p class="mb-2">Akun Anda telah berhasil dibuat!</p>
+                                <p class="text-muted">Silakan cek email untuk kode verifikasi.</p>
+                            </div>
+                        `,
+                        showConfirmButton: true,
+                        confirmButtonText: 'Login Sekarang',
+                        confirmButtonColor: '#28a745',
+                        allowOutsideClick: false,
+                        customClass: {
+                            popup: 'animated bounceIn'
+                        }
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Redirect to login page
+                            window.location.href = '#'; // Replace with actual login URL
+                        }
+                    });
+
+                    // Reset button
+                    submitButton.innerHTML = originalText;
+                    submitButton.disabled = false;
+                }, 2000);
+            });
+
+            // Initialize progress bar
+            updateProgress();
+            @if(session('success'))
+                document.addEventListener('DOMContentLoaded', function() {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Registrasi Berhasil!',
+                        html: `
+                            <div class="text-center">
+                                <i class="fas fa-check-circle text-success mb-3" style="font-size: 3rem;"></i>
+                                <p class="mb-2">{{ session('success') }}</p>
+                                <p class="text-muted">Silakan cek email untuk kode verifikasi.</p>
+                            </div>
+                        `,
+                        showConfirmButton: true,
+                        confirmButtonText: 'Login Sekarang',
+                        confirmButtonColor: '#28a745',
+                        allowOutsideClick: false,
+                        customClass: {
+                            popup: 'animated bounceIn'
+                        }
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = '{{ url("login") }}';
                         }
                     });
                 });
-            }
-    });
+            @endif
+        });
 
-</script>
+    </script>
 @endpush
 
 @push('styles')

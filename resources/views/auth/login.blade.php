@@ -108,6 +108,21 @@
                             Daftar di sini
                         </a>
                     </p>
+                </div >
+
+                <!-- Opsi 4: Simple dengan border dan ikon yang lebih prominent -->
+                <div class="text-center mt-4 p-3 border rounded-3" style="background-color: #f8f9fa; border-color: #dee2e6 !important;">
+                    <div class="mb-2">
+                        <i class="fas fa-envelope-circle-check text-success" style="font-size: 1.5rem;"></i>
+                    </div>
+                    <small class="text-muted d-block">
+                        <strong class="text-dark">Baru saja Mendaftar?</strong>
+                    </small>
+                    <small class="text-muted">
+                        Jangan lupa cek email untuk verifikasi akun Anda
+                    </small>
+                </div>
+
                 </div>
             </div>
         </div>

@@ -358,9 +358,9 @@
         </div>
 
         <!-- Form -->
-        <form method="POST" action="{{ route('admin.updateProfile') }}" enctype="multipart/form-data">
-            @csrf
-
+        <form action="{{ route('admin.updateProfile') }}" method="POST" enctype="multipart/form-data">
+        @csrf
+        @method('PUT')
             <!-- Display Validation Errors -->
             @if ($errors->any())
                 <div class="alert alert-danger">
@@ -460,17 +460,14 @@
                                 id="gender" 
                                 name="gender">
                             <option value="">Pilih Jenis Kelamin</option>
-                            <option value="Laki-laki" {{ old('gender', $admin->gender) == 'Laki-laki' ? 'selected' : '' }}>
-                                Laki-laki
-                            </option>
-                            <option value="Perempuan" {{ old('gender', $admin->gender) == 'Perempuan' ? 'selected' : '' }}>
-                                Perempuan
-                            </option>
+                            <option value="Laki-laki" {{ old('gender', $admin->gender) == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
+                            <option value="Perempuan" {{ old('gender', $admin->gender) == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
                         </select>
                         @error('gender')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
+
 
                     <div class="form-group">
                         <label for="birth_place" class="form-label">Tempat Lahir</label>
@@ -503,16 +500,17 @@
                                 id="education_level" 
                                 name="education_level">
                             <option value="">Pilih Pendidikan</option>
-                            ,'SMA/SMK/Sederajat','Diploma 3 (D3)','Sarjana (S1)','Lainnya'
-                            <option value="SMP" {{ old('education_level', $admin->education_level) == 'SMP/Sederajat' ? 'selected' : '' }}>SMP/Sederajat</option>
-                            <option value="SMA" {{ old('education_level', $admin->education_level) == 'SMA/SMK/Sederajat' ? 'selected' : '' }}>SMA/SMK/Sederajat</option>
-                            <option value="D3" {{ old('education_level', $admin->education_level) == 'Diploma 3 (D3)' ? 'selected' : '' }}>Diploma 3 (D3)</option>
-                            <option value="S1" {{ old('education_level', $admin->education_level) == 'Sarjana (S1)' ? 'selected' : '' }}>Sarjana (S1)</option>
+                            <option value="SMP/Sederajat" {{ old('education_level', $admin->education_level) == 'SMP/Sederajat' ? 'selected' : '' }}>SMP/Sederajat</option>
+                            <option value="SMA/SMK/Sederajat" {{ old('education_level', $admin->education_level) == 'SMA/SMK/Sederajat' ? 'selected' : '' }}>SMA/SMK/Sederajat</option>
+                            <option value="Diploma 3 (D3)" {{ old('education_level', $admin->education_level) == 'Diploma 3 (D3)' ? 'selected' : '' }}>Diploma 3 (D3)</option>
+                            <option value="Sarjana (S1)" {{ old('education_level', $admin->education_level) == 'Sarjana (S1)' ? 'selected' : '' }}>Sarjana (S1)</option>
+                            <option value="Lainnya" {{ old('education_level', $admin->education_level) == 'Lainnya' ? 'selected' : '' }}>Lainnya</option>
                         </select>
                         @error('education_level')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
+
                 </div>
 
                 <div class="form-group">
