@@ -359,7 +359,7 @@
 
             <p>
                 <i class="fas fa-envelope-open-text" style="color: #17a2b8; margin-right: 8px;"></i>
-                Terima kasih telah mendaftar di <strong style="color: #2196F3;">LPK Amarta Bangun Indonesia Cabang Cibitung</strong>. 
+                Terima kasih telah mendaftar di <strong style="color: #2196F3;">LPK Amarta Bangun Bekasi Indonesia</strong>. 
                 Untuk menyelesaikan proses verifikasi akun Anda, silakan masukkan kode berikut:
             </p>
 
@@ -403,32 +403,32 @@
             <!-- Security Notice -->
             <div class="security-notice">
                 <i class="fas fa-shield-alt"></i>
-                <strong>Keamanan:</strong> Jangan bagikan kode ini kepada siapa pun. Tim IT LPK Amarta Bangun Indonesia Cabang Cibitung tidak akan pernah meminta kode verifikasi melalui telepon atau media lainnya.
+                <strong>Keamanan:</strong> Jangan bagikan kode ini kepada siapa pun. Tim IT LPK Amarta Bangun Bekasi Indonesia tidak akan pernah meminta kode verifikasi melalui telepon atau media lainnya.
             </div>
 
             <p style="margin-top: 25px; font-size: 15px;">
-                Jika Anda tidak merasa mendaftar di LPK Amarta Bangun Indonesia Cabang Cibitung, silakan abaikan email ini dengan aman.
+                Jika Anda tidak merasa mendaftar di LPK Amarta Bangun Bekasi Indonesia, silakan abaikan email ini dengan aman.
             </p>
 
             <p style="color: #2196F3; font-weight: 500;">
                 <i class="fas fa-heart" style="color: #e74c3c; margin-right: 5px;"></i>
                 Salam hangat,<br>
-                <strong>Tim IT LPK Amarta Bangun Indonesia Cabang Cibitung</strong>
+                <strong>Tim IT LPK Amarta Bangun Bekasi Indonesia</strong>
             </p>
         </div>
 
         <!-- Footer Section -->
         <div class="footer">
             <div class="footer-content">
-                &copy; {{ date('Y') }} <span class="company-name">LPK Amarta Bangun Indonesia Cabang Cibitung</span>. Semua hak dilindungi undang-undang.
+                Copyright &copy; {{ date('Y') }} <span class="company-name">LPK Amarta Bangun Bekasi Indonesia</span>.
             </div>
             <div class="footer-links">
                 <i class="fas fa-globe" style="margin-right: 5px;"></i>
-                <a href="mailto:info@lpkamarta.com">
-                    <i class="fas fa-envelope"></i> info@lpkamarta.com
+                <a href="mailto:lpkamartacibitung@gmail.com">
+                    <i class="fas fa-envelope"></i> lpkamartacibitung@gmail.com
                 </a>
-                <a href="tel:+6285283123744">
-                    <i class="fas fa-phone"></i> +62 852-8312-3744
+                <a href="https://wa.me/6282134716388">
+                    <i class="fas fa-phone"></i> +62 821-3471-6388
                 </a>
                 <a href="https://www.lpkamarta.com">
                     <i class="fas fa-link"></i> www.lpkamarta.com

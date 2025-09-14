@@ -14,7 +14,7 @@
                     <!-- Header -->
                     <tr>
                         <td align="center" style="border-bottom: 2px solid #eee; padding-bottom: 15px; margin-bottom: 20px;">
-                            <h1 style="margin: 0; font-size: 20px; color: #1e40af; font-family: Arial, sans-serif;">LPK Amarta Bangun Indonesia Cabang Cibitung</h1>
+                            <h1 style="margin: 0; font-size: 20px; color: #1e40af; font-family: Arial, sans-serif;">LPK Amarta Bangun Indonesia Bekasi Indonesia</h1>
                             <p style="margin: 5px 0 0; font-size: 14px; color: #555; font-family: Arial, sans-serif;">Undangan Rapat Virtual</p>
                         </td>
                     </tr>

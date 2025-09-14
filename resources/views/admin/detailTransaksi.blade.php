@@ -3,7 +3,7 @@
 @section('title', 'Detail Transaksi')
 
 @section('content')
-<div class="container-fluid">
+<div class="container-fluid mt-5">
     <!-- Breadcrumb & Header -->
     <div class="d-flex justify-content-between align-items-center mb-4 mt-4">
         <div>

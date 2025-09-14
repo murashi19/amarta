@@ -29,6 +29,21 @@
         --transition-fast: 0.2s ease;
         --transition-normal: 0.3s ease;
         --transition-slow: 0.5s ease;
+
+        /* Custom Gradients menggunakan warna template */
+        --primary-gradient: linear-gradient(135deg, var(--color-primary) 0%, #1976d2 100%);
+        --secondary-gradient: linear-gradient(135deg, var(--color-secondary) 0%, #d4851a 100%);
+        --success-gradient: linear-gradient(135deg, var(--color-success) 0%, #4caf50 100%);
+        --info-gradient: linear-gradient(135deg, var(--color-info) 0%, #42a5f5 100%);
+        
+        /* Alternative gradients dengan kombinasi warna template */
+        --primary-alt-gradient: linear-gradient(135deg, var(--color-primary) 0%, var(--color-info) 100%);
+        --secondary-alt-gradient: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-warning) 100%);
+        --success-alt-gradient: linear-gradient(135deg, var(--color-success) 0%, #16a085 100%);
+        --info-alt-gradient: linear-gradient(135deg, var(--color-info) 0%, var(--color-primary) 100%);
+        
+        --shadow-soft: 0 8px 32px rgba(0,0,0,0.1);
+        --shadow-hover: 0 20px 40px rgba(0,0,0,0.2);
     }
 
 
@@ -122,30 +137,242 @@
         PROGRAM TAMBAHAN
         ========================================*/
 
-        #program-tambahan {
+        #program-tambahan{
             width: 100%;
+            height: 100vh;
             background-color: var(--color-hover);
-            height: 400px;
-            margin-bottom: 20px;
         }
-
-        .card-program {
-            background-color: var(--color-light);
-            color: var(--color-dark);
+        .interactive-program-card {
             border-radius: 20px;
-            width: 100%;
-            height: 200px;
-            box-shadow: var(--shadow-sm);
-            transition: var(--transition-normal);
+            padding: 0;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: none;
+            height: 180px;
             display: flex;
             flex-direction: column;
             justify-content: center;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            box-shadow: var(--shadow-soft);
         }
 
-        .card-program:hover {
-            transform: scale(1.05);
-            background-color: var(--color-primary);
-            color: var(--color-light);
+        .interactive-program-card .card-body {
+            position: relative;
+            z-index: 2;
+            height: 100%;
+        }
+
+        /* Gradient Backgrounds */
+        .interactive-program-card.primary-gradient {
+            background: var(--primary-gradient);
+        }
+
+        .interactive-program-card.secondary-gradient {
+            background: var(--secondary-gradient);
+        }
+
+        .interactive-program-card.success-gradient {
+            background: var(--success-gradient);
+        }
+
+        .interactive-program-card.info-gradient {
+            background: var(--info-gradient);
+        }
+
+        /* Hover Overlay Effect */
+        .interactive-program-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.1);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1;
+        }
+
+        .interactive-program-card:hover::after {
+            opacity: 1;
+        }
+
+        /* Hover Effects */
+        .interactive-program-card:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: var(--shadow-hover);
+        }
+
+        /* Card Title Styling */
+        .interactive-program-card .card-title {
+            color: white;
+            font-weight: 600;
+            margin: 0;
+            z-index: 3;
+            position: relative;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            line-height: 1.3;
+        }
+
+        /* Decorative Pattern */
+        .card-pattern {
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 100px;
+            height: 100px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            z-index: 1;
+        }
+
+        .interactive-program-card:hover .card-pattern {
+            transform: scale(1.5);
+            opacity: 0.3;
+        }
+
+        /* Additional Decorative Elements */
+        .interactive-program-card::before {
+            content: '';
+            position: absolute;
+            bottom: -30px;
+            left: -30px;
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            z-index: 1;
+        }
+
+        .interactive-program-card:hover::before {
+            transform: scale(1.3);
+            opacity: 0.8;
+        }
+
+        /* Active Card Enhancement */
+        .interactive-program-card.active-card {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .interactive-program-card.active-card::after {
+            opacity: 0.5;
+        }
+
+        /* Focus States untuk Accessibility */
+        .interactive-program-card:focus {
+            outline: none;
+            box-shadow: var(--shadow-hover), 0 0 0 3px rgba(13, 94, 166, 0.3);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .interactive-program-card {
+                height: 160px;
+                margin-bottom: 1rem;
+            }
+            
+            .interactive-program-card .card-title {
+                font-size: 0.9rem !important;
+                line-height: 1.2;
+            }
+            
+            .interactive-program-card:hover {
+                transform: translateY(-5px) scale(1.02);
+            }
+            
+            .card-pattern {
+                width: 80px;
+                height: 80px;
+                top: -40px;
+                right: -40px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .interactive-program-card {
+                height: 140px;
+            }
+            
+            .interactive-program-card .card-title {
+                font-size: 0.85rem !important;
+            }
+            
+            .card-pattern {
+                width: 60px;
+                height: 60px;
+                top: -30px;
+                right: -30px;
+            }
+        }
+
+        /* Loading Animation */
+        .interactive-program-card {
+            animation: cardFadeIn 0.6s ease-out forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .interactive-program-card:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .interactive-program-card:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .interactive-program-card:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .interactive-program-card:nth-child(4) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes cardFadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Pulse Animation untuk Active Card */
+        .interactive-program-card.active-card {
+            animation: activePulse 2s infinite;
+        }
+
+        @keyframes activePulse {
+            0%, 100% {
+                box-shadow: var(--shadow-hover);
+            }
+            50% {
+                box-shadow: var(--shadow-hover), 0 0 0 5px rgba(13, 94, 166, 0.1);
+            }
+        }
+
+        /* Additional Enhancement - Glow Effect */
+        .interactive-program-card:hover {
+            position: relative;
+        }
+
+        .primary-gradient:hover {
+            box-shadow: var(--shadow-hover), 0 0 30px rgba(13, 94, 166, 0.3);
+        }
+
+        .secondary-gradient:hover {
+            box-shadow: var(--shadow-hover), 0 0 30px rgba(166, 85, 13, 0.3);
+        }
+
+        .success-gradient:hover {
+            box-shadow: var(--shadow-hover), 0 0 30px rgba(36, 194, 36, 0.3);
+        }
+
+        .info-gradient:hover {
+            box-shadow: var(--shadow-hover), 0 0 30px rgba(41, 123, 163, 0.3);
         }
 
         /*========================================
@@ -1089,6 +1316,124 @@
                 min-height: 120px;
             }
         }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            padding-top: 50px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.9);
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            margin: auto;
+            display: block;
+            max-width: 50%;
+            max-height: 90%;
+            border-radius: 10px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            animation: zoomIn 0.3s ease;
+        }
+
+        @keyframes zoomIn {
+            from { transform: scale(0.5); }
+            to { transform: scale(1); }
+        }
+
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #bbb;
+        }
+
+        .modal-caption {
+            margin: auto;
+            display: block;
+            width: 80%;
+            max-width: 700px;
+            text-align: center;
+            color: #ccc;
+            padding: 10px 0;
+        }
+
+        .modal-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .modal-nav:hover {
+            background: rgba(255,255,255,0.4);
+        }
+
+        .modal-prev {
+            left: 20px;
+        }
+
+        .modal-next {
+            right: 20px;
+        }
+
+        /* Hover effect untuk gambar */
+        .item-image2 {
+            cursor: pointer;
+            position: relative;
+        }
+
+        .item-image2::after {
+            content: '\f002';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 2rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            background: rgba(0,0,0,0.5);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .item-image2:hover::after {
+            opacity: 1;
+        }
 </style>
 @endpush
 
@@ -1096,277 +1441,292 @@
 
 @section('content')
 
-
-<!-- Konten 1: Program Unggulan -->
-<section id="program-unggulan" class="py-5 mb-2 mb-md-0">
-  <div class="container h-100">
-    <div class="section-title">
-      <h1 class="text-center fw-bold mb-4 judul-section">
-        {{__('app.program_title')}} <span>{{__('app.program_subtitle')}}</span>
-      </h1>
-      <div class="underline"></div>
-    </div>
-
-    <!-- Carousel -->
-    <div id="carouselProgram" class="carousel slide" data-bs-ride="carousel">
-      <div class="carousel-inner">
-
-        <!-- Slide 1 -->
-        <div class="carousel-item active">
-          <div class="row align-items-center g-4">
-            <div class="col-md-6">
-              <div class="ratio ratio-4x3">
-                <img src="asset/img/photo (30).jpg" class="img-fluid rounded-4 shadow-sm" style="object-fit: cover;" alt="Program Pemagangan Jepang" />
-              </div>
-            </div>
-            <div class="col-md-6 d-flex flex-column justify-content-center">
-              <h3 class="fw-bold mb-3">{{__('app.program_1')}}</h3>
-              <p class="mb-4">{{__('app.program_1_text')}}</p>
-              <!-- <button class="button-primary px-4 py-2">{{__('app.program_1_button')}}</button> -->
-            </div>
-          </div>
+    <!-- Konten 1: Program Unggulan -->
+    <section id="program-unggulan" class="py-5 mb-2 mb-md-0">
+        <div class="container h-100">
+        <div class="section-title">
+        <h1 class="text-center fw-bold mb-4 judul-section">
+            {{__('app.program_title')}} <span>{{__('app.program_subtitle')}}</span>
+        </h1>
+        <div class="underline"></div>
         </div>
 
-        <!-- Slide 2 -->
-        <div class="carousel-item">
-          <div class="row align-items-center g-4">
-            <div class="col-md-6">
-              <div class="ratio ratio-4x3">
-                <img src="asset/img/photo (33).jpg" class="img-fluid rounded-4 shadow-sm" style="object-fit: cover;" alt="Program Tokutei Ginou" />
-              </div>
-            </div>
-            <div class="col-md-6 d-flex flex-column justify-content-center">
-              <h3 class="fw-bold mb-3">{{__('app.program_2')}}</h3>
-              <p class="mb-4">{{__('app.program_2_text')}}</p>
-              <!-- <button class="button-primary px-4 py-2">{{__('app.program_2_button')}}</button> -->
-            </div>
-          </div>
-        </div>
+        <!-- Carousel -->
+        <div id="carouselProgram" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
 
-        <!-- Slide 3 -->
-        <div class="carousel-item">
-          <div class="row align-items-center g-4">
-            <div class="col-md-6">
-              <div class="ratio ratio-4x3">
-                <img src="asset/img/photo2 (30).jpg" class="img-fluid rounded-4 shadow-sm" style="object-fit: cover;" alt="Program Nihongo Gakkou" />
-              </div>
+            <!-- Slide 1 -->
+            <div class="carousel-item active">
+            <div class="row align-items-center g-4">
+                <div class="col-md-6">
+                <div class="ratio ratio-4x3" onclick="openModal('asset/img/photo (30).webp', 'Program Pemagangan Jepang')">
+                    <img src="asset/img/photo (30).webp" class="img-fluid rounded-4 shadow-sm" style="object-fit: cover;" alt="Program Pemagangan Jepang" />
+                </div>
+                </div>
+                <div class="col-md-6 d-flex flex-column justify-content-center">
+                <h3 class="fw-bold mb-3">{{__('app.program_1')}}</h3>
+                <p class="mb-4">{{__('app.program_1_text')}}</p>
+                <!-- <button class="button-primary px-4 py-2">{{__('app.program_1_button')}}</button> -->
+                </div>
             </div>
-            <div class="col-md-6 d-flex flex-column justify-content-center">
-              <h3 class="fw-bold mb-3">{{__('app.program_4')}}</h3>
-              <p class="mb-4">{{__('app.program_4_text')}}</p>
-              <!-- <button class="button-primary px-4 py-2">{{__('app.program_4_button')}}</button> -->
             </div>
-          </div>
-        </div>
 
-        <!-- Slide 4 -->
-        <div class="carousel-item">
-          <div class="row align-items-center g-4">
-            <div class="col-md-6">
-              <div class="ratio ratio-4x3">
-                <img src="asset/img/photo2 (29).jpg" class="img-fluid rounded-4 shadow-sm" style="object-fit: cover;" alt="Program Engineering Jepang" />
-              </div>
+            <!-- Slide 2 -->
+            <div class="carousel-item">
+            <div class="row align-items-center g-4">
+                <div class="col-md-6">
+                <div class="ratio ratio-4x3" onclick="openModal('asset/img/photo (33).webp', 'Program Tokutei Ginou')">
+                    <img src="asset/img/photo (33).webp" class="img-fluid rounded-4 shadow-sm" style="object-fit: cover;" alt="Program Tokutei Ginou" />
+                </div>
+                </div>
+                <div class="col-md-6 d-flex flex-column justify-content-center">
+                <h3 class="fw-bold mb-3">{{__('app.program_2')}}</h3>
+                <p class="mb-4">{{__('app.program_2_text')}}</p>
+                <!-- <button class="button-primary px-4 py-2">{{__('app.program_2_button')}}</button> -->
+                </div>
             </div>
-            <div class="col-md-6 d-flex flex-column justify-content-center">
-              <h3 class="fw-bold mb-3">{{__('app.program_3')}}</h3>
-              <p class="mb-4">{{__('app.program_3_text')}}</p>
-              <!-- <button class="button-primary px-4 py-2">{{__('app.program_3_button')}}</button> -->
             </div>
-          </div>
-        </div>
 
-      </div>
-            <!-- Controls -->
-            <button class="carousel-control-prev d-none d-md-block" type="button" data-bs-target="#carouselProgram" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon"></span>
+            <!-- Slide 3 -->
+            <div class="carousel-item">
+            <div class="row align-items-center g-4">
+                <div class="col-md-6">
+                <div class="ratio ratio-4x3" onclick="openModal('asset/img/photo2 (30).webp', 'Program Nihongo Gakkou')">
+                    <img src="asset/img/photo2 (30).webp" class="img-fluid rounded-4 shadow-sm" style="object-fit: cover;" alt="Program Nihongo Gakkou" />
+                </div>
+                </div>
+                <div class="col-md-6 d-flex flex-column justify-content-center">
+                <h3 class="fw-bold mb-3">{{__('app.program_4')}}</h3>
+                <p class="mb-4">{{__('app.program_4_text')}}</p>
+                <!-- <button class="button-primary px-4 py-2">{{__('app.program_4_button')}}</button> -->
+                </div>
+            </div>
+            </div>
+
+            <!-- Slide 4 -->
+            <div class="carousel-item">
+            <div class="row align-items-center g-4">
+                <div class="col-md-6">
+                <div class="ratio ratio-4x3" onclick="openModal('asset/img/photo2 (16).webp', 'Program Engineering Jepang')">
+                    <img src="asset/img/photo2 (16).webp" class="img-fluid rounded-4 shadow-sm" style="object-fit: cover;" alt="Program Engineering Jepang" />
+                </div>
+                </div>
+                <div class="col-md-6 d-flex flex-column justify-content-center">
+                <h3 class="fw-bold mb-3">{{__('app.program_3')}}</h3>
+                <p class="mb-4">{{__('app.program_3_text')}}</p>
+                <!-- <button class="button-primary px-4 py-2">{{__('app.program_3_button')}}</button> -->
+                </div>
+            </div>
+            </div>
+
+        </div>
+                <!-- Controls -->
+                <button class="carousel-control-prev d-none d-md-block" type="button" data-bs-target="#carouselProgram" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon"></span>
+                </button>
+                <button class="carousel-control-next d-none d-md-block" type="button" data-bs-target="#carouselProgram" data-bs-slide="next">
+                    <span class="carousel-control-next-icon"></span>
+                </button>
+
+                <!-- Indicators -->
+                <div class="carousel-indicators mt-4">
+                <button type="button" data-bs-target="#carouselProgram" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#carouselProgram" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#carouselProgram" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                <button type="button" data-bs-target="#carouselProgram" data-bs-slide-to="3" aria-label="Slide 4"></button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Konten 2 -->
+    <section id="program-tambahan" class="d-flex justify-content-center align-items-center py-4 py-md-5 mb-5 mb-md-0">
+        <div class="container">
+            <div class="row justify-content-center g-3 g-md-4">
+                {{-- Card 1 --}}
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <div class="card interactive-program-card primary-gradient text-center">
+                        <div class="card-body d-flex align-items-center justify-content-center py-3 py-md-4">
+                            <div class="card-pattern"></div>
+                            <h5 class="card-title fw-bold m-0 fs-6 fs-md-5">{{__('app.card1_title')}} <br> {{__('app.card1_subtitle')}}</h5>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Card 2 --}}
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <div class="card interactive-program-card secondary-gradient text-center">
+                        <div class="card-body d-flex align-items-center justify-content-center py-3 py-md-4">
+                            <div class="card-pattern"></div>
+                            <h5 class="card-title fw-bold m-0 fs-6 fs-md-5">{{__('app.card2_title')}}</h5>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Card 3 --}}
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <div class="card interactive-program-card success-gradient text-center">
+                        <div class="card-body d-flex align-items-center justify-content-center py-3 py-md-4">
+                            <div class="card-pattern"></div>
+                            <h5 class="card-title fw-bold m-0 fs-6 fs-md-5">{{__('app.card3_title')}}</h5>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Card 4 --}}
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <div class="card interactive-program-card info-gradient text-center">
+                        <div class="card-body d-flex align-items-center justify-content-center py-3 py-md-4">
+                            <div class="card-pattern"></div>
+                            <h5 class="card-title fw-bold m-0 fs-6 fs-md-5">{{__('app.card4_title')}} <br> {{__('app.card4_subtitle')}}</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Konten 3 - Final -->
+    <section id="kegiatan-kami" class="mt-5 mt-md-0">
+    <div class="container">
+        <div class="kegiatan-section">
+        <h1 class="section-title">{{__('app.kegiatan_title')}}</h1>
+
+        <div class="carousel-section2">
+            <button class="nav-button2 nav-prev2" onclick="previousSlide()">
+            <i class="fa fa-chevron-left"></i>
             </button>
-            <button class="carousel-control-next d-none d-md-block" type="button" data-bs-target="#carouselProgram" data-bs-slide="next">
-                <span class="carousel-control-next-icon"></span>
+
+            <div class="carousel-container2">
+            <div class="carousel-wrapper2" id="carouselWrapper2">
+                <!-- Kegiatan 1 -->
+                <div class="carousel-item2">
+                <div class="item-image2" onclick="openModal('asset/img/6.webp', 'Kelas Bahasa')">
+                    <img src="asset/img/6.webp" alt="Kelas Bahasa" loading="lazy">
+                </div>
+                <div class="item-content2">
+                    <p class="item-description">
+                    {{__('app.kegiatan5')}}
+                    </p>
+                </div>
+                </div>
+
+                <div class="carousel-item2">
+                <div class="item-image2" onclick="openModal('asset/img/photo2 (36).webp', 'Kelas Pemantapan')">
+                    <img src="asset/img/photo2 (36).webp" alt="Kelas Pemantapan" loading="lazy">
+                </div>
+                <div class="item-content2">
+                    <p class="item-description">
+                    {{__('app.kegiatan1')}}
+                    </p>
+                </div>
+                </div>
+
+                <!-- Kegiatan 2 -->
+                <div class="carousel-item2">
+                <div class="item-image2" onclick="openModal('asset/img/photo2 (35).webp', 'Kelas Olahraga Fisik')">
+                    <img src="asset/img/photo2 (35).webp" alt="Kelas Olahraga Fisik" loading="lazy">
+                </div>
+                <div class="item-content2">
+                    <p class="item-description">
+                    {{__('app.kegiatan2')}}
+                    </p>
+                </div>
+                </div>
+
+                <!-- Kegiatan 3 -->
+                <div class="carousel-item2">
+                <div class="item-image2" onclick="openModal('asset/img/photo (22).webp', 'Ujian Bahasa')">
+                    <img src="asset/img/photo (22).webp" alt="Ujian Bahasa" loading="lazy">
+                </div>
+                <div class="item-content2">
+                    <p class="item-description">
+                    {{__('app.kegiatan3')}}
+                    </p>
+                </div>
+                </div>
+                
+                <!-- Kegiatan 4 -->
+                <div class="carousel-item2">
+                <div class="item-image2" onclick="openModal('asset/img/8.webp', 'Interview')">
+                    <img src="asset/img/8.webp" alt="Interview" loading="lazy">
+                </div>
+                <div class="item-content2">
+                    <p class="item-description">
+                    {{__('app.kegiatan4')}}
+                    </p>
+                </div>
+                </div>
+
+                <div class="carousel-item2">
+                <div class="item-image2" onclick="openModal('asset/img/photo2 (63).webp', 'Tes Skill dan Interview Offline')">
+                    <img src="asset/img/photo2 (63).webp" alt="Tes Skill dan Interview Offline" loading="lazy">
+                </div>
+                <div class="item-content2">
+                    <p class="item-description">
+                    {{__('app.kegiatan6')}}
+                    </p>
+                </div>
+                </div>
+
+                <div class="carousel-item2">
+                <div class="item-image2" onclick="openModal('asset/img/5.webp', 'Tanda Tangan Kontrak')">
+                    <img src="asset/img/5.webp" alt="Tanda Tangan Kontrak" loading="lazy">
+                </div>
+                <div class="item-content2">
+                    <p class="item-description">
+                    {{__('app.kegiatan7')}}
+                    </p>
+                </div>
+                </div>
+
+                <div class="carousel-item2">
+                <div class="item-image2" onclick="openModal('asset/img/4.webp', 'Persiapan Keberangkatan')">
+                    <img src="asset/img/4.webp" alt="Persiapan Keberangkatan" loading="lazy">
+                </div>
+                <div class="item-content2">
+                    <p class="item-description">
+                    {{__('app.kegiatan8')}}
+                    </p>
+                </div>
+                </div>
+
+                <div class="carousel-item2">
+                <div class="item-image2" onclick="openModal('asset/img/photo (38).webp', 'Pemberangkatan')">
+                    <img src="asset/img/photo (38).webp" alt="Pemberangkatan" loading="lazy">
+                </div>
+                <div class="item-content2">
+                    <p class="item-description">
+                    {{__('app.kegiatan9')}}
+                    </p>
+                </div>
+                </div>
+            </div>
+            </div>
+
+            <button class="nav-button2 nav-next2" onclick="nextSlide()">
+            <i class="fa fa-chevron-right"></i>
             </button>
-
-            <!-- Indicators -->
-            <div class="carousel-indicators mt-4">
-            <button type="button" data-bs-target="#carouselProgram" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-            <button type="button" data-bs-target="#carouselProgram" data-bs-slide-to="1" aria-label="Slide 2"></button>
-            <button type="button" data-bs-target="#carouselProgram" data-bs-slide-to="2" aria-label="Slide 3"></button>
-            <button type="button" data-bs-target="#carouselProgram" data-bs-slide-to="3" aria-label="Slide 4"></button>
+            <div class="carousel-indicators" id="indicators2">
+            <!-- Diisi lewat JS -->
             </div>
         </div>
+        </div>
     </div>
-</section>
+    </section>
 
-<!-- Konten 2 -->
-<section id="program-tambahan" class="d-flex justify-content-center align-items-center py-4 py-md-5 mb-5 mb-md-0">
-  <div class="container">
-    <div class="row justify-content-center g-3 g-md-4">
-      <!-- Card 1 -->
-      <div class="col-12 col-sm-6 col-lg-3">
-        <div class="card card-program active-card text-center card-mobile-size">
-          <div class="card-body d-flex align-items-center justify-content-center py-3 py-md-4">
-            <h5 class="card-title fw-bold m-0 fs-6 fs-md-5">{{__('app.card1_title')}} <br> {{__('app.card1_subtitle')}}</h5>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Card 2 -->
-      <div class="col-12 col-sm-6 col-lg-3">
-        <div class="card card-program text-center card-mobile-size">
-          <div class="card-body d-flex align-items-center justify-content-center py-3 py-md-4">
-            <h5 class="card-title fw-bold m-0 fs-6 fs-md-5">{{__('app.card2_title')}}</h5>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Card 3 -->
-      <div class="col-12 col-sm-6 col-lg-3">
-        <div class="card card-program text-center card-mobile-size">
-          <div class="card-body d-flex align-items-center justify-content-center py-3 py-md-4">
-            <h5 class="card-title fw-bold m-0 fs-6 fs-md-5">{{__('app.card3_title')}}</h5>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Card 4 -->
-      <div class="col-12 col-sm-6 col-lg-3">
-        <div class="card card-program text-center card-mobile-size">
-          <div class="card-body d-flex align-items-center justify-content-center py-3 py-md-4">
-            <h5 class="card-title fw-bold m-0 fs-6 fs-md-5">{{__('app.card4_title')}} <br> {{__('app.card4_subtitle')}}</h5>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Konten 3 - Final -->
-<section id="kegiatan-kami" class="mt-5 mt-md-0">
-  <div class="container">
-    <div class="kegiatan-section">
-      <h1 class="section-title">{{__('app.kegiatan_title')}}</h1>
-
-      <div class="carousel-section2">
-        <button class="nav-button2 nav-prev2" onclick="previousSlide()">
-          <i class="fa fa-chevron-left"></i>
+    <!-- Modal untuk popup foto -->
+    <div id="imageModal" class="modal">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <button class="modal-nav modal-prev" onclick="previousModalImage()">
+            <i class="fa fa-chevron-left"></i>
         </button>
-
-        <div class="carousel-container2">
-          <div class="carousel-wrapper2" id="carouselWrapper2">
-            <!-- Kegiatan 1 -->
-
-            <div class="carousel-item2">
-              <div class="item-image2">
-                <img src="asset/img/6.jpg" alt="Kelas Bahasa" loading="lazy">
-              </div>
-              <div class="item-content2">
-                <p class="item-description">
-                  {{__('app.kegiatan5')}}
-                </p>
-              </div>
-            </div>
-
-            <div class="carousel-item2">
-              <div class="item-image2">
-                <img src="asset/img/photo2 (36).jpg" alt="Kelas Pemantapan" loading="lazy">
-              </div>
-              <div class="item-content2">
-                <p class="item-description">
-                  {{__('app.kegiatan1')}}
-                </p>
-              </div>
-            </div>
-
-            <!-- Kegiatan 2 -->
-            <div class="carousel-item2">
-              <div class="item-image2">
-                <img src="asset/img/photo2 (35).jpg" alt="Kelas Olahraga Fisik" loading="lazy">
-              </div>
-              <div class="item-content2">
-                <p class="item-description">
-                  {{__('app.kegiatan2')}}
-                </p>
-              </div>
-            </div>
-
-            <!-- Kegiatan 3 -->
-            <div class="carousel-item2">
-              <div class="item-image2">
-                <img src="asset/img/photo (22).jpg" alt="Ujian Bahasa" loading="lazy">
-              </div>
-              <div class="item-content2">
-                <p class="item-description">
-                  {{__('app.kegiatan3')}}
-                </p>
-              </div>
-            </div>
-            
-            <!-- Kegiatan 4 -->
-            <div class="carousel-item2">
-              <div class="item-image2">
-                <img src="asset/img/8.jpg" alt="Interview" loading="lazy">
-              </div>
-              <div class="item-content2">
-                <p class="item-description">
-                  {{__('app.kegiatan4')}}
-                </p>
-              </div>
-            </div>
-
-            <div class="carousel-item2">
-              <div class="item-image2">
-                <img src="asset/img/photo2 (63).jpg" alt="Tes Skill dan Interview Offline" loading="lazy">
-              </div>
-              <div class="item-content2">
-                <p class="item-description">
-                  {{__('app.kegiatan6')}}
-                </p>
-              </div>
-            </div>
-
-            <div class="carousel-item2">
-              <div class="item-image2">
-                <img src="asset/img/5.jpg" alt="Tanda Tangan Kontrak" loading="lazy">
-              </div>
-              <div class="item-content2">
-                <p class="item-description">
-                  {{__('app.kegiatan7')}}
-                </p>
-              </div>
-            </div>
-
-            <div class="carousel-item2">
-              <div class="item-image2">
-                <img src="asset/img/4.jpg" alt="Persiapan Keberangkatan" loading="lazy">
-              </div>
-              <div class="item-content2">
-                <p class="item-description">
-                  {{__('app.kegiatan8')}}
-                </p>
-              </div>
-            </div>
-
-            <div class="carousel-item2">
-              <div class="item-image2">
-                <img src="asset/img/photo (38).jpg" alt="Pemberangkatan" loading="lazy">
-              </div>
-              <div class="item-content2">
-                <p class="item-description">
-                  {{__('app.kegiatan9')}}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <button class="nav-button2 nav-next2" onclick="nextSlide()">
-          <i class="fa fa-chevron-right"></i>
+        <img class="modal-content" id="modalImage">
+        <button class="modal-nav modal-next" onclick="nextModalImage()">
+            <i class="fa fa-chevron-right"></i>
         </button>
-        <div class="carousel-indicators" id="indicators2">
-          <!-- Diisi lewat JS -->
-        </div>
-      </div>
+        <div class="modal-caption" id="modalCaption"></div>
     </div>
-  </div>
-</section>
 
   <section id="gallery">
     <div class="gallery-header">
@@ -1380,58 +1740,58 @@
       <div class="swiper">
         <div class="swiper-wrapper">
         <div class="swiper-slide">
-          <img src="asset/img/photo2 (42).jpg" alt="Gallery 42">
+          <img src="asset/img/photo2 (35).webp" alt="Gallery 42">
         </div>
         <div class="swiper-slide">
-          <img src="asset/img/photo2 (43).jpg" alt="Gallery 43">
+          <img src="asset/img/photo (44).webp" alt="Gallery 43">
         </div>
         <div class="swiper-slide">
-          <img src="asset/img/photo2 (44).jpg" alt="Gallery 44">
+          <img src="asset/img/photo2 (44).webp" alt="Gallery 44">
         </div>
         <div class="swiper-slide">
-          <img src="asset/img/photo2 (45).jpg" alt="Gallery 45">
+          <img src="asset/img/photo2 (45).webp" alt="Gallery 45">
         </div>
         <div class="swiper-slide">
-          <img src="asset/img/photo2 (46).jpg" alt="Gallery 46">
+          <img src="asset/img/photo2 (46).webp" alt="Gallery 46">
         </div>
         <div class="swiper-slide">
-          <img src="asset/img/photo2 (47).jpg" alt="Gallery 47">
+          <img src="asset/img/photo2 (47).webp" alt="Gallery 47">
         </div>
         <div class="swiper-slide">
-          <img src="asset/img/photo2 (48).jpg" alt="Gallery 48">
+          <img src="asset/img/photo2 (48).webp" alt="Gallery 48">
         </div>
         <div class="swiper-slide">
-          <img src="asset/img/photo2 (49).jpg" alt="Gallery 49">
+          <img src="asset/img/photo2 (49).webp" alt="Gallery 49">
         </div>
         <div class="swiper-slide">
-          <img src="asset/img/photo2 (50).jpg" alt="Gallery 50">
+          <img src="asset/img/photo2 (50).webp" alt="Gallery 50">
         </div>
         <div class="swiper-slide">
-          <img src="asset/img/photo2 (51).jpg" alt="Gallery 51">
+          <img src="asset/img/photo2 (51).webp" alt="Gallery 51">
         </div>
         <div class="swiper-slide">
-          <img src="asset/img/photo2 (52).jpg" alt="Gallery 52">
+          <img src="asset/img/photo2 (52).webp" alt="Gallery 52">
         </div>
         <div class="swiper-slide">
-          <img src="asset/img/photo2 (53).jpg" alt="Gallery 53">
+          <img src="asset/img/photo2 (53).webp" alt="Gallery 53">
         </div>
         <div class="swiper-slide">
-          <img src="asset/img/photo2 (54).jpg" alt="Gallery 54">
+          <img src="asset/img/photo2 (54).webp" alt="Gallery 54">
         </div>
         <div class="swiper-slide">
-          <img src="asset/img/photo2 (55).jpg" alt="Gallery 55">
+          <img src="asset/img/photo2 (55).webp" alt="Gallery 55">
         </div>
         <div class="swiper-slide">
-          <img src="asset/img/photo2 (56).jpg" alt="Gallery 56">
+          <img src="asset/img/photo2 (64).webp" alt="Gallery 56">
         </div>
         <div class="swiper-slide">
-          <img src="asset/img/photo2 (57).jpg" alt="Gallery 57">
+          <img src="asset/img/photo2 (57).webp" alt="Gallery 57">
         </div>
         <div class="swiper-slide">
-          <img src="asset/img/photo2 (58).jpg" alt="Gallery 58">
+          <img src="asset/img/photo2 (68).webp" alt="Gallery 58">
         </div>
         <div class="swiper-slide">
-          <img src="asset/img/photo2 (59).jpg" alt="Gallery 59">
+          <img src="asset/img/photo2 (59).webp" alt="Gallery 59">
         </div>
 
       </div>
@@ -1947,6 +2307,88 @@
 
             // Inisialisasi posisi awal
             updateCarousel();
+
+            // Modal Pop up gambar
+            let currentModalImage = 0;
+            // Array untuk menyimpan data gambar
+            const images = [
+                { src: 'asset/img/photo (30).webp', alt: 'Program Pemagangan Jepang' },
+                { src: 'asset/img/photo (33).webp', alt: 'Program Tokutei Ginou' },
+                { src: 'asset/img/photo2 (30).webp', alt: 'Program Nihongo Gakkou' },
+                { src: 'asset/img/photo2 (16).webp', alt: 'Program Engineering Jepang' },
+                { src: 'asset/img/6.webp', alt: 'Kelas Bahasa' },
+                { src: 'asset/img/photo2 (36).webp', alt: 'Kelas Pemantapan' },
+                { src: 'asset/img/photo2 (35).webp', alt: 'Kelas Olahraga Fisik' },
+                { src: 'asset/img/photo (22).webp', alt: 'Ujian Bahasa' },
+                { src: 'asset/img/8.webp', alt: 'Interview' },
+                { src: 'asset/img/photo2 (63).webp', alt: 'Tes Skill dan Interview Offline' },
+                { src: 'asset/img/5.webp', alt: 'Tanda Tangan Kontrak' },
+                { src: 'asset/img/4.webp', alt: 'Persiapan Keberangkatan' },
+                { src: 'asset/img/photo (38).webp', alt: 'Pemberangkatan' }
+            ];
+
+            // Modal functions
+            function openModal(src, alt) {
+                const modal = document.getElementById('imageModal');
+                const modalImg = document.getElementById('modalImage');
+                const caption = document.getElementById('modalCaption');
+                
+                // Find current image index
+                currentModalImage = images.findIndex(img => img.src === src);
+                
+                modal.style.display = 'block';
+                modalImg.src = src;
+                caption.innerHTML = alt;
+                
+                // Prevent body scroll
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeModal() {
+                const modal = document.getElementById('imageModal');
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+
+            function nextModalImage() {
+                currentModalImage = (currentModalImage + 1) % images.length;
+                updateModalImage();
+            }
+
+            function previousModalImage() {
+                currentModalImage = (currentModalImage - 1 + images.length) % images.length;
+                updateModalImage();
+            }
+
+            function updateModalImage() {
+                const modalImg = document.getElementById('modalImage');
+                const caption = document.getElementById('modalCaption');
+                
+                modalImg.src = images[currentModalImage].src;
+                caption.innerHTML = images[currentModalImage].alt;
+            }
+
+            // Close modal when clicking outside the image
+            window.onclick = function(event) {
+                const modal = document.getElementById('imageModal');
+                if (event.target == modal) {
+                    closeModal();
+                }
+            }
+
+            // Keyboard navigation
+            document.addEventListener('keydown', function(event) {
+                const modal = document.getElementById('imageModal');
+                if (modal.style.display === 'block') {
+                    if (event.key === 'Escape') {
+                        closeModal();
+                    } else if (event.key === 'ArrowLeft') {
+                        previousModalImage();
+                    } else if (event.key === 'ArrowRight') {
+                        nextModalImage();
+                    }
+                }
+            });
     </script>
 @endpush
 @endsection

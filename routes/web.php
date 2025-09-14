@@ -21,11 +21,14 @@ use App\Http\Controllers\ManageTransactionController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\FinanceController;
 use App\Http\Controllers\LanguageController;
+use App\Http\Controllers\LowonganController;
+use App\Http\Controllers\UserDocumentController;
 
 // --- Landing Page ---
 
 Route::get('/', fn() => view('home'));
 Route::get('/program', fn() => view('program'));
+Route::get('/lowongan_detail/{type}', [LowonganController::class, 'detail'])->name('lowongan_detail');
 Route::get('/about', fn() => view('about'));
 Route::get('/contact', fn() => view('contact'));
 // Route::post('/contact', [FormController::class, 'send'])->name('form.send');
@@ -107,6 +110,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/installments/{id}', [ManageTransactionController::class, 'detailInstallment'])->name('admin.installments.detail');
     Route::get('/admin/transaksi/installments/export', [ManageTransactionController::class, 'exportInstallments'])
     ->name('admin.installments.export');
+    Route::post('/transactions/{id}/installments/offline', [ManageTransactionController::class, 'addOfflineInstallment'])
+    ->name('transactions.installments.addOffline');
 
 
     // API routes untuk AJAX
@@ -125,6 +130,10 @@ Route::middleware(['auth', 'verifikasi'])->group(function () {
     Route::get('/users/editProfile', [UsersController::class, 'editProfile'])->name('users.editProfile');
     Route::put('/users/editProfile', [UsersController::class, 'updateProfile'])->name('users.editProfile.updateProfile');
     Route::post('/change-password', [UsersController::class, 'updatePassword'])->name('password.update');
+
+    // Dokumen
+    Route::get('/documents', [UserDocumentController::class, 'index'])->name('documents.index');
+    Route::post('/documents', [UserDocumentController::class, 'store'])->name('documents.store');
 
     // Keuangan
     Route::middleware(['auth', 'CheckFinanceAccess'])->group(function () {

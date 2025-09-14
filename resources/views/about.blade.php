@@ -24,7 +24,7 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background-image: url("../Asset/img/foto-konten3.png");
+        background-image: url("../Asset/img/foto-konten3.webp");
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
@@ -535,131 +535,7 @@
         display: none;
     }
     
-    /* ========================================
-        KONTEN 4 (Legalitas)
-    ======================================== */
-    #legalitas {
-        padding: 40px 0;
-        height: auto;
-    }
-
-    .legal-hero {
-        width: 100%;
-        height: auto;
-        border-radius: 0;
-        padding: 2rem 1rem;
-    }
-
-    .legal-hero-content-text {
-        padding: 0;
-        text-align: center;
-    }
-    
-    .legal-hero-content-text h3 {
-        font-size: 1.5rem;
-    }
-    
-    .legal-hero-content-text h1 {
-        font-size: 2rem;
-    }
-    
-    .content-wrapper {
-        margin-top: 2rem;
-        margin-left: 0;
-    }
-
-    .slider-container2 {
-        width: 100%;
-    }
-
-    .slider-wrapper {
-        overflow-x: scroll; /* Mengaktifkan horizontal scroll untuk card */
-        scroll-snap-type: x mandatory;
-        -webkit-overflow-scrolling: touch;
-        padding-bottom: 15px; /* Memberi ruang di bawah scrollbar */
-        justify-content: flex-start;
-    }
-    
-    .certificate-card {
-        min-width: 85%; /* Menyesuaikan lebar card agar tidak terlalu besar */
-        height: auto;
-        min-height: 500px;
-        margin-right: 15px;
-        scroll-snap-align: center;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-    }
-
-    .certificate-image {
-        height: 500px;
-    }
-
-    .certificate-info-overlay {
-        padding: 20px;
-        text-align: center;
-    }
-
-    .slider-next {
-        display: none; /* Menyembunyikan tombol next karena ada scrolling */
-    }
-
-    .slider-indicators {
-        display: none; /* Menyembunyikan indikator karena ada scrolling */
-    }
-    }
-    /* Image hover */
-    .img-fluid:hover {
-        transform: scale(1.02);
-        transition: transform 0.4s ease;
-    }
-
-    /* Loading state */
-    .loading-dots {
-        display: inline-block;
-    }
-
-    .loading-dots::after {
-        content: "";
-        animation: dots 1.5s steps(4, end) infinite;
-    }
-
-    @keyframes dots {
-        0%,
-        20% {
-            content: "";
-        }
-        40% {
-            content: ".";
-        }
-        60% {
-            content: "..";
-        }
-        80%,
-        100% {
-            content: "...";
-        }
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-        .bg-decor {
-            width: 100px;
-            top: -20px;
-            right: 0;
-        }
-
-        h2 {
-            font-size: 1.5rem;
-        }
-
-        .text-body {
-            font-size: 0.95rem;
-        }
-
-        .vision-mission-card {
-            margin-bottom: 2rem;
-        }
-    }
-
+  
     /*========================================
     ABOUT KONTEN 3 - ENHANCED
     ========================================*/
@@ -957,6 +833,131 @@
         }
     }
 
+    /* ========================================
+        KONTEN 4 (Legalitas)
+    ======================================== */
+    #legalitas {
+        padding: 40px 0;
+        height: auto;
+    }
+
+    .legal-hero {
+        width: 100%;
+        height: auto;
+        border-radius: 0;
+        padding: 2rem 1rem;
+    }
+
+    .legal-hero-content-text {
+        padding: 0;
+        text-align: center;
+    }
+    
+    .legal-hero-content-text h3 {
+        font-size: 1.5rem;
+    }
+    
+    .legal-hero-content-text h1 {
+        font-size: 2rem;
+    }
+    
+    .content-wrapper {
+        margin-top: 2rem;
+        margin-left: 0;
+    }
+
+    .slider-container2 {
+        width: 100%;
+    }
+
+    .slider-wrapper {
+        overflow-x: scroll; /* Mengaktifkan horizontal scroll untuk card */
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 15px; /* Memberi ruang di bawah scrollbar */
+        justify-content: flex-start;
+    }
+    
+    .certificate-card {
+        min-width: 85%; /* Menyesuaikan lebar card agar tidak terlalu besar */
+        height: auto;
+        min-height: 500px;
+        margin-right: 15px;
+        scroll-snap-align: center;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .certificate-image {
+        height: 500px;
+    }
+
+    .certificate-info-overlay {
+        padding: 20px;
+        text-align: center;
+    }
+
+    .slider-next {
+        display: none; /* Menyembunyikan tombol next karena ada scrolling */
+    }
+
+    .slider-indicators {
+        display: none; /* Menyembunyikan indikator karena ada scrolling */
+    }
+    }
+    /* Image hover */
+    .img-fluid:hover {
+        transform: scale(1.02);
+        transition: transform 0.4s ease;
+    }
+
+    /* Loading state */
+    .loading-dots {
+        display: inline-block;
+    }
+
+    .loading-dots::after {
+        content: "";
+        animation: dots 1.5s steps(4, end) infinite;
+    }
+
+    @keyframes dots {
+        0%,
+        20% {
+            content: "";
+        }
+        40% {
+            content: ".";
+        }
+        60% {
+            content: "..";
+        }
+        80%,
+        100% {
+            content: "...";
+        }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .bg-decor {
+            width: 100px;
+            top: -20px;
+            right: 0;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+        }
+
+        .text-body {
+            font-size: 0.95rem;
+        }
+
+        .vision-mission-card {
+            margin-bottom: 2rem;
+        }
+    }
+
     /* Konten 4 Legalitas */
     #legalitas {
         width: 100%;
@@ -1158,7 +1159,7 @@
                     </p>
                 </div>
                 <div class="col-lg-6 position-relative company-image">
-                    <img src="asset/img/foto.png" alt="Group Photo" class="img-fluid rounded">
+                    <img src="asset/img/foto.webp" alt="Group Photo" class="img-fluid rounded">
                 </div>
             </div>
 
@@ -1199,7 +1200,7 @@
         <div class="container py-5">
             <div class="row align-items-center">
                 <div class="col-lg-6 position-relative pendiri-image2">
-                    <img src="asset/img/photo (15).jpg" alt="Profile Pendiri" class="img-fluid rounded-5">
+                    <img src="asset/img/photo (15).webp" alt="Profile Pendiri" class="img-fluid rounded-5">
                 </div>
                 <div class="col-lg-6 pendiri-content">
                     <h3 class="judul-h3 text-reveal">
@@ -1242,7 +1243,7 @@
                         <!-- Slide 1 -->
                         <div class="certificate-card">
                             <div class="certificate-image">
-                                <img src="asset/img/photo2 (42).jpg"  alt="">
+                                <img src="asset/img/Legalitas1.jpg"  alt="">
                             </div>
                             <div class="certificate-info-overlay">
                                 <h3 class="certificate-title">{{__('app.legalitas_title')}}</h3>
@@ -1255,7 +1256,7 @@
                         <!-- Slide 2 -->
                         <div class="certificate-card">
                             <div class="certificate-image">
-                                    <img src="asset/img/photo2 (42).jpg"  alt="">
+                                <img src="asset/img/Legalitas2.jpg"  alt="">
                             </div>
                             <div class="certificate-info-overlay">
                                 <h3 class="certificate-title">{{__('app.sertifikat_title')}}</h3>
@@ -1268,31 +1269,13 @@
                         <!-- Slide 3 -->
                         <div class="certificate-card">
                             <div class="certificate-image">
-                                
-                                    <img src="asset/img/photo2 (41).jpg"  alt="">
-                            
+                                <img src="asset/img/Legalitas3.jpg"  alt="">
                             </div>
                             <div class="certificate-info-overlay">
                                 <h3 class="certificate-title">{{__('app.sertifikat2_title')}}</h3>
                                 <p class="certificate-subtitle">{{__('app.sertifikat2_subtitle')}}</p>
                                 <p class="certificate-description">
                                     {{__('app.sertifikat2_desc')}}
-                                </p>
-                            </div>
-                        </div>
-
-                        <!-- Slide 4 -->
-                        <div class="certificate-card">
-                            <div class="certificate-image">
-                                
-                                    <img src="asset/img/photo2 (42).jpg"  alt="">
-                                
-                            </div>
-                            <div class="certificate-info-overlay">
-                                <h3 class="certificate-title">{{__('app.sertifikat3_title')}}</h3>
-                                <p class="certificate-subtitle">{{__('app.sertifikat3_subtitle')}}</p>
-                                <p class="certificate-description">
-                                    {{__('app.sertifikat3_desc')}}
                                 </p>
                             </div>
                         </div>
@@ -1312,6 +1295,4 @@
     </div>
 </section>
 
-
- 
 @endsection

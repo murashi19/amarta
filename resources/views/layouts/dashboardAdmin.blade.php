@@ -6,7 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Dashboard') - LPK PT Amarta Indonesia</title>
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="{{ asset('Asset/img/LogoAmarta.jpg') }}">
+    <link rel="icon" type="image/png" href="{{ asset('Asset/img/LogoAmarta.webp') }}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     
@@ -470,7 +470,7 @@
     <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
         <div class="container-fluid">
             <a class="navbar-brand" href="{{ route('dashboard.admin') }}">
-                <img src="{{ asset('Asset/img/Amarta-Logo.png') }}" alt="Logo Amarta" style="height: 50px; ">
+                <img src="{{ asset('Asset/img/logo.webp') }}" alt="Logo Amarta" style="height: 50px; ">
             </a>
             
             <button class="navbar-toggler d-lg-none" type="button" id="sidebarToggle">

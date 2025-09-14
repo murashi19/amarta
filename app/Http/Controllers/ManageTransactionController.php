@@ -132,6 +132,77 @@ class ManageTransactionController extends Controller
         return view('admin.transaksi', ['tab' => 'installments'], compact('installments'));
     }
 
+    public function addOfflineInstallment(Request $request, $transactionId)
+    {
+        $validated = $request->validate([
+            'amount' => 'required|numeric|min:1000',
+            'notes'  => 'nullable|string|max:255',
+            'photo'  => 'nullable|image|mimes:jpg,jpeg,png|max:2048', // max 2MB
+        ]);
+
+        DB::beginTransaction();
+
+        try {
+            $transaction = Transaction::with('user', 'feePayments')
+                ->where('type', 'dp')
+                ->whereIn('status', ['Pending', 'Verification'])
+                ->findOrFail($transactionId);
+
+            // Hitung cicilan keberapa
+            $nextInstallmentNumber = ($transaction->feePayments()->count() ?? 0) + 1;
+
+            // Upload bukti (kalau ada)
+            $photoPath = null;
+            if ($request->hasFile('photo')) {
+                $photoPath = $request->file('photo')->store('payments_proofs', 'public');
+            }
+
+            // Tambahkan record ke fee_payments
+            $payment = FeePayment::create([
+                'transaction_id'     => $transaction->id,
+                'payment_method'     => 'cash',
+                'selected_method'    => 'cash',
+                'amount'             => $validated['amount'],
+                'installment_number' => $nextInstallmentNumber,
+                'status'             => 'Completed',
+                'notes'              => $validated['notes'] ?? 'Pembayaran offline dicatat admin',
+                'paid_at'            => now(),
+                'verified_by'        => auth()->id(),
+                'verified_at'        => now(),
+                'photo'              => $photoPath, // simpan path bukti
+            ]);
+
+            // Hitung total yang sudah dibayar
+            $totalPaid = FeePayment::where('transaction_id', $transaction->id)
+                ->where('status', 'Completed')
+                ->sum('amount');
+
+            // Update status transaksi
+            if ($totalPaid >= $transaction->amount) {
+                $transaction->update([
+                    'status'  => 'Completed',
+                    'paid_at' => now(),
+                ]);
+                $this->updateUserStatus($transaction);
+            } else {
+                $transaction->update([
+                    'status' => 'Pending'
+                ]);
+            }
+
+            DB::commit();
+
+            return redirect()->back()->with('success', 'Cicilan Program Kelas berhasil ditambahkan.');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Tambah cicilan offline gagal: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Gagal menambahkan cicilan offline.');
+        }
+    }
+
+
+
     public function detail($id)
     {
         try {

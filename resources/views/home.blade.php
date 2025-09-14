@@ -1653,7 +1653,7 @@
                 <!-- Gambar Hero -->
                 <div class="col-lg-6 hero-image d-none d-lg-block">
                     <div class="text-center">
-                        <img img src="asset/img/hero.png" alt="Hero Image">
+                        <img img src="asset/img/hero.webp" alt="Hero Image">
                     </div>
                 </div>
             </div>
@@ -1716,7 +1716,7 @@
                 <!-- Image Section -->
                 <div class="image-section">
                     <div class="bg-hover p-5 rounded text-center">
-                        <img src="asset/img/foto-konten3.png" alt="LPK Amarta Training">
+                        <img src="asset/img/foto-konten3.webp" alt="LPK Amarta Training">
                         <h3 class="text-dark mt-3">{{ __('app.gerbang_image_caption')}}</h3>
                     </div>
                 </div>
@@ -1752,63 +1752,72 @@
     </section>
 
     <!-- Lowongan Section -->
-<section id="lowongan" class="py-2">
-  <div class="container h-100">
-    <div class="section-title">
-      <h1 class="text-center fw-bold mb-4 judul-section">
-        {{__('app.lowongan_title')}} <span>{{__('app.lowongan_subtitle')}}</span>
-      </h1>
-      <div class="underline"></div>
-    </div>
-
-    <div class="lowongan-container">
-      <!-- Card 1 -->
-      <a href="/lowongan_kerja" class="lowongan-card">
-        <div class="icon-wrapper">
-          <i class="fas fa-cogs"></i>
+    <section id="lowongan" class="py-2">
+        <div class="container h-100">
+            <div class="section-title">
+                <h1 class="text-center fw-bold mb-4 judul-section">
+                    {{__('app.lowongan_title')}} <span>{{__('app.lowongan_subtitle')}}</span>
+                </h1>
+                <div class="underline"></div>
+            </div>
+            
+            <div class="lowongan-container">
+                <!-- Card 1 - Manufaktur -->
+                <a href="{{ route('lowongan_detail', ['type' => 'manufaktur']) }}" class="lowongan-card">
+                    <div class="icon-wrapper">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <h3 class="lowongan-title">{{__('app.lowongan_1')}}</h3>
+                    <span class="detail-btn">Detail</span>
+                </a>
+                
+                <!-- Card 2 - Pertanian & Perikanan -->
+                <a href="{{ route('lowongan_detail', ['type' => 'pertanian']) }}" class="lowongan-card">
+                    <div class="icon-wrapper">
+                        <i class="fas fa-tractor"></i>
+                    </div>
+                    <h3 class="lowongan-title">{{__('app.lowongan_2')}}</h3>
+                    <span class="detail-btn">Detail</span>
+                </a>
+                
+                <!-- Card 3 - Pengolahan Makanan & Minuman -->
+                <a href="{{ route('lowongan_detail', ['type' => 'makanan']) }}" class="lowongan-card">
+                    <div class="icon-wrapper">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    <h3 class="lowongan-title">{{__('app.lowongan_3')}}</h3>
+                    <span class="detail-btn">Detail</span>
+                </a>
+                
+                <!-- Card 4 - Konstruksi -->
+                <a href="{{ route('lowongan_detail', ['type' => 'konstruksi']) }}" class="lowongan-card">
+                    <div class="icon-wrapper">
+                        <i class="fas fa-hard-hat"></i>
+                    </div>
+                    <h3 class="lowongan-title">{{__('app.lowongan_4')}}</h3>
+                    <span class="detail-btn">Detail</span>
+                </a>
+                
+                <!-- Card 5 - Peternakan -->
+                <a href="{{ route('lowongan_detail', ['type' => 'peternakan']) }}" class="lowongan-card">
+                    <div class="icon-wrapper">
+                        <i class="fas fa-paw"></i>
+                    </div>
+                    <h3 class="lowongan-title">{{__('app.lowongan_5')}}</h3>
+                    <span class="detail-btn">Detail</span>
+                </a>
+                
+                <!-- Card 6 - lainnya -->
+                <a href="{{ route('lowongan_detail', ['type' => 'lainnya']) }}" class="lowongan-card">
+                    <div class="icon-wrapper">
+                        <i class="fas fa-ellipsis-h"></i>
+                    </div>
+                    <h3 class="lowongan-title">{{__('app.lowongan_6')}}</h3>
+                    <span class="detail-btn">Detail</span>
+                </a>
+            </div>
         </div>
-        <h3 class="lowongan-title">{{__('app.lowongan_1')}}</h3>
-        <!-- <span class="detail-btn">Detail</span> -->
-      </a>
-
-      <!-- Card 2 -->
-      <a href="/lowongan_kerja" class="lowongan-card">
-        <div class="icon-wrapper">
-          <i class="fas fa-tractor"></i>
-        </div>
-        <h3 class="lowongan-title">{{__('app.lowongan_2')}}</h3>
-        <!-- <span class="detail-btn">Detail</span> -->
-      </a>
-
-      <!-- Card 3 -->
-      <a href="/lowongan_kerja" class="lowongan-card">
-        <div class="icon-wrapper">
-          <i class="fas fa-utensils"></i>
-        </div>
-        <h3 class="lowongan-title">{{__('app.lowongan_3')}}</h3>
-        <!-- <span class="detail-btn">Detail</span> -->
-      </a>
-
-      <!-- Card 4 -->
-      <a href="/lowongan_kerja" class="lowongan-card">
-        <div class="icon-wrapper">
-          <i class="fas fa-hard-hat"></i>
-        </div>
-        <h3 class="lowongan-title">{{__('app.lowongan_4')}}</h3>
-        <!-- <span class="detail-btn">Detail</span> -->
-      </a>
-
-      <!-- Card 5 -->
-      <a href="/lowongan_kerja" class="lowongan-card">
-        <div class="icon-wrapper">
-          <i class="fas fa-paw"></i>
-        </div>
-        <h3 class="lowongan-title">{{__('app.lowongan_5')}}</h3>
-        <!-- <span class="detail-btn">Detail</span> -->
-      </a>
-    </div>
-  </div>
-</section>
+    </section>
 
 
 

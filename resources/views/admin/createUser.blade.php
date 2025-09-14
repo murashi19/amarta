@@ -3,7 +3,7 @@
 @section('title', 'Tambah Pengguna')
 
 @section('content')
-<div class="container">
+<div class="container mt-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2><i class="fas fa-user-plus me-2"></i> Tambah Pengguna</h2>
         <a href="{{ route('admin.usersManage') }}" class="btn btn-secondary">

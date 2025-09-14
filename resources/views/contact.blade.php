@@ -139,121 +139,240 @@
         }
 
         /* === KONTEN 3 CONTACT CARDS === */
-        #contact-cards {
-            background-color: #f8f9fa;
+        :root {
+            --primary-gradient: #0d5ea6;
+            --whatsapp-gradient: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
+            --email-gradient: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            --phone-gradient: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            --shadow-soft: 0 8px 32px rgba(0,0,0,0.08);
+            --shadow-hover: 0 25px 50px rgba(0,0,0,0.15);
         }
 
-        .contact-card {
-            background-color: #ffffff; /* Semua card default background PUTIH */
-            border-radius: 1rem;
+        .section-title-floating {
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+            font-size: 2.5rem;
+            margin-bottom: 3rem !important;
+        }
+
+        .floating-contact-card {
+            background: white;
+            border-radius: 24px;
             padding: 2.5rem 1.5rem;
             text-align: center;
-            box-shadow: var(--shadow-md); /* Menggunakan variabel shadow */
-            transition: var(--transition-normal); /* Menggunakan variabel transition */
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: var(--shadow-soft);
             position: relative;
             overflow: hidden;
-            z-index: 1;
-            min-height: 200px;
+            height: 100%;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            align-items: center;
-            color: #333; /* Warna teks default HITAM */
-            will-change: transform, box-shadow, color;
         }
 
-        .contact-card::before {
-            content: "";
+        .floating-contact-card::after {
+            content: '';
             position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: var(
-                --color-hover
-            ); /* Warna overlay BIRU MUDA saat hover */
-            border-radius: 1rem;
-            z-index: -1;
-            transform: scaleY(0); /* Awalnya tersembunyi */
-            transform-origin: bottom;
-            transition: transform 0.3s ease;
+            right: 0;
+            height: 4px;
+            background: var(--primary-gradient);
+            transform: translateX(-100%);
+            transition: transform 0.5s ease;
         }
 
-        /* Hover effect for all contact cards - UNIFORM BLUE HOVER */
-        .contact-card:hover {
-            transform: translateY(-10px); /* Naik sedikit */
-            box-shadow: var(--shadow-lg); /* Bayangan lebih jelas */
-            /* Background card tetap putih, karena overlay ::before yang akan memberi warna biru */
-            color: var(
-                --color-dark
-            ); /* Teks di dalam card berubah menjadi warna gelap (--color-dark) */
+        .floating-contact-card:hover::after {
+            transform: translateX(0);
         }
 
-        .contact-card:hover::before {
-            transform: scaleY(1); /* Tampilkan overlay biru muda */
+        .floating-contact-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: var(--shadow-hover);
+            text-decoration: none !important;
         }
 
-        /* Pastikan icon, title, dan description berubah warna saat hover */
-        .contact-card:hover .contact-title,
-        .contact-card:hover .contact-description {
-            color: var(
-                --color-dark
-            ); /* Ubah warna semua elemen teks/ikon menjadi warna gelap (--color-dark) saat di-hover */
-            z-index: 2;
-            position: relative;
-        }
-
-        /* Default colors for icon circles (background color) */
-        .icon-circle {
-            width: 60px;
-            height: 60px;
+        .floating-icon-wrapper {
+            width: 90px;
+            height: 90px;
             border-radius: 50%;
+            margin: 0 auto 2rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 1.25rem;
-            font-size: 1.8rem;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            position: relative;
+            transition: all 0.4s ease;
+        }
+
+        .floating-icon-wrapper::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            border-radius: 50%;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        /* WhatsApp Styling */
+        .whatsapp-floating .floating-icon-wrapper {
+            background: var(--whatsapp-gradient);
+        }
+
+        .whatsapp-floating .floating-icon-wrapper::before {
+            background: linear-gradient(135deg, rgba(37, 211, 102, 0.2), rgba(18, 140, 126, 0.2));
+        }
+
+        /* Email Styling */
+        .email-floating .floating-icon-wrapper {
+            background: var(--email-gradient);
+        }
+
+        .email-floating .floating-icon-wrapper::before {
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.2), rgba(238, 90, 36, 0.2));
+        }
+
+        /* Phone Styling */
+        .phone-floating .floating-icon-wrapper {
+            background: var(--phone-gradient);
+        }
+
+        .phone-floating .floating-icon-wrapper::before {
+            background: linear-gradient(135deg, rgba(116, 185, 255, 0.2), rgba(9, 132, 227, 0.2));
+        }
+
+        .floating-contact-card:hover .floating-icon-wrapper::before {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        .floating-contact-card:hover .floating-icon-wrapper {
+            animation: floatingBounce 2s ease-in-out infinite;
+        }
+
+        @keyframes floatingBounce {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .floating-icon-wrapper i {
+            font-size: 2.2rem;
+            color: white;
             z-index: 2;
             position: relative;
-            color: #fff; /* Warna ikon di dalam lingkaran defaultnya putih */
         }
 
-        .whatsapp-green {
-            background-color: #25d366; /* WhatsApp Green */
-        }
-
-        .email-red {
-            background-color: #ea4335; /* Gmail/Google Red */
-        }
-
-        .phone-blue {
-            background-color: var(
-                --color-primary
-            ); /* Menggunakan --color-primary untuk biru ikon telepon */
-        }
-
-        /* Tidak perlu penyesuaian spesifik untuk whatsapp-card:hover::before atau icon-circle di sini
-        karena semua sudah diatur oleh .contact-card:hover::before dan .contact-card:hover .icon-circle
-        agar seragam biru muda. */
-
-        .contact-title {
-            font-size: 1.5rem;
+        .floating-contact-title {
             font-weight: 600;
+            color: #2d3748;
             margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+            transition: color 0.3s ease;
         }
 
-        .contact-description {
-            font-size: 0.95rem;
-            color: #6c757d; /* Warna teks deskripsi default abu-abu */
+        .floating-contact-card:hover .floating-contact-title {
+            color: #1a202c;
+        }
+
+        .floating-contact-subtitle {
+            color: #718096;
+            font-size: 0.9rem;
+            margin: 0;
             line-height: 1.5;
+            transition: color 0.3s ease;
         }
 
-        /* Override deskripsi saat hover */
-        .contact-card:hover .contact-description {
-            color: var(
-                --color-dark
-            ); /* Saat hover, teks deskripsi menjadi warna gelap */
+        .floating-contact-card:hover .floating-contact-subtitle {
+            color: #4a5568;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .section-title-floating {
+                font-size: 2rem;
+            }
+            
+            .floating-contact-card {
+                padding: 2rem 1.2rem;
+                margin-bottom: 2rem;
+            }
+            
+            .floating-icon-wrapper {
+                width: 80px;
+                height: 80px;
+                margin-bottom: 1.5rem;
+            }
+            
+            .floating-icon-wrapper i {
+                font-size: 2rem;
+            }
+            
+            .floating-contact-title {
+                font-size: 1.2rem;
+            }
+            
+            .floating-contact-subtitle {
+                font-size: 0.85rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .floating-contact-card {
+                padding: 1.8rem 1rem;
+            }
+            
+            .floating-icon-wrapper {
+                width: 70px;
+                height: 70px;
+            }
+            
+            .floating-icon-wrapper i {
+                font-size: 1.8rem;
+            }
+        }
+
+        /* Additional smooth interactions */
+        .floating-contact-card {
+            cursor: pointer;
+        }
+
+        .floating-contact-card:focus {
+            outline: none;
+            box-shadow: var(--shadow-hover), 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        /* Loading animation for icons */
+        .floating-icon-wrapper {
+            animation: initialPulse 1s ease-out;
+        }
+
+        @keyframes initialPulse {
+            0% {
+                transform: scale(0.8);
+                opacity: 0.5;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* Stagger animation delay untuk efek yang lebih menarik */
+        .floating-contact-card:nth-child(1) .floating-icon-wrapper {
+            animation-delay: 0.1s;
+        }
+
+        .floating-contact-card:nth-child(2) .floating-icon-wrapper {
+            animation-delay: 0.2s;
+        }
+
+        .floating-contact-card:nth-child(3) .floating-icon-wrapper {
+            animation-delay: 0.3s;
         }
 
         /*========================================
@@ -631,7 +750,7 @@
                 <div class="carousel-inner">
                     {{-- Carousel Item 1 --}}
                     <div class="carousel-item active">
-                        <img src="asset/img/photo (21).jpg" class="d-block w-100 carousel-image" alt="Image 1">
+                        <img src="asset/img/photo (21).webp" class="d-block w-100 carousel-image" alt="Image 1">
                         <div class="carousel-caption d-flex align-items-center justify-content-center h-100">
                             <div class="text-center">
                                 <h1 class="display-3 fw-bold text-white">{{__('app.contactus')}}</h1>
@@ -646,7 +765,7 @@
                     </div>
                     {{-- Carousel Item 2 --}}
                     <div class="carousel-item">
-                        <img src="asset/img/photo (30).jpg" class="d-block w-100 carousel-image" alt="Image 2">
+                        <img src="asset/img/photo (30).webp" class="d-block w-100 carousel-image" alt="Image 2">
                         <div class="carousel-caption d-flex align-items-center justify-content-center h-100">
                             <div class="text-center">
                                 <h1 class="display-3 fw-bold text-white">{{__('app.ourlocation')}}</h1>
@@ -661,7 +780,7 @@
                     </div>
                     {{-- Carousel Item 3 --}}
                     <div class="carousel-item">
-                        <img src="asset/img/photo (22).jpg" class="d-block w-100 carousel-image" alt="Image 3">
+                        <img src="asset/img/photo (22).webp" class="d-block w-100 carousel-image" alt="Image 3">
                         <div class="carousel-caption d-flex align-items-center justify-content-center h-100">
                             <div class="text-center">
                                 <h1 class="display-3 fw-bold text-white">{{__('app.getintouch')}}</h1>
@@ -731,9 +850,9 @@
                              2. Cari lokasi yang Anda inginkan (misal: LPK PT Amarta Jakarta).
                              3. Klik 'Bagikan' (Share) -> 'Sematkan Peta' (Embed Map).
                              4. Salin kode <iframe> yang diberikan. --}}
-                        <iframe
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.1603150901974!2d107.13979687399022!3d-6.242592193745714!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e6985a955264c81%3A0xe4eb9858dcd796be!2sWaroeng%20Babeh!5e0!3m2!1sid!2sid!4v1753496771537!5m2!1sid!2sid"
-                            width="100%"
+                        <iframe 
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.160054611097!2d107.13979397399024!3d-6.242626593745676!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e6985004d9e1ff7%3A0x92547a8813159ae1!2sLPK%20AMARTA%20BEKASI!5e0!3m2!1sid!2sid!4v1757576395088!5m2!1sid!2sid"
+                            width="600"
                             height="450"
                             style="border:0;"
                             allowfullscreen=""
@@ -745,43 +864,50 @@
             </div>
         </div>
     </section>
+    
+    {{-- Contact Cards Section dengan Floating Animation --}}
     <section id="contact-cards" class="py-5">
         <div class="container">
-            <h2 class="text-center section-title-custom mb-5">{{__('app.contact_card')}}</h2> {{-- Anda bisa ganti judul ini --}}
+            <h2 class="text-center section-title-floating mb-5">{{__('app.contact_card')}}</h2>
             <div class="row justify-content-center">
                 {{-- Card 1: WhatsApp --}}
                 <div class="col-md-4 mb-4">
-                    <a href="https://wa.me/6285283123744" target="_blank" class="contact-card whatsapp-card text-decoration-none d-block">
-                        <div class="icon-circle whatsapp-green">
+                    <a href="https://wa.me/6285283123744" target="_blank" class="floating-contact-card whatsapp-floating text-decoration-none d-block">
+                        <div class="floating-icon-wrapper">
                             <i class="fab fa-whatsapp"></i>
                         </div>
-                        <h3 class="contact-title">{{__('app.contact_title')}}</h3>
-                    </a>
-                </div>
-                {{-- Card 2: Email (Generic) --}}
-                <div class="col-md-4 mb-4">
-                    <a href="mailto:lpkamartacibitung@gmail.com" class="contact-card email-card text-decoration-none d-block">
-                        <div class="icon-circle email-red">
-                            <i class="fas fa-envelope"></i>
-                        </div>
-                        <h3 class="contact-title">{{__('app.email_label')}}</h3>
+                        <h3 class="floating-contact-title">{{__('app.contact_title')}}</h3>
+                        <p class="floating-contact-subtitle">{{__('app.contact_subtitle')}}</p>
                     </a>
                 </div>
 
-                {{-- Card 3: Telepon (Generic) --}}
+                {{-- Card 2: Email --}}
                 <div class="col-md-4 mb-4">
-                    <a href="https://wa.me/6282134716388" class="contact-card phone-card text-decoration-none d-block">
-                        <div class="icon-circle phone-blue">
+                    <a href="mailto:lpkamartacibitung@gmail.com" class="floating-contact-card email-floating text-decoration-none d-block">
+                        <div class="floating-icon-wrapper">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <h3 class="floating-contact-title">{{__('app.email_label')}}</h3>
+                        <p class="floating-contact-subtitle">{{__('app.email_subtitle')}}</p>
+                    </a>
+                </div>
+
+                {{-- Card 3: Phone --}}
+                <div class="col-md-4 mb-4">
+                    <a href="https://wa.me/6282134716388" class="floating-contact-card phone-floating text-decoration-none d-block">
+                        <div class="floating-icon-wrapper">
                             <i class="fas fa-phone-alt"></i>
                         </div>
-                        <h3 class="contact-title">{{__('app.phone_label')}}</h3>
+                        <h3 class="floating-contact-title">{{__('app.phone_label')}}</h3>
+                        <p class="floating-contact-subtitle">{{__('app.phone_subtitle')}}</p>
                     </a>
                 </div>
             </div>
         </div>
     </section>
 
-     <section id="faq-section" class="py-5 bg-light">
+    {{-- FAQ Section --}}
+    <section id="faq-section" class="py-5 bg-light">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-12 text-center mb-5">
@@ -802,7 +928,7 @@
                         <div class="accordion-item">
                             <h2 class="accordion-header" id="headingOne">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                                   {{__('app.q1')}}
+                                {{__('app.q1')}}
                                 </button>
                             </h2>
                             <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
@@ -811,7 +937,7 @@
                                 </div>
                             </div>
                         </div>
-
+                        
                         {{-- FAQ Item 2 --}}
                         <div class="accordion-item">
                             <h2 class="accordion-header" id="headingTwo">
@@ -821,11 +947,11 @@
                             </h2>
                             <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faqAccordion">
                                 <div class="accordion-body">
-                                   {{__('app.a2')}}
+                                {{__('app.a2')}}
                                 </div>
                             </div>
                         </div>
-
+                        
                         {{-- FAQ Item 3 --}}
                         <div class="accordion-item">
                             <h2 class="accordion-header" id="headingThree">
@@ -839,7 +965,7 @@
                                 </div>
                             </div>
                         </div>
-
+                        
                         {{-- FAQ Item 4 --}}
                         <div class="accordion-item">
                             <h2 class="accordion-header" id="headingFour">
@@ -850,6 +976,77 @@
                             <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#faqAccordion">
                                 <div class="accordion-body">
                                     {{__('app.a4')}}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        {{-- FAQ Detail Selengkapnya --}}
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingMoreDetails">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMoreDetails" aria-expanded="false" aria-controls="collapseMoreDetails">
+                                    {{__('app.more_details')}} {{-- atau bisa langsung "Lihat Detail Selengkapnya" --}}
+                                </button>
+                            </h2>
+                            <div id="collapseMoreDetails" class="accordion-collapse collapse" aria-labelledby="headingMoreDetails" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    {{-- Nested Accordion untuk 4 FAQ tambahan --}}
+                                    <div class="accordion" id="nestedFaqAccordion">
+                                        {{-- FAQ Item 5 --}}
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header" id="headingFive">
+                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                                                    {{__('app.q5')}}
+                                                </button>
+                                            </h2>
+                                            <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#nestedFaqAccordion">
+                                                <div class="accordion-body">
+                                                    {{__('app.a5')}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        {{-- FAQ Item 6 --}}
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header" id="headingSix">
+                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
+                                                    {{__('app.q6')}}
+                                                </button>
+                                            </h2>
+                                            <div id="collapseSix" class="accordion-collapse collapse" aria-labelledby="headingSix" data-bs-parent="#nestedFaqAccordion">
+                                                <div class="accordion-body">
+                                                    {{__('app.a6')}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        {{-- FAQ Item 7 --}}
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header" id="headingSeven">
+                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven">
+                                                    {{__('app.q7')}}
+                                                </button>
+                                            </h2>
+                                            <div id="collapseSeven" class="accordion-collapse collapse" aria-labelledby="headingSeven" data-bs-parent="#nestedFaqAccordion">
+                                                <div class="accordion-body">
+                                                    {{__('app.a7')}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        {{-- FAQ Item 8 --}}
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header" id="headingEight">
+                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEight" aria-expanded="false" aria-controls="collapseEight">
+                                                    {{__('app.q8')}}
+                                                </button>
+                                            </h2>
+                                            <div id="collapseEight" class="accordion-collapse collapse" aria-labelledby="headingEight" data-bs-parent="#nestedFaqAccordion">
+                                                <div class="accordion-body">
+                                                    {{__('app.a8')}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -876,7 +1073,7 @@
             const telepon = encodeURIComponent(document.getElementById('telepon').value);
             const subjek = encodeURIComponent(document.getElementById('subjek').value);
             const pesan = encodeURIComponent(document.getElementById('pesan').value);  
-            const gmailLink = `https://mail.google.com/mail/?view=cm&fs=1&to=trianapahmi@gmail.com&su=${subjek}&body=Nama:%20${nama}%0AEmail:%20${email}%0ATelepon:%20${telepon}%0APesan:%20${pesan}`;
+            const gmailLink = `https://mail.google.com/mail/?view=cm&fs=1&to=lpkamartacibitung@gmail.com&su=${subjek}&body=Nama:%20${nama}%0AEmail:%20${email}%0ATelepon:%20${telepon}%0APesan:%20${pesan}`;
 
             // buka Gmail di tab baru
             window.open(gmailLink, '_blank');

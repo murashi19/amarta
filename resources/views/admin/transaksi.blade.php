@@ -709,6 +709,38 @@
             transition: none;
         }
     }
+
+    .upload-area:hover {
+        border-color: #007bff !important;
+        background: linear-gradient(45deg, #e3f2fd 0%, #bbdefb 100%) !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0,123,255,0.2);
+    }
+
+    .upload-area.drag-over {
+        border-color: #28a745 !important;
+        background: linear-gradient(45deg, #e8f5e8 0%, #c8e6c9 100%) !important;
+        transform: scale(1.02);
+    }
+
+    .upload-area.has-file {
+        border-color: #28a745 !important;
+        background: linear-gradient(45deg, #e8f5e8 0%, #c8e6c9 100%) !important;
+    }
+
+    .preview-area img {
+        border: 2px solid #28a745;
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+
+    .upload-area.processing {
+        animation: pulse 1s infinite;
+    }
 </style>
 @endpush
 
@@ -1061,6 +1093,44 @@
                                                 </div>
                                                 @endif
 
+                                                <!-- Tombol Tambah Cicilan Offline -->
+                                                @if($transaction->type === 'dp' && $transaction->status !== 'Completed')
+                                                    @php
+                                                        $totalPaid = $transaction->feePayments->where('status', 'Completed')->sum('amount');
+                                                        $remaining = $transaction->amount - $totalPaid;
+                                                        $progressPercentage = $transaction->amount > 0 ? ($totalPaid / $transaction->amount) * 100 : 0;
+                                                    @endphp
+                                                    
+                                                    <div class="mb-3">
+                                                        <button type="button" 
+                                                                class="btn btn-primary btn-sm w-100 position-relative"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#addInstallmentModal{{ $transaction->id }}">
+                                                            <i class="fas fa-plus me-2"></i>
+                                                            <span class="fw-bold">Tambah Cicilan</span>
+                                                            <div class="mt-1">
+                                                                <small class="text-white-50">
+                                                                    Sudah: Rp {{ number_format($totalPaid, 0, ',', '.') }} / 
+                                                                    Total: Rp {{ number_format($transaction->amount, 0, ',', '.') }}
+                                                                </small>
+                                                            </div>
+                                                        </button>
+                                                        
+                                                        <!-- Progress Bar -->
+                                                        <div class="progress mt-2" style="height: 6px;">
+                                                            <div class="progress-bar bg-success" role="progressbar" 
+                                                                style="width: {{ $progressPercentage }}%" 
+                                                                aria-valuenow="{{ $progressPercentage }}" 
+                                                                aria-valuemin="0" 
+                                                                aria-valuemax="100">
+                                                            </div>
+                                                        </div>
+                                                        <div class="text-center mt-1">
+                                                            <small class="text-muted">{{ number_format($progressPercentage, 1) }}% terbayar</small>
+                                                        </div>
+                                                    </div>
+                                                @endif
+
                                                 <!-- Delete Button -->
                                                 <button type="button" class="btn btn-outline-danger btn-sm w-100" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $transaction->id }}">
                                                     <i class="fas fa-trash me-1"></i> Hapus
@@ -1069,6 +1139,195 @@
                                         </td>
                                     </tr>
                                     @endforeach
+                                    @foreach($transactions as $transaction)
+                                    @php
+                                        $totalPaid = $transaction->feePayments->where('status', 'Completed')->sum('amount');
+                                        $remaining = $transaction->amount - $totalPaid;
+                                    @endphp
+                                    <!-- Modal Tambah Cicilan -->
+                                    <div class="modal fade" id="addInstallmentModal{{ $transaction->id }}" tabindex="-1" 
+                                        aria-labelledby="addInstallmentLabel{{ $transaction->id }}" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                        <form method="POST" action="{{ route('transactions.installments.addOffline', $transaction->id) }}" 
+                                            enctype="multipart/form-data" id="installmentForm{{ $transaction->id }}">
+                                            @csrf
+                                            <div class="modal-content shadow">
+                                                <!-- Header -->
+                                                <div class="modal-header bg-gradient bg-primary text-white border-0">
+                                                    <div>
+                                                        <h5 class="modal-title fw-bold mb-0" id="addInstallmentLabel{{ $transaction->id }}">
+                                                            <i class="fas fa-money-bill-wave me-2"></i>
+                                                            Tambah Cicilan Offline
+                                                        </h5>
+                                                        <small class="text-white-50">Transaksi #{{ $transaction->id }}</small>
+                                                    </div>
+                                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                
+                                                <!-- Body -->
+                                                <div class="modal-body p-4">
+                                                    <!-- Progress Card -->
+                                                    <div class="card border-0 bg-light mb-4">
+                                                        <div class="card-body p-3">
+                                                            <div class="row g-3">
+                                                                <div class="col-4 text-center">
+                                                                    <div class="text-success fw-bold h6 mb-1">
+                                                                        Rp {{ number_format($totalPaid, 0, ',', '.') }}
+                                                                    </div>
+                                                                    <small class="text-muted">Sudah Dibayar</small>
+                                                                </div>
+                                                                <div class="col-4 text-center">
+                                                                    <div class="text-primary fw-bold h6 mb-1">
+                                                                        Rp {{ number_format($transaction->amount, 0, ',', '.') }}
+                                                                    </div>
+                                                                    <small class="text-muted">Total Tagihan</small>
+                                                                </div>
+                                                                <div class="col-4 text-center">
+                                                                    <div class="text-danger fw-bold h6 mb-1">
+                                                                        Rp {{ number_format($remaining, 0, ',', '.') }}
+                                                                    </div>
+                                                                    <small class="text-muted">Sisa Tagihan</small>
+                                                                </div>
+                                                            </div>
+                                                            <div class="progress mt-3" style="height: 8px;">
+                                                                <div class="progress-bar bg-success progress-bar-striped" 
+                                                                    role="progressbar" 
+                                                                    style="width: {{ $transaction->amount > 0 ? ($totalPaid / $transaction->amount) * 100 : 0 }}%" 
+                                                                    aria-valuenow="{{ $transaction->amount > 0 ? ($totalPaid / $transaction->amount) * 100 : 0 }}" 
+                                                                    aria-valuemin="0" aria-valuemax="100"></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <!-- Form Fields -->
+                                                    <div class="row g-3">
+                                                        <!-- Jumlah -->
+                                                        <div class="col-12">
+                                                            <label for="amount{{ $transaction->id }}" class="form-label fw-semibold">
+                                                                <i class="fas fa-rupiah-sign text-primary me-1"></i>
+                                                                Jumlah Bayar (Rp) <span class="text-danger">*</span>
+                                                            </label>
+                                                            <div class="input-group">
+                                                                <span class="input-group-text bg-light">
+                                                                    <i class="fas fa-money-bill-wave text-success"></i>
+                                                                </span>
+                                                                <input type="number" class="form-control form-control-lg" 
+                                                                    id="amount{{ $transaction->id }}" 
+                                                                    name="amount"
+                                                                    max="{{ $remaining }}" min="300000"
+                                                                    placeholder="Masukkan jumlah pembayaran" required>
+                                                            </div>
+                                                            <div class="form-text">
+                                                                <i class="fas fa-info-circle text-info me-1"></i>
+                                                                Maksimal pembayaran: <strong>Rp {{ number_format($remaining, 0, ',', '.') }}</strong>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Catatan -->
+                                                        <div class="col-12">
+                                                            <label for="notes{{ $transaction->id }}" class="form-label fw-semibold">
+                                                                <i class="fas fa-sticky-note text-warning me-1"></i>
+                                                                Catatan
+                                                            </label>
+                                                            <div class="input-group">
+                                                                <span class="input-group-text bg-light">
+                                                                    <i class="fas fa-pen text-secondary"></i>
+                                                                </span>
+                                                                <input type="text" class="form-control" 
+                                                                    id="notes{{ $transaction->id }}" 
+                                                                    name="notes" 
+                                                                    placeholder="Tambahkan catatan (opsional)">
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Upload Bukti -->
+                                                        <div class="col-12">
+                                                            <label for="photo{{ $transaction->id }}" class="form-label fw-semibold">
+                                                                <i class="fas fa-file-image text-info me-1"></i>
+                                                                Upload Bukti Pembayaran <span class="text-danger">*</span>
+                                                            </label>
+                                                            
+                                                            <!-- Custom File Upload Area -->
+                                                            <div class="upload-area border-2 border-dashed border-light rounded p-4 text-center position-relative" 
+                                                                id="uploadArea{{ $transaction->id }}" 
+                                                                style="background: linear-gradient(45deg, #f8f9fa 0%, #e9ecef 100%); transition: all 0.3s ease;">
+                                                                
+                                                                <input type="file" class="form-control position-absolute w-100 h-100 opacity-0" 
+                                                                    id="photo{{ $transaction->id }}" 
+                                                                    name="photo" 
+                                                                    accept="image/jpeg,image/png,image/jpg" 
+                                                                    style="cursor: pointer; top: 0; left: 0;"
+                                                                    onchange="handleFileSelect(this, {{ $transaction->id }})"
+                                                                    required>
+                                                                
+                                                                <div class="upload-content" id="uploadContent{{ $transaction->id }}">
+                                                                    <div class="mb-3">
+                                                                        <i class="fas fa-cloud-upload-alt fa-3x text-muted"></i>
+                                                                    </div>
+                                                                    <h6 class="text-muted mb-2">
+                                                                        <strong>Klik untuk upload</strong> atau drag & drop
+                                                                    </h6>
+                                                                    <p class="text-muted small mb-0">
+                                                                        Format: JPG, PNG • Maks: 2MB
+                                                                    </p>
+                                                                </div>
+                                                                
+                                                                <!-- Preview Area (Hidden initially) -->
+                                                                <div class="preview-area d-none" id="previewArea{{ $transaction->id }}">
+                                                                    <div class="row align-items-center">
+                                                                        <div class="col-3">
+                                                                            <img id="imagePreview{{ $transaction->id }}" 
+                                                                                src="" alt="Preview" 
+                                                                                class="img-fluid rounded shadow-sm" 
+                                                                                style="max-height: 80px; object-fit: cover;">
+                                                                        </div>
+                                                                        <div class="col-7">
+                                                                            <div class="text-start">
+                                                                                <h6 class="mb-1 text-success">
+                                                                                    <i class="fas fa-check-circle me-1"></i>
+                                                                                    File berhasil dipilih
+                                                                                </h6>
+                                                                                <p class="mb-0 small text-muted" id="fileName{{ $transaction->id }}"></p>
+                                                                                <p class="mb-0 small text-info" id="fileSize{{ $transaction->id }}"></p>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-2">
+                                                                            <button type="button" class="btn btn-outline-danger btn-sm" 
+                                                                                    onclick="removeFile({{ $transaction->id }})">
+                                                                                <i class="fas fa-times"></i>
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <!-- Error Message Area -->
+                                                            <div class="invalid-feedback d-block" id="fileError{{ $transaction->id }}" style="display: none !important;"></div>
+                                                            
+                                                            <div class="form-text">
+                                                                <i class="fas fa-info-circle text-info me-1"></i>
+                                                                Bukti pembayaran wajib diupload untuk validasi
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <!-- Footer -->
+                                                <div class="modal-footer border-0 bg-light p-3">
+                                                    <button type="button" class="btn btn-outline-secondary px-4" data-bs-dismiss="modal">
+                                                        <i class="fas fa-times me-1"></i> Batal
+                                                    </button>
+                                                    <button type="submit" class="btn btn-primary px-4" id="submitBtn{{ $transaction->id }}">
+                                                        <span class="spinner-border spinner-border-sm me-2 d-none" role="status"></span>
+                                                        <i class="fas fa-save me-1"></i> Simpan Cicilan
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                        </div>
+                                    </div>
+                                @endforeach
+
                                 @else
                                 <tr>
                                     <td colspan="7" class="text-center py-5">
@@ -1655,144 +1914,117 @@
 
 @push('scripts')
     <script>
+        // Global variables to prevent conflicts
+        let searchTimeouts = {};
+        let fileHandlers = {};
+
         document.addEventListener('DOMContentLoaded', function () {
-            // Tab functionality
+            // Initialize all components
+            initializeTabs();
+            initializeModals();
+            initializeMeetingFields();
+            initializeFormHandlers();
+            initializeSearchFunctionality();
+            initializeFileUpload();
+            initializeTableResponsiveness();
+            initializeCSRFToken();
+        });
+
+        // Tab functionality
+        function initializeTabs() {
             const urlParams = new URLSearchParams(window.location.search);
             const activeTab = urlParams.get('tab');
             
             if (activeTab === 'installments') {
-                // Switch to installments tab
-                const installmentsTab = document.getElementById('installments-tab');
-                const installmentsPane = document.getElementById('installments');
-                const transactionsTab = document.getElementById('transactions-tab');
-                const transactionsPane = document.getElementById('transactions');
-                
-                if (installmentsTab && installmentsPane) {
-                    transactionsTab.classList.remove('active');
-                    transactionsPane.classList.remove('show', 'active');
-                    
-                    installmentsTab.classList.add('active');
-                    installmentsPane.classList.add('show', 'active');
-                }
+                switchToInstallmentsTab();
             }
+            
+            // Tab switching with URL update
+            const tabButtons = document.querySelectorAll('#transactionTabs button[data-bs-toggle="tab"]');
+            tabButtons.forEach(button => {
+                button.addEventListener('shown.bs.tab', function(event) {
+                    updateTabURL(event.target.getAttribute('data-bs-target'));
+                });
+            });
+        }
 
-            // Modal setup
+        function switchToInstallmentsTab() {
+            const installmentsTab = document.getElementById('installments-tab');
+            const installmentsPane = document.getElementById('installments');
+            const transactionsTab = document.getElementById('transactions-tab');
+            const transactionsPane = document.getElementById('transactions');
+            
+            if (installmentsTab && installmentsPane) {
+                transactionsTab?.classList.remove('active');
+                transactionsPane?.classList.remove('show', 'active');
+                
+                installmentsTab.classList.add('active');
+                installmentsPane.classList.add('show', 'active');
+            }
+        }
+
+        function updateTabURL(targetTab) {
+            const url = new URL(window.location);
+            if (targetTab === '#installments') {
+                url.searchParams.set('tab', 'installments');
+            } else {
+                url.searchParams.delete('tab');
+            }
+            window.history.pushState({}, '', url);
+        }
+
+        // Modal initialization
+        function initializeModals() {
             const modal = document.getElementById('approveModal');
             if (modal) {
                 modal.addEventListener('show.bs.modal', function (event) {
                     const button = event.relatedTarget;
                     const transactionId = button.getAttribute('data-id');
-                    document.getElementById('approveTransactionId').value = transactionId;
+                    const targetInput = document.getElementById('approveTransactionId');
+                    if (targetInput) {
+                        targetInput.value = transactionId;
+                    }
                 });
             }
+        }
 
-            // CSRF Token for AJAX requests
+        // CSRF Token setup
+        function initializeCSRFToken() {
             const csrfToken = document.querySelector('meta[name="csrf-token"]');
             if (csrfToken) {
                 window.csrfToken = csrfToken.getAttribute('content');
             }
+        }
 
-            // Form elements
-            const meetingDate       = document.getElementById('meeting_date');
-            const meetingTime       = document.getElementById('meeting_time');
-            const googleMeetLink    = document.getElementById('google_meet_link');
-            const zoomMeetLink      = document.getElementById('zoom_meet_link');
-            const zoomMeetingId     = document.getElementById('zoom_meeting_id');
-            const zoomPasscode      = document.getElementById('zoom_passcode');
-            const activeMeetLink    = document.getElementById('active_meet_link');
+        // Meeting fields functionality
+        function initializeMeetingFields() {
+            const meetingDate = document.getElementById('meeting_date');
+            const meetingTime = document.getElementById('meeting_time');
+            const googleMeetLink = document.getElementById('google_meet_link');
+            const zoomMeetLink = document.getElementById('zoom_meet_link');
+            const zoomMeetingId = document.getElementById('zoom_meeting_id');
+            const zoomPasscode = document.getElementById('zoom_passcode');
+            const platformRadios = document.querySelectorAll('input[name="meeting_platform"]');
 
-            // Preview elements
-            const previewDate       = document.getElementById('preview-date');
-            const previewTime       = document.getElementById('preview-time');
-            const previewLink       = document.getElementById('preview-link');
-
-            // Field containers
-            const googleFields      = document.getElementById('google-meet-fields');
-            const zoomFields        = document.getElementById('zoom-fields');
-            const platformRadios    = document.querySelectorAll('input[name="meeting_platform"]');
-
-            // Update field sesuai platform
-            function updateMeetingFields() {
-                const selected = document.querySelector('input[name="meeting_platform"]:checked')?.value;
-                if (!selected) return;
-
-                if (selected === "google_meet") {
-                    // Show Google Meet fields, hide Zoom fields
-                    googleFields.classList.remove("d-none");
-                    zoomFields.classList.add("d-none");
-
-                    // Update required attributes
-                    googleMeetLink.required = true;
-                    zoomMeetLink.required = false;
-                    zoomMeetingId.required = false;
-                    zoomPasscode.required = false;
-
-                    // Update hidden field with Google Meet link
-                    activeMeetLink.value = googleMeetLink.value;
-
-                    // Update preview
-                    previewLink.textContent = googleMeetLink.value || "Belum diisi";
-                } else if (selected === "zoom") {
-                    // Show Zoom fields, hide Google Meet fields
-                    googleFields.classList.add("d-none");
-                    zoomFields.classList.remove("d-none");
-
-                    // Update required attributes
-                    googleMeetLink.required = false;
-                    zoomMeetLink.required = true;
-                    zoomMeetingId.required = true;
-                    zoomPasscode.required = true;
-
-                    // Update hidden field with Zoom link
-                    activeMeetLink.value = zoomMeetLink.value;
-
-                    // Update preview with Zoom info
-                    let previewText = "";
-                    if (zoomMeetingId.value) previewText += "ID: " + zoomMeetingId.value;
-                    if (zoomPasscode.value) previewText += (previewText ? " | " : "") + "Passcode: " + zoomPasscode.value;
-                    previewLink.textContent = previewText || "Belum diisi";
-                }
-            }
-
-            // Event listeners for platform change
+            // Event listeners
             platformRadios.forEach(radio => {
                 radio.addEventListener("change", updateMeetingFields);
             });
 
-            // Event listener for date change
             if (meetingDate) {
-                meetingDate.addEventListener("change", function () {
-                    previewDate.textContent = this.value 
-                        ? new Date(this.value).toLocaleDateString('id-ID') 
-                        : "Belum dipilih";
-                });
+                meetingDate.addEventListener("change", updatePreviewDate);
             }
 
-            // Event listener for time change
             if (meetingTime) {
-                meetingTime.addEventListener("change", function () {
-                    previewTime.textContent = this.value || "Belum dipilih";
-                });
+                meetingTime.addEventListener("change", updatePreviewTime);
             }
 
-            // Event listener for Google Meet link
             if (googleMeetLink) {
-                googleMeetLink.addEventListener("input", function () {
-                    if (document.querySelector('input[name="meeting_platform"]:checked')?.value === 'google_meet') {
-                        activeMeetLink.value = this.value;
-                        previewLink.textContent = this.value || "Belum diisi";
-                    }
-                });
+                googleMeetLink.addEventListener("input", handleGoogleMeetChange);
             }
 
-            // Event listeners for Zoom fields
             if (zoomMeetLink) {
-                zoomMeetLink.addEventListener("input", function () {
-                    if (document.querySelector('input[name="meeting_platform"]:checked')?.value === 'zoom') {
-                        activeMeetLink.value = this.value;
-                        updateMeetingFields();
-                    }
-                });
+                zoomMeetLink.addEventListener("input", handleZoomLinkChange);
             }
 
             if (zoomMeetingId) {
@@ -1805,106 +2037,252 @@
 
             // Initialize default state
             updateMeetingFields();
-        });
+        }
 
+        function updateMeetingFields() {
+            const selected = document.querySelector('input[name="meeting_platform"]:checked')?.value;
+            if (!selected) return;
+
+            const googleFields = document.getElementById('google-meet-fields');
+            const zoomFields = document.getElementById('zoom-fields');
+            const googleMeetLink = document.getElementById('google_meet_link');
+            const zoomMeetLink = document.getElementById('zoom_meet_link');
+            const zoomMeetingId = document.getElementById('zoom_meeting_id');
+            const zoomPasscode = document.getElementById('zoom_passcode');
+            const activeMeetLink = document.getElementById('active_meet_link');
+            const previewLink = document.getElementById('preview-link');
+
+            if (selected === "google_meet") {
+                googleFields?.classList.remove("d-none");
+                zoomFields?.classList.add("d-none");
+
+                if (googleMeetLink) googleMeetLink.required = true;
+                if (zoomMeetLink) zoomMeetLink.required = false;
+                if (zoomMeetingId) zoomMeetingId.required = false;
+                if (zoomPasscode) zoomPasscode.required = false;
+
+                if (activeMeetLink) activeMeetLink.value = googleMeetLink?.value || '';
+                if (previewLink) previewLink.textContent = googleMeetLink?.value || "Belum diisi";
+            } else if (selected === "zoom") {
+                googleFields?.classList.add("d-none");
+                zoomFields?.classList.remove("d-none");
+
+                if (googleMeetLink) googleMeetLink.required = false;
+                if (zoomMeetLink) zoomMeetLink.required = true;
+                if (zoomMeetingId) zoomMeetingId.required = true;
+                if (zoomPasscode) zoomPasscode.required = true;
+
+                if (activeMeetLink) activeMeetLink.value = zoomMeetLink?.value || '';
+
+                let previewText = "";
+                if (zoomMeetingId?.value) previewText += "ID: " + zoomMeetingId.value;
+                if (zoomPasscode?.value) previewText += (previewText ? " | " : "") + "Passcode: " + zoomPasscode.value;
+                if (previewLink) previewLink.textContent = previewText || "Belum diisi";
+            }
+        }
+
+        function updatePreviewDate() {
+            const previewDate = document.getElementById('preview-date');
+            const meetingDate = document.getElementById('meeting_date');
+            
+            if (previewDate && meetingDate) {
+                previewDate.textContent = meetingDate.value 
+                    ? new Date(meetingDate.value).toLocaleDateString('id-ID') 
+                    : "Belum dipilih";
+            }
+        }
+
+        function updatePreviewTime() {
+            const previewTime = document.getElementById('preview-time');
+            const meetingTime = document.getElementById('meeting_time');
+            
+            if (previewTime && meetingTime) {
+                previewTime.textContent = meetingTime.value || "Belum dipilih";
+            }
+        }
+
+        function handleGoogleMeetChange() {
+            const googleMeetLink = document.getElementById('google_meet_link');
+            const activeMeetLink = document.getElementById('active_meet_link');
+            const previewLink = document.getElementById('preview-link');
+            
+            if (document.querySelector('input[name="meeting_platform"]:checked')?.value === 'google_meet') {
+                if (activeMeetLink) activeMeetLink.value = googleMeetLink.value;
+                if (previewLink) previewLink.textContent = googleMeetLink.value || "Belum diisi";
+            }
+        }
+
+        function handleZoomLinkChange() {
+            const zoomMeetLink = document.getElementById('zoom_meet_link');
+            const activeMeetLink = document.getElementById('active_meet_link');
+            
+            if (document.querySelector('input[name="meeting_platform"]:checked')?.value === 'zoom') {
+                if (activeMeetLink) activeMeetLink.value = zoomMeetLink.value;
+                updateMeetingFields();
+            }
+        }
+
+        // Form handling
+        function initializeFormHandlers() {
+            // Auto-submit form functionality
+            const forms = document.querySelectorAll('#filterForm, #installmentFilterForm');
+            forms.forEach(form => {
+                const selects = form.querySelectorAll('select');
+                selects.forEach(select => {
+                    select.addEventListener('change', function() {
+                        this.style.opacity = '0.6';
+                        this.disabled = true;
+                        form.submit();
+                    });
+                });
+            });
+
+            // Loading state for buttons
+            const allForms = document.querySelectorAll('form');
+            allForms.forEach(form => {
+                form.addEventListener('submit', function() {
+                    const submitBtn = this.querySelector('button[type="submit"]');
+                    if (submitBtn && !submitBtn.disabled) {
+                        handleFormSubmit(submitBtn);
+                    }
+                });
+            });
+        }
+
+        function handleFormSubmit(submitBtn) {
+            submitBtn.disabled = true;
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Memproses...';
+            
+            setTimeout(() => {
+                if (submitBtn.disabled) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalText;
+                }
+            }, 5000);
+        }
+
+        // Search functionality
+        function initializeSearchFunctionality() {
+            const searchInputs = document.querySelectorAll('#searchTransaction, #searchInstallment');
+            
+            searchInputs.forEach(searchInput => {
+                if (searchInput) {
+                    const inputId = searchInput.id;
+                    searchInput.addEventListener('input', function() {
+                        handleSearchInput(this, inputId);
+                    });
+                }
+            });
+        }
+
+        function handleSearchInput(input, inputId) {
+            if (searchTimeouts[inputId]) {
+                clearTimeout(searchTimeouts[inputId]);
+            }
+            
+            searchTimeouts[inputId] = setTimeout(() => {
+                if (input.value.length >= 3 || input.value.length === 0) {
+                    const form = input.closest('form');
+                    if (form) {
+                        form.submit();
+                    }
+                }
+            }, 500);
+        }
+
+        // Table responsiveness
+        function initializeTableResponsiveness() {
+            const tables = document.querySelectorAll('#transactionsTable, #installmentsTable');
+            
+            tables.forEach(table => {
+                if (table && window.innerWidth < 768) {
+                    table.classList.add('table-sm');
+                }
+            });
+        }
+
+        // Transaction status update
         function updateTransactionStatus(selectElement) {
             const transactionId = selectElement.getAttribute('data-transaction-id');
             const currentStatus = selectElement.getAttribute('data-current-status');
             const newStatus = selectElement.value;
             const spinner = document.getElementById('spinner-' + transactionId);
             
-            // If status hasn't changed, do nothing
-            if (currentStatus === newStatus) {
-                return;
-            }
+            if (currentStatus === newStatus) return;
             
-            // Show confirmation dialog
-            let actionText = '';
-            switch(newStatus) {
-                case 'Completed':
-                    actionText = 'menyetujui';
-                    break;
-                case 'Failed':
-                    actionText = 'menolak';
-                    break;
-                case 'Pending':
-                    actionText = 'mengubah ke Pending';
-                    break;
-                case 'Verification':
-                    actionText = 'mengubah ke Verifikasi';
-                    break;
-            }
+            const actionText = getStatusActionText(newStatus);
             
             if (!confirm(`Apakah Anda yakin ingin ${actionText} transaksi ini?`)) {
-                // Reset to original value
                 selectElement.value = currentStatus;
                 return;
             }
             
-            // Show loading spinner
-            if (spinner) {
-                spinner.classList.remove('d-none');
-            }
-            selectElement.disabled = true;
+            setLoadingState(spinner, selectElement, true);
             
-            // Prepare form data
             const formData = new FormData();
             formData.append('_token', window.csrfToken);
             formData.append('status', newStatus);
             
-            // Send AJAX request
             fetch(`/admin/transaksi/${transactionId}/updateStatus`, {
                 method: 'POST',
                 body: formData,
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
             })
             .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Update current status attribute
-                    selectElement.setAttribute('data-current-status', newStatus);
-                    
-                    // Show success message
-                    showStatusMessage('success', data.message);
-                    
-                    // Update paid_at display if status is Completed
-                    if (newStatus === 'Completed' && data.paid_at) {
-                        updatePaidAtDisplay(transactionId, data.paid_at);
-                    }
-                    
-                    // Update stats if needed
-                    updateStatsCards();
-                } else {
-                    // Reset to original value
-                    selectElement.value = currentStatus;
-                    showStatusMessage('error', data.message || 'Gagal mengubah status transaksi');
+            .then(data => handleStatusUpdateResponse(data, selectElement, transactionId, newStatus, currentStatus))
+            .catch(error => handleStatusUpdateError(error, selectElement, currentStatus))
+            .finally(() => setLoadingState(spinner, selectElement, false));
+        }
+
+        function getStatusActionText(status) {
+            const actions = {
+                'Completed': 'menyetujui',
+                'Failed': 'menolak',
+                'Pending': 'mengubah ke Pending',
+                'Verification': 'mengubah ke Verifikasi'
+            };
+            return actions[status] || 'mengubah status';
+        }
+
+        function setLoadingState(spinner, element, isLoading) {
+            if (spinner) {
+                spinner.classList.toggle('d-none', !isLoading);
+            }
+            element.disabled = isLoading;
+        }
+
+        function handleStatusUpdateResponse(data, selectElement, transactionId, newStatus, currentStatus) {
+            if (data.success) {
+                selectElement.setAttribute('data-current-status', newStatus);
+                showStatusMessage('success', data.message);
+                
+                if (newStatus === 'Completed' && data.paid_at) {
+                    updatePaidAtDisplay(transactionId, data.paid_at);
                 }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                // Reset to original value
+                
+                updateStatsCards();
+            } else {
                 selectElement.value = currentStatus;
-                showStatusMessage('error', 'Terjadi kesalahan saat mengubah status transaksi');
-            })
-            .finally(() => {
-                // Hide loading spinner
-                if (spinner) {
-                    spinner.classList.add('d-none');
-                }
-                selectElement.disabled = false;
-            });
+                showStatusMessage('error', data.message || 'Gagal mengubah status transaksi');
+            }
+        }
+
+        function handleStatusUpdateError(error, selectElement, currentStatus) {
+            console.error('Error:', error);
+            selectElement.value = currentStatus;
+            showStatusMessage('error', 'Terjadi kesalahan saat mengubah status transaksi');
         }
 
         function showStatusMessage(type, message) {
             const alertClass = type === 'success' ? 'alert-success' : 'alert-danger';
             const iconClass = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle';
+            const titleText = type === 'success' ? 'Berhasil!' : 'Error!';
             
             const alertHTML = `
                 <div class="alert ${alertClass} alert-dismissible fade show status-message" role="alert">
                     <i class="fas ${iconClass} me-2"></i>
-                    <strong>${type === 'success' ? 'Berhasil!' : 'Error!'}</strong> ${message}
+                    <strong>${titleText}</strong> ${message}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             `;
@@ -1913,10 +2291,9 @@
             if (container) {
                 container.innerHTML = alertHTML;
                 
-                // Auto remove after 5 seconds
                 setTimeout(() => {
                     const alert = container.querySelector('.alert');
-                    if (alert) {
+                    if (alert && typeof bootstrap !== 'undefined') {
                         const bsAlert = new bootstrap.Alert(alert);
                         bsAlert.close();
                     }
@@ -1925,22 +2302,17 @@
         }
 
         function updatePaidAtDisplay(transactionId, paidAt) {
-            // Find the status cell for this transaction
             const statusCell = document.querySelector(`select[data-transaction-id="${transactionId}"]`)?.closest('td');
-            
             if (!statusCell) return;
             
-            // Check if paid_at display already exists
             let paidDisplay = statusCell.querySelector('.text-success.d-block');
             
             if (!paidDisplay) {
-                // Create new paid_at display
                 paidDisplay = document.createElement('small');
                 paidDisplay.className = 'text-success d-block mt-1';
                 statusCell.appendChild(paidDisplay);
             }
             
-            // Format the date
             const date = new Date(paidAt);
             const formattedDate = date.toLocaleDateString('id-ID', {
                 day: '2-digit',
@@ -1955,207 +2327,30 @@
         }
 
         function updateStatsCards() {
-            // This function could be enhanced to update the stats cards via AJAX
-            // For now, we'll just reload the page after a short delay to show updated stats
             setTimeout(() => {
                 window.location.reload();
             }, 1000);
         }
 
-        // Auto-submit form functionality
-        document.addEventListener('DOMContentLoaded', function() {
-            const forms = document.querySelectorAll('#filterForm, #installmentFilterForm');
-            
-            forms.forEach(form => {
-                const selects = form.querySelectorAll('select');
-                
-                selects.forEach(select => {
-                    select.addEventListener('change', function() {
-                        // Add loading state
-                        this.style.opacity = '0.6';
-                        this.disabled = true;
-                        
-                        // Submit form
-                        form.submit();
-                    });
-                });
-            });
-        });
-
-        // Enhanced search functionality
-        document.addEventListener('DOMContentLoaded', function() {
-            const searchInputs = document.querySelectorAll('#searchTransaction, #searchInstallment');
-            
-            searchInputs.forEach(searchInput => {
-                let searchTimeout;
-                
-                if (searchInput) {
-                    searchInput.addEventListener('input', function() {
-                        clearTimeout(searchTimeout);
-                        searchTimeout = setTimeout(() => {
-                            if (this.value.length >= 3 || this.value.length === 0) {
-                                const form = this.closest('form');
-                                if (form) {
-                                    form.submit();
-                                }
-                            }
-                        }, 500); // 500ms delay
-                    });
-                }
-            });
-        });
-
-        // Improved table responsiveness
-        document.addEventListener('DOMContentLoaded', function() {
-            const tables = document.querySelectorAll('#transactionsTable, #installmentsTable');
-            
-            tables.forEach(table => {
-                if (table && window.innerWidth < 768) {
-                    // Add mobile-specific classes or modifications
-                    table.classList.add('table-sm');
-                }
-            });
-        });
-
-        // Loading state for buttons
-        document.addEventListener('DOMContentLoaded', function() {
-            const forms = document.querySelectorAll('form');
-            forms.forEach(form => {
-                form.addEventListener('submit', function() {
-                    const submitBtn = this.querySelector('button[type="submit"]');
-                    if (submitBtn && !submitBtn.disabled) {
-                        submitBtn.disabled = true;
-                        const originalText = submitBtn.innerHTML;
-                        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Memproses...';
-                        
-                        // Reset button after 5 seconds if form hasn't submitted
-                        setTimeout(() => {
-                            if (submitBtn.disabled) {
-                                submitBtn.disabled = false;
-                                submitBtn.innerHTML = originalText;
-                            }
-                        }, 5000);
-                    }
-                });
-            });
-        });
-
-        // Tab switching with URL update
-        document.addEventListener('DOMContentLoaded', function() {
-            const tabButtons = document.querySelectorAll('#transactionTabs button[data-bs-toggle="tab"]');
-            
-            tabButtons.forEach(button => {
-                button.addEventListener('shown.bs.tab', function(event) {
-                    const targetTab = event.target.getAttribute('data-bs-target');
-                    const url = new URL(window.location);
-                    
-                    if (targetTab === '#installments') {
-                        url.searchParams.set('tab', 'installments');
-                    } else {
-                        url.searchParams.delete('tab');
-                    }
-                    
-                    // Update URL without page reload
-                    window.history.pushState({}, '', url);
-                });
-            });
-        });
-
-        // SweetAlert Verifikasi Cicilan
-        function confirmApprove(installmentId) {
-            Swal.fire({
-                title: 'Konfirmasi Terima Cicilan',
-                text: "Apakah Anda yakin ingin menyetujui cicilan ini?",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#28a745',
-                cancelButtonColor: '#6c757d',
-                confirmButtonText: 'Ya, Setujui!',
-                cancelButtonText: 'Batal'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Buat form dinamis untuk mengirim permintaan
-                    const form = document.createElement('form');
-                    form.method = 'POST';
-                    form.action = '/installments/' + installmentId + '/verify';
-                    form.style.display = 'none';
-                    
-                    // Tambahkan token CSRF
-                    const csrfToken = document.createElement('input');
-                    csrfToken.type = 'hidden';
-                    csrfToken.name = '_token';
-                    csrfToken.value = '{{ csrf_token() }}';
-                    form.appendChild(csrfToken);
-
-                    // Tambahkan input action
-                    const actionInput = document.createElement('input');
-                    actionInput.type = 'hidden';
-                    actionInput.name = 'action';
-                    actionInput.value = 'approve';
-                    form.appendChild(actionInput);
-
-                    document.body.appendChild(form);
-                    form.submit();
-                }
-            });
-        }
-
-        function confirmReject(installmentId) {
-            Swal.fire({
-                title: 'Konfirmasi Tolak Cicilan',
-                text: "Apakah Anda yakin ingin menolak cicilan ini? Status akan berubah menjadi Failed.",
-                icon: 'error',
-                showCancelButton: true,
-                confirmButtonColor: '#dc3545',
-                cancelButtonColor: '#6c757d',
-                confirmButtonText: 'Ya, Tolak!',
-                cancelButtonText: 'Batal'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Buat form dinamis untuk mengirim permintaan
-                    const form = document.createElement('form');
-                    form.method = 'POST';
-                    form.action = '/installments/' + installmentId + '/verify';
-                    form.style.display = 'none';
-                    
-                    // Tambahkan token CSRF
-                    const csrfToken = document.createElement('input');
-                    csrfToken.type = 'hidden';
-                    csrfToken.name = '_token';
-                    csrfToken.value = '{{ csrf_token() }}';
-                    form.appendChild(csrfToken);
-
-                    // Tambahkan input action
-                    const actionInput = document.createElement('input');
-                    actionInput.type = 'hidden';
-                    actionInput.name = 'action';
-                    actionInput.value = 'reject';
-                    form.appendChild(actionInput);
-
-                    document.body.appendChild(form);
-                    form.submit();
-                }
-            });
-        }
-
-        // Fungsi pencarian
+        // Filter transactions
         function filterTransactions() {
-            const searchValue = document.getElementById('searchTransaction').value.toLowerCase();
-            const typeValue = document.getElementById('filterType').value.toLowerCase();
-            const statusValue = document.getElementById('filterStatus').value.toLowerCase();
+            const searchValue = document.getElementById('searchTransaction')?.value.toLowerCase() || '';
+            const typeValue = document.getElementById('filterType')?.value.toLowerCase() || '';
+            const statusValue = document.getElementById('filterStatus')?.value.toLowerCase() || '';
 
-            const table = document.getElementById('transactionsTable'); // pastikan id tabel benar
-            const rows = table.querySelectorAll('tbody tr');
-
+            const table = document.getElementById('transactionsTable');
+            if (!table) return;
+            
+            const rows = table.querySelectorAll('tbody tr:not(.no-data-row)');
             let visibleCount = 0;
 
             rows.forEach(row => {
-                const nameCol   = row.querySelector('td:nth-child(2)')?.innerText.toLowerCase()
-                const typeCol   = row.querySelector('td:nth-child(3)')?.innerText.toLowerCase() 
-                const statusCol = row.querySelector('td:nth-child(5)')?.innerText.toLowerCase() 
+                const nameCol = row.querySelector('td:nth-child(2)')?.innerText.toLowerCase() || '';
+                const typeCol = row.querySelector('td:nth-child(3)')?.innerText.toLowerCase() || '';
+                const statusCol = row.querySelector('td:nth-child(5)')?.innerText.toLowerCase() || '';
 
-                const matchesSearch = !searchValue || nameCol.includes(searchValue)
-                const matchesType   = !typeValue || typeCol.includes(typeValue);
+                const matchesSearch = !searchValue || nameCol.includes(searchValue);
+                const matchesType = !typeValue || typeCol.includes(typeValue);
                 const matchesStatus = !statusValue || statusCol.includes(statusValue);
 
                 if (matchesSearch && matchesType && matchesStatus) {
@@ -2166,7 +2361,10 @@
                 }
             });
 
-            // Tampilkan pesan jika tidak ada data
+            toggleNoDataMessage(table, visibleCount);
+        }
+
+        function toggleNoDataMessage(table, visibleCount) {
             const tbody = table.querySelector('tbody');
             let noDataRow = tbody.querySelector('.no-data-row');
 
@@ -2180,6 +2378,254 @@
             } else {
                 if (noDataRow) noDataRow.remove();
             }
+        }
+
+        // File upload functionality
+        function initializeFileUpload() {
+            // File upload akan diinisialisasi per transaksi
+            // Fungsi ini dipanggil dari template Blade
+        }
+
+        function handleFileSelect(input, transactionId) {
+            const file = input.files[0];
+            if (!file) return;
+
+            const elements = getFileUploadElements(transactionId);
+            if (!elements.uploadArea) return;
+
+            resetErrorState(elements);
+
+            if (!validateFile(file, transactionId)) {
+                input.value = '';
+                return;
+            }
+
+            showProcessingState(elements.uploadArea);
+            createPreview(file, elements, transactionId);
+        }
+
+        function getFileUploadElements(transactionId) {
+            return {
+                uploadArea: document.getElementById(`uploadArea${transactionId}`),
+                uploadContent: document.getElementById(`uploadContent${transactionId}`),
+                previewArea: document.getElementById(`previewArea${transactionId}`),
+                imagePreview: document.getElementById(`imagePreview${transactionId}`),
+                fileName: document.getElementById(`fileName${transactionId}`),
+                fileSize: document.getElementById(`fileSize${transactionId}`),
+                fileError: document.getElementById(`fileError${transactionId}`)
+            };
+        }
+
+        function resetErrorState(elements) {
+            if (elements.fileError) {
+                elements.fileError.style.display = 'none';
+            }
+            if (elements.uploadArea) {
+                elements.uploadArea.classList.remove('is-invalid');
+            }
+        }
+
+        function validateFile(file, transactionId) {
+            const validTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+            const maxSize = 2 * 1024 * 1024; // 2MB
+
+            if (!validTypes.includes(file.type)) {
+                showError(transactionId, 'Format file tidak valid. Gunakan JPG atau PNG.');
+                return false;
+            }
+
+            if (file.size > maxSize) {
+                showError(transactionId, 'Ukuran file terlalu besar. Maksimal 2MB.');
+                return false;
+            }
+
+            return true;
+        }
+
+        function showProcessingState(uploadArea) {
+            if (uploadArea) {
+                uploadArea.classList.add('processing');
+            }
+        }
+
+        function createPreview(file, elements, transactionId) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                if (elements.imagePreview) elements.imagePreview.src = e.target.result;
+                if (elements.fileName) elements.fileName.textContent = file.name;
+                if (elements.fileSize) elements.fileSize.textContent = formatFileSize(file.size);
+                
+                switchToPreviewMode(elements);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function switchToPreviewMode(elements) {
+            if (elements.uploadContent) elements.uploadContent.classList.add('d-none');
+            if (elements.previewArea) elements.previewArea.classList.remove('d-none');
+            if (elements.uploadArea) {
+                elements.uploadArea.classList.add('has-file');
+                elements.uploadArea.classList.remove('processing');
+            }
+        }
+
+        function removeFile(transactionId) {
+            const input = document.getElementById(`photo${transactionId}`);
+            const elements = getFileUploadElements(transactionId);
+            
+            if (input) input.value = '';
+            
+            if (elements.uploadContent) elements.uploadContent.classList.remove('d-none');
+            if (elements.previewArea) elements.previewArea.classList.add('d-none');
+            if (elements.uploadArea) elements.uploadArea.classList.remove('has-file');
+        }
+
+        function showError(transactionId, message) {
+            const elements = getFileUploadElements(transactionId);
+            
+            if (elements.fileError) {
+                elements.fileError.textContent = message;
+                elements.fileError.style.display = 'block';
+            }
+            
+            if (elements.uploadArea) {
+                elements.uploadArea.classList.add('is-invalid');
+            }
+            
+            setTimeout(() => {
+                if (elements.fileError) elements.fileError.style.display = 'none';
+                if (elements.uploadArea) elements.uploadArea.classList.remove('is-invalid');
+            }, 5000);
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // Drag and drop functionality (akan dipanggil dari Blade template)
+        function initializeDragAndDrop(transactionId) {
+            const uploadArea = document.getElementById(`uploadArea${transactionId}`);
+            const fileInput = document.getElementById(`photo${transactionId}`);
+            
+            if (!uploadArea || !fileInput) return;
+
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                uploadArea.addEventListener(eventName, preventDefaults, false);
+            });
+
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                uploadArea.addEventListener(eventName, () => {
+                    uploadArea.classList.add('drag-over');
+                }, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                uploadArea.addEventListener(eventName, () => {
+                    uploadArea.classList.remove('drag-over');
+                }, false);
+            });
+
+            uploadArea.addEventListener('drop', function(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                
+                if (files.length > 0) {
+                    fileInput.files = files;
+                    handleFileSelect(fileInput, transactionId);
+                }
+            }, false);
+        }
+
+        // Form submit handling (akan dipanggil dari Blade template)
+        function initializeFormSubmit(transactionId) {
+            const form = document.getElementById(`installmentForm${transactionId}`);
+            const submitBtn = document.getElementById(`submitBtn${transactionId}`);
+            
+            if (form && submitBtn) {
+                form.addEventListener('submit', function(e) {
+                    const spinner = submitBtn.querySelector('.spinner-border');
+                    const icon = submitBtn.querySelector('.fas');
+                    
+                    if (spinner) spinner.classList.remove('d-none');
+                    if (icon) icon.classList.add('d-none');
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span>Menyimpan...';
+                });
+            }
+        }
+
+        // SweetAlert confirmations
+        function confirmApprove(installmentId) {
+            if (typeof Swal === 'undefined') {
+                return confirm('Apakah Anda yakin ingin menyetujui cicilan ini?') && submitInstallmentAction(installmentId, 'approve');
+            }
+            
+            Swal.fire({
+                title: 'Konfirmasi Terima Cicilan',
+                text: "Apakah Anda yakin ingin menyetujui cicilan ini?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#28a745',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Ya, Setujui!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    submitInstallmentAction(installmentId, 'approve');
+                }
+            });
+        }
+
+        function confirmReject(installmentId) {
+            if (typeof Swal === 'undefined') {
+                return confirm('Apakah Anda yakin ingin menolak cicilan ini?') && submitInstallmentAction(installmentId, 'reject');
+            }
+            
+            Swal.fire({
+                title: 'Konfirmasi Tolak Cicilan',
+                text: "Apakah Anda yakin ingin menolak cicilan ini? Status akan berubah menjadi Failed.",
+                icon: 'error',
+                showCancelButton: true,
+                confirmButtonColor: '#dc3545',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Ya, Tolak!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    submitInstallmentAction(installmentId, 'reject');
+                }
+            });
+        }
+
+        function submitInstallmentAction(installmentId, action) {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/installments/' + installmentId + '/verify';
+            form.style.display = 'none';
+            
+            const csrfToken = document.createElement('input');
+            csrfToken.type = 'hidden';
+            csrfToken.name = '_token';
+            csrfToken.value = window.csrfToken || document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+            form.appendChild(csrfToken);
+
+            const actionInput = document.createElement('input');
+            actionInput.type = 'hidden';
+            actionInput.name = 'action';
+            actionInput.value = action;
+            form.appendChild(actionInput);
+
+            document.body.appendChild(form);
+            form.submit();
         }
     </script>
 @endpush

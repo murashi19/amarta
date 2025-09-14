@@ -42,6 +42,7 @@
             max-width: 1000px;
             margin: 0 auto;
             padding: 2rem 1rem;
+            margin-top: 1rem;
         }
 
         .edit-card {
@@ -605,14 +606,6 @@
                 return;
             }
 
-            // Show loading state
-            const submitBtn = document.querySelector('button[type="submit"]');
-            const icon = submitBtn.querySelector('i');
-            const text = submitBtn.querySelector('span') || submitBtn.childNodes[1];
-            
-            icon.className = 'fas fa-spinner fa-spin';
-            if (text) text.textContent = ' Menyimpan...';
-            submitBtn.disabled = true;
         });
 
         // Auto-resize textarea
